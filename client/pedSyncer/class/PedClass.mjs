@@ -125,7 +125,6 @@ class PedClass {
      * After the ped reached his final position a new route will be calculated.
      */
     navmashPositions = [];
-    finalPosition = null;
     nearFinalPosition = false;
 
     /**

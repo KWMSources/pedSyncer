@@ -1,7 +1,6 @@
 import { inDistanceBetweenPos } from "../utils/functions.mjs";
 import alt from 'alt';
 import got from 'got';
-import { throws } from "assert";
 
 var i = 0;
 var peds = {};
@@ -126,7 +125,6 @@ class PedClass {
      * After the ped reached his final position a new route will be calculated.
      */
     navmashPositions = [];
-    finalPosition = null;
     nearFinalPosition = false;
     currentNavmashPositionsIndex = null;
 
