@@ -270,7 +270,7 @@ class PedClass {
     static async createCitizenPeds() {
         //Call the pedSyncer-Service
         let spawnsRequest = await got(
-            "https://localhost:5001/getSpawns", {
+            "http://localhost:5000/getSpawns", {
                 https: {
                     rejectUnauthorized: false
                 }
