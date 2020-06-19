@@ -2,7 +2,7 @@
 
 This AltV-resource is an experiment for synchronize peds. I publish this resource to give an idea how this can work. Furthermore, I also published it to allow contribution by other developers to improve this experiment. Maybe the developers of AltV themself can get an idea about how to implement this nice feature for the multiplayer-mod.
 
-So, contribution is contribution is welcome!
+So, contribution is welcome!
 
 # Disclaimer
 
