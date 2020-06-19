@@ -14,11 +14,11 @@ So, contribution is welcome!
 - ped meta & synced meta
 - random ped spawning
 
-# Disclaimer
+# Disclaimer - IMPORTANT!
 
-This experiment is free to use. If you find any possibilities for improvements, please tell me or contribute by pull requests. It would improve this experiment and give a better idea about how this can work - so it could also a better idea for the AltV-Devs themself. If you find any issues please post them here.
+This experiment is free to use. If you find any possibilities for improvements, please tell me or contribute by pull requests. It would improve this experiment and give a better idea about how this can work - so it could also an idea for the AltV-Devs themself. If you find any issues please post them here.
 
-As mentioned, this is just an experiment. For now I give no guarantee that it works. I do not recommend to use it on live-projects, because it is not tested to a big amount of players. If you want to test it, do it and tell me your feedback.
+**As mentioned, this is just an experiment. For now I give no guarantee that it works.** I do not recommend to use it on live-projects, because it is not tested to a big amount of players. If you want to test it, do it and tell me your feedback.
 
 # Idea
 
@@ -36,7 +36,7 @@ The idea of this experiment is to manage peds mostly on the serverside, less on 
 
 The calculation of the paths and the wandering is based on navMeshes. The GTA5 natural navMeshes will be used to calculate paths and wandering paths of a ped. There are 98,000 footpath navMeshes which have to be managed. Because of the size of the footpath navMeshes and the complexity to load them and calculating paths, I decide to outsource these tasks to an external service. This external service calculates random spawns of peds and their wandering paths based on navMeshes.
 
-You can get more information about the external service here: https://github.com/KWMSources/pedSyncer-Service
+For more information about the external service, click here: https://github.com/KWMSources/pedSyncer-Service
 
 ## Clientside
 
@@ -86,6 +86,8 @@ The streaming process is time-critical. With delays in the streaming process, th
 [ ] Handling with Peds which starts on a navMesh without a neighbour navMesh (route cannot be calculated)
 
 If you want to contribute and to do some of these todos please tell me to avoid double work. Write me on discord: Saltmueller#0001
+
+# FAQ
 
 # Special Thanks
 
