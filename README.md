@@ -20,6 +20,12 @@ This experiment is free to use. If you find any possibilities for improvements, 
 
 **As mentioned, this is just an experiment. For now I give no guarantee that it works.** I do not recommend to use it on live-projects, because it is not tested to a big amount of players. If you want to test it, do it and tell me your feedback.
 
+# Contribution
+
+Contribution is very welcome! I commented the code and wrote all my thoughts into it. This experiment definitely needs improvements in performance and synchronization. If you find any possibilites please tell me or contribute by pull requests.
+
+You can also add new features into it, but please let me know to avoid double work.
+
 # Idea
 
 Before you use or analyze this project I want to tell you the idea of the pedSyncer.
@@ -68,7 +74,420 @@ The streaming process is time-critical. With delays in the streaming process, th
 
 # Installation & integration
 
+If you want to run this experiment with citizen-spawning and wandering please run the pedSyncer-service on the same localhost or change the localhost references. For more information about the pedSyncer-service see https://github.com/KWMSources/pedSyncer-Service.
+
+You can use this experiment as a separate resource or you can integrate this resource into your resource for your development.
+
+**Use as separate resource**
+1. `npm install got` (usage of the REST-API of the pedSyncer-service)
+2. create a folder and name it "pedSyncer"
+3. unpack this repository into this folder
+4. add 'pedSyncer' into your server.cfg
+
+**Integrate this resource into your resource**
+1. `npm install got` (usage of the REST-API of the pedSyncer-service)
+2. copy the content of the server-folder into your server-folder of your resource
+3. copy this code into your main mjs:
+```
+import alt from 'alt';
+import { Ped } from './pedSyncer/class/PedClass.mjs';
+import { startPedStreamer } from './pedSyncer/streamer/PedStreamer.mjs';
+import { startPedControler } from './pedSyncer/control/PedControler.mjs';
+
+...
+
+startPedControler();
+alt.setTimeout(() => {
+    startPedStreamer();
+    Ped.createCitizenPeds(); //if you want to spawn peds randomly and let them wander - else delete this line
+}, 5000);
+```
+4. copy the content of the client-folder into your client-folder of your resource
+5. copy this code into your client-main js:
+```
+import * as alt from 'alt';
+import { startPedControler } from './pedSyncer/control/PedControler.mjs';
+
+startPedControler();
+```
+
 # Documentation
+
+The idea of developing with this resource is that you can use the peds like you use players and vehicles in AltV. The properties and functions are oriented to the use of players or vehicles.
+
+## Serverside
+
+### Ped
+
+**Object-Properties**
+
+`dimension: number`
+
+Not active currently
+
+`id: number`
+
+Unique ID of the ped
+
+`netOwner: number`
+
+The netOwner of this ped given by the ID of the player
+
+`playerHaveStreamed: Array<number>`
+
+The players given by their IDs which have this ped streamed in
+
+`valid: boolean`
+
+Not active currently
+
+`created: boolean`
+
+True if the peds style was set - otherwise false
+
+`pos: WorldVector3`
+
+Current position of the ped
+
+`heading: float`
+
+Current heading of the ped
+
+`model: number`
+
+Model of the ped
+
+`drawable{1-11}: number`
+
+Drawable Index of the ped
+
+`texture{1-11}: number`
+
+Texture Index of the ped
+
+`prop{0,1,2,6,7}: number`
+
+Not active currently
+
+`invincible: boolean`
+
+Not active currently
+
+`vehicle: number`
+
+Not active currently
+
+`seat: number`
+
+Not active currently
+
+`injuries: ?`
+
+Not active currently
+
+`hasBlood: boolean`
+
+Not active currently
+
+`armour: number`
+
+Not active currently
+
+`health: number`
+
+Not active currently
+
+`weapons: ?`
+
+Not active currently
+
+`ammo: ?`
+
+Not active currently
+
+`currentTask: string`
+
+Not active currently
+
+`currentTaskParams: array<string>`
+
+Not active currently
+
+`freeze: boolean`
+
+Not active currently
+
+`wandering: boolean`
+
+Not active currently - active by default for citizen peds
+
+`navmashPositions: array<WorldVector3>`
+
+Positions of the wandering of the ped
+
+`nearFinalPosition: boolean`
+
+Is the ped near his final destination of his wandering? If yes, calculate new route.
+
+`currentNavmashPositionsIndex: number`
+
+Only active if the ped is not streamed to anyone. Contains the index of `navmashPositions` on which the ped is
+
+**Object-Methods**
+
+`constructor(x: float, y: float, z: float, model: number): void`
+
+Constuctor of the ped. `x`, `y` and `z` are the WorldVector3 coordinates. Usage like `let ped = new Ped(0,0,72);`
+
+`destroy(): void`
+
+Not active currently
+
+`setPath(positionsToFollow: array<WorldVector3>): void`
+
+Method to set the path which the ped will follow and start the peds walking to these positions. Please mention: The ped will only follow to the last position because of smoothing. The positions till the end are intermediate positions to its final destination. These are important for the server-side ped-movement calculation.
+
+`getPathFinalDestination(): WorldVector3`
+
+Returns the final destination of the ped
+
+`deleteMeta(key: string): void`
+
+Delete meta information of the ped
+
+`getMeta(key: string): object`
+
+Returns meta information of the ped
+
+`hasMeta(key: string): boolean`
+
+Returns true if the meta object is set, otherwise false
+
+`setMeta(key: string, value: object): void`
+
+Sets the peds meta information
+
+`deleteSyncedMeta(key: string): void`
+
+Delete synchronized meta information of the ped
+
+`getSyncedMeta(key: string): object`
+
+Returns synchronized meta information of the ped
+
+`hasSyncedMeta(key: string): boolean`
+
+Returns true if the synchronized meta object is set, otherwise false
+
+`setSyncedMeta(key: string, value: object): void`
+
+Sets the peds synchronized meta information
+
+**Static methods and properties**
+
+`getByID(id: number): Ped`
+
+Returns the ped object given by his ID. `undefined` if it found nothing
+
+`getNear(pos: WorldVector3, distance: float): Array<Ped>`
+
+Returns peds which are in the distance of a given position.
+
+`all`
+
+Returns all peds.
+
+`createCitizenPeds(): void`
+
+Method to create citizen peds which spawns randomly and wander.
+
+### PedControler
+
+`setPedNewPath(ped: Ped): void`
+
+Generate a new path for the ped to wander.
+
+## Clientside
+
+### Ped
+
+**Object-Properties**
+
+`dimension: number`
+
+Not active currently
+
+`id: number`
+
+Unique ID of the ped
+
+`scriptID: number`
+
+The scriptID of the ped
+
+`netOwner: number`
+
+The netOwner of this ped given by the ID of the player
+
+`valid: boolean`
+
+Not active currently
+
+`created: boolean`
+
+True if the peds style was set - otherwise false
+
+`pos: WorldVector3`
+
+Current position of the ped
+
+`heading: float`
+
+Current heading of the ped
+
+`model: number`
+
+Model of the ped
+
+`drawable{1-11}: number`
+
+Drawable Index of the ped
+
+`texture{1-11}: number`
+
+Texture Index of the ped
+
+`prop{0,1,2,6,7}: number`
+
+Not active currently
+
+`invincible: boolean`
+
+Not active currently
+
+`vehicle: number`
+
+Not active currently
+
+`seat: number`
+
+Not active currently
+
+`injuries: ?`
+
+Not active currently
+
+`hasBlood: boolean`
+
+Not active currently
+
+`armour: number`
+
+Not active currently
+
+`health: number`
+
+Not active currently
+
+`weapons: ?`
+
+Not active currently
+
+`ammo: ?`
+
+Not active currently
+
+`currentTask: string`
+
+Not active currently
+
+`currentTaskParams: array<string>`
+
+Not active currently
+
+`freeze: boolean`
+
+Not active currently
+
+`wandering: boolean`
+
+Not active currently - active by default for citizen peds
+
+`navmashPositions: array<WorldVector3>`
+
+Positions of the wandering of the ped
+
+`nearFinalPosition: boolean`
+
+Is the ped near his final destination of his wandering? If yes, calculate new route.
+
+**Object-Methods**
+
+`constructor(x: float, y: float, z: float, model: number): void`
+
+Constuctor of the ped. `x`, `y` and `z` are the WorldVector3 coordinates. Usage like `let ped = new Ped(0,0,72);`
+
+`destroy(): void`
+
+Not active currently
+
+`setPath(positionsToFollow: array<WorldVector3>): void`
+
+Method to set the path which the ped will follow and start the peds walking to these positions. Please mention: The ped will only follow to the last position because of smoothing. The positions till the end are intermediate positions to its final destination. These are important for the server-side ped-movement calculation.
+
+`getPathFinalDestination(): WorldVector3`
+
+Returns the final destination of the ped
+
+`deleteMeta(key: string): void`
+
+Delete meta information of the ped
+
+`getMeta(key: string): object`
+
+Returns meta information of the ped
+
+`hasMeta(key: string): boolean`
+
+Returns true if the meta object is set, otherwise false
+
+`setMeta(key: string, value: object): void`
+
+Sets the peds meta information
+
+`getSyncedMeta(key: string): object`
+
+Returns synchronized meta information of the ped
+
+`hasSyncedMeta(key: string): boolean`
+
+Returns true if the synchronized meta object is set, otherwise false
+
+**Static methods and properties**
+
+`getByID(id: number): Ped`
+
+Returns the ped object given by his ID. `undefined` if it found nothing
+
+`getByScriptID(id: number): Ped`
+
+Returns the ped object given by this scriptID. Is 0 if it is not streamed to the player.
+
+`getNear(pos: WorldVector3, distance: float): Array<Ped>`
+
+Returns peds which are in the distance of a given position.
+
+`all`
+
+Returns all peds.
+
+`getAllStreamedPeds(): Array<Ped>`
+
+Returns all peds which are streamed to this client.
+
+`createCitizenPeds(): void`
+
+Method to create citizen peds which spawns randomly and wander.
 
 # ToDos
 
@@ -89,7 +508,31 @@ If you want to contribute and to do some of these todos please tell me to avoid 
 
 # FAQ
 
+**Can I use this for my project?**
+
+Yes, but I don't recommend it to use it for "production", because it is not tested for a large amount of players. Bugs and issues can also appear.
+
+**Can I change the experiments code?**
+
+Yes. If you find some possibilities for improvements please tell me about it. If you use it to develop your idea or for new exciting stuff, I would be happy if you show me.
+
+**Can you upload the pedSyncer-Service as a central service for all pedSyncer-user?**
+
+I don't plan to do this. I think a central service would be a big risk for the stability. DDoS-Attacks, bottle necks, ... I think it would be better for you to run it by yourself.
+
+**Why do you this or that?**
+
+Ask me on a discord channel on the AltV-discord or contact me on pm.
+
+**Can I buy this for an exclusive use?**
+
+No, it is an open source experiment.
+
+**I use c# - can you develop it for c#?**
+
+Currently I don't plan to transfer this experiment to c#.
+
 # Special Thanks
 
 - Goes to Durty for his navMesh-Dump and navMesh-Framework. Visit https://github.com/DurtyFree/gta-v-data-dumps
-- Goes to Dirty-Gaming - I've learned a lot their and its sad that I leaved this project but the show must go on! <3
+- Goes to Dirty-Gaming - I've learned a lot there and its sad that I leaved this project but the show must go on! <3
