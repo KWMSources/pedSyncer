@@ -95,12 +95,7 @@ import { startPedStreamer } from './pedSyncer/streamer/PedStreamer.mjs';
 import { startPedControler } from './pedSyncer/control/PedControler.mjs';
 
 ...
-
 startPedControler();
-alt.setTimeout(() => {
-    startPedStreamer();
-    Ped.createCitizenPeds(); //if you want to spawn peds randomly and let them wander - else delete this line
-}, 5000);
 ```
 4. copy the content of the client-folder into your client-folder of your resource
 5. copy this code into your client-main js:
@@ -110,6 +105,9 @@ import { startPedControler } from './pedSyncer/control/PedControler.mjs';
 
 startPedControler();
 ```
+
+**How to stop the citizen creation?**
+Delete in `PedControler.mjs` the `Ped.createCitizenPeds();` line.
 
 # Documentation
 
