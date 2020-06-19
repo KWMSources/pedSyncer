@@ -72,18 +72,18 @@ The streaming process is time-critical. With delays in the streaming process, th
 
 # ToDos
 
-[ ] Variable for Streaming-Range
-[ ] Variable for citizen count
-[ ] Ped-Death-Handling
-[ ] Ped-Dumbling
-[ ] Ped shocking event reaction
-[ ] Street-Crossing
-[ ] Ped in vehicles
-[ ] Handling for wandering, freezing, inviciblity, health, armour, weapons
-[ ] Syncing of the peds attributes
-[ ] Outsourcing Stream-Mechanics to the client?
-[ ] Ped path smoothing
-[ ] Handling with Peds which starts on a navMesh without a neighbour navMesh (route cannot be calculated)
+- [ ] Variable for Streaming-Range
+- [ ] Variable for citizen count
+- [ ] Ped-Death-Handling
+- [ ] Ped-Dumbling
+- [ ] Ped shocking event reaction
+- [ ] Street-Crossing
+- [ ] Ped in vehicles
+- [ ] Handling for wandering, freezing, inviciblity, health, armour, weapons
+- [ ] Syncing of the peds attributes
+- [ ] Outsourcing Stream-Mechanics to the client?
+- [ ] Ped path smoothing
+- [ ] Handling with Peds which starts on a navMesh without a neighbour navMesh (route cannot be calculated)
 
 If you want to contribute and to do some of these todos please tell me to avoid double work. Write me on discord: Saltmueller#0001
 
