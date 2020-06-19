@@ -1,5 +1,6 @@
 import alt from 'alt';
 import { Ped } from '../class/PedClass.mjs';
+import { startPedStreamer } from './pedSyncer/streamer/PedStreamer.mjs';
 import { removeElementFromArray } from '../utils/functions.mjs';
 import { setPedNewPath } from './PedMovementControler.mjs';
 import { automaticMovementForPed } from './PedMovementControler.mjs';
@@ -133,4 +134,9 @@ export function startPedControler() {
 
     //Start the server-side ped-movement calculcation
     startPedAutomaticMovements();
+
+    alt.setTimeout(() => {
+        startPedStreamer();
+        Ped.createCitizenPeds();
+    }, 5000);
 }

@@ -1,6 +1,3 @@
-import alt from 'alt';
-import { Ped } from './pedSyncer/class/PedClass.mjs';
-import { startPedStreamer } from './pedSyncer/streamer/PedStreamer.mjs';
 import { startPedControler } from './pedSyncer/control/PedControler.mjs';
 
 /**
@@ -19,7 +16,3 @@ import { startPedControler } from './pedSyncer/control/PedControler.mjs';
  */
 
 startPedControler();
-alt.setTimeout(() => {
-    startPedStreamer();
-    Ped.createCitizenPeds();
-}, 5000);
