@@ -1,6 +1,6 @@
 import alt from 'alt';
 import { Ped } from '../class/PedClass.mjs';
-import { startPedStreamer } from './pedSyncer/streamer/PedStreamer.mjs';
+import { startPedStreamer } from '../streamer/PedStreamer.mjs';
 import { removeElementFromArray } from '../utils/functions.mjs';
 import { setPedNewPath } from './PedMovementControler.mjs';
 import { automaticMovementForPed } from './PedMovementControler.mjs';
