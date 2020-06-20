@@ -17,7 +17,7 @@ export async function setPedNewPath(ped) {
 
     //Get new path from the pedSyncer-service
     let newPedPath = await got(
-        "https://localhost:44386/getRoute/" 
+        "http://localhost:5000/getRoute/" 
             + pedToSet.getPathFinalDestination().x.toString().replace(".", ",") + "/"
             + pedToSet.getPathFinalDestination().y.toString().replace(".", ",") + "/"
             + pedToSet.getPathFinalDestination().z.toString().replace(".", ",") + "/"
