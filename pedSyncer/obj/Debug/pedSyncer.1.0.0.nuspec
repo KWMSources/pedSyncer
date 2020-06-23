@@ -12,7 +12,8 @@
         <dependency id="AltV.Net" version="1.31.1" exclude="Build,Analyzers" />
         <dependency id="AltV.Net.EntitySync" version="1.3.0-dev-preview" exclude="Build,Analyzers" />
         <dependency id="AltV.Net.EntitySync.ServerEvent" version="1.3.0-dev-preview" exclude="Build,Analyzers" />
-        <dependency id="MessagePack" version="2.1.143" exclude="Build,Analyzers" />
+        <dependency id="MessagePack" version="2.1.115" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.3" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>

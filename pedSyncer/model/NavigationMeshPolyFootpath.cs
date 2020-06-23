@@ -37,21 +37,6 @@ namespace NavMesh_Graph
         {
         }
 
-        public NavigationMeshPolyFootpath(NavigationMeshPoly obj)
-        {
-            this.Index = obj.Index;
-            this.PartId = obj.PartId;
-            this.Position = obj.Position;
-            this.Vertices = obj.Vertices;
-            this.Id = obj.Id;
-            this.AreaId = obj.AreaId;
-            this.Neighbours = new List<int>();
-
-            int cellX = (int)Math.Ceiling(this.Position.X / 100.0), cellY = (int)Math.Ceiling(this.Position.Y / 100.0);
-            if (!navMeshesMap.ContainsKey((cellX, cellY))) navMeshesMap.Add((cellX, cellY), new List<NavigationMeshPolyFootpath>());
-            navMeshesMap[(cellX, cellY)].Add(this);
-        }
-
         public static Dictionary<(int, int), List<NavigationMeshPolyFootpath>> navMeshesMap = new Dictionary<(int, int), List<NavigationMeshPolyFootpath>>();
 
 

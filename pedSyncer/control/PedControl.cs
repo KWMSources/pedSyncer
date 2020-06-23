@@ -20,10 +20,6 @@ namespace PedSyncer
 		public static void OnFirstSpawn(IPlayer Player, Dictionary<string,string> PedClient)
         {
 			if (!PedClient.TryGetValue("id", out string idStr)) return;
-			foreach(string key in PedClient.Keys)
-            {
-				Console.WriteLine("Test First Spawn " + key + " " + PedClient[key]);
-            }
 
 			ulong id = (ulong) IntegerType.FromString(idStr);
 
