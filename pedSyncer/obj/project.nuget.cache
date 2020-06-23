@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "dgSpecHash": "5XcmEfX3d+KFyssHkNxDdVWivO1xMyXYR0mRh4YLoJY3vQhaeLXYi/83MbKU94BS7p7JLqgfFmoxIi0rZ+qkeQ==",
+  "success": true,
+  "projectFilePath": "F:\\Projekte\\pedSyncer\\pedSyncer\\pedSyncer.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Kay Wilhelm Mähler\\.nuget\\packages\\altv.net\\1.31.1\\altv.net.1.31.1.nupkg.sha512",
+    "C:\\Users\\Kay Wilhelm Mähler\\.nuget\\packages\\altv.net.async\\1.27.2\\altv.net.async.1.27.2.nupkg.sha512",
+    "C:\\Users\\Kay Wilhelm Mähler\\.nuget\\packages\\altv.net.entitysync\\1.3.0-dev-preview\\altv.net.entitysync.1.3.0-dev-preview.nupkg.sha512",
+    "C:\\Users\\Kay Wilhelm Mähler\\.nuget\\packages\\altv.net.entitysync.serverevent\\1.3.0-dev-preview\\altv.net.entitysync.serverevent.1.3.0-dev-preview.nupkg.sha512",
+    "C:\\Users\\Kay Wilhelm Mähler\\.nuget\\packages\\messagepack\\2.1.115\\messagepack.2.1.115.nupkg.sha512",
+    "C:\\Users\\Kay Wilhelm Mähler\\.nuget\\packages\\messagepack.annotations\\2.1.115\\messagepack.annotations.2.1.115.nupkg.sha512",
+    "C:\\Users\\Kay Wilhelm Mähler\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.0.0\\microsoft.bcl.asyncinterfaces.1.0.0.nupkg.sha512",
+    "C:\\Users\\Kay Wilhelm Mähler\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\Kay Wilhelm Mähler\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512",
+    "C:\\Users\\Kay Wilhelm Mähler\\.nuget\\packages\\system.reflection.emit\\4.6.0\\system.reflection.emit.4.6.0.nupkg.sha512",
+    "C:\\Users\\Kay Wilhelm Mähler\\.nuget\\packages\\system.reflection.emit.lightweight\\4.6.0\\system.reflection.emit.lightweight.4.6.0.nupkg.sha512",
+    "C:\\Users\\Kay Wilhelm Mähler\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.2\\system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512",
+    "C:\\Users\\Kay Wilhelm Mähler\\.nuget\\packages\\system.threading.channels\\4.7.0\\system.threading.channels.4.7.0.nupkg.sha512",
+    "C:\\Users\\Kay Wilhelm Mähler\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.3\\system.threading.tasks.extensions.4.5.3.nupkg.sha512"
+  ],
+  "logs": []
+}
