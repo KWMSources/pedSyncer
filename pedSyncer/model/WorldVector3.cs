@@ -1,6 +1,6 @@
-﻿using System;
+﻿using MessagePack;
+using System;
 using System.Numerics;
-using MessagePack;
 
 namespace NavMesh_Graph
 {
@@ -31,7 +31,7 @@ namespace NavMesh_Graph
         public static WorldVector3 ToWorldVector3(Vector3 vector)
         {
             return new WorldVector3(vector.X, vector.Y, vector.Z);
-    }
+        }
 
         //Method to check if two WorldVelctor3s are equal
         public static bool equals(WorldVector3 vec1, WorldVector3 vec2)

@@ -5,9 +5,8 @@ using System.Timers;
 
 namespace PedSyncer
 {
-    class PedMovementControl
+    internal class PedMovementControl
     {
-
         private static PedMovementControl Instance = null;
         private Timer Timer;
 
@@ -17,8 +16,8 @@ namespace PedSyncer
             Timer.AutoReset = true;
             Timer.Elapsed += new ElapsedEventHandler(MovePeds);
             Timer.Start();
-
         }
+
         public static PedMovementControl GetInstance()
         {
             if (Instance == null) Instance = new PedMovementControl();
@@ -44,12 +43,13 @@ namespace PedSyncer
             }
 
             AddPedMovement(
-                (int) Math.Ceiling(Utils.GetDistanceBetweenPos(ped.Position, ped.NavmashPositions[ped.CurrentNavmashPositionsIndex + 1].Position.ToVector3())),
+                (int)Math.Ceiling(Utils.GetDistanceBetweenPos(ped.Position, ped.NavmashPositions[ped.CurrentNavmashPositionsIndex + 1].Position.ToVector3())),
                 ped
             );
         }
 
         private Dictionary<int, List<Ped>> PedMovements = new Dictionary<int, List<Ped>>();
+
         private void AddPedMovement(int Distance, Ped Ped)
         {
             if (!PedMovements.ContainsKey(Distance)) PedMovements.Add(Distance, new List<Ped>());
@@ -94,7 +94,6 @@ namespace PedSyncer
             }
         }
 
-
         public static int GetNearestNavMeshOfPed(Ped Ped)
         {
             if (Ped.NavmashPositions.Count == 0) return -1;
@@ -107,7 +106,8 @@ namespace PedSyncer
             {
                 double Distance = Utils.GetDistanceBetweenPos(Ped.Position, NavMesh.Position.ToVector3());
 
-                if (MinimumDistance > Distance) {
+                if (MinimumDistance > Distance)
+                {
                     MinimumPos = i;
                     MinimumDistance = Distance;
                 }

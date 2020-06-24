@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using AltV.Net;
+﻿using AltV.Net;
 using MessagePack;
+using System;
+using System.Collections.Generic;
 
 namespace NavMesh_Graph
 {
     [MessagePackObject]
-    public class NavigationMeshPolyFootpath: IWritable
+    public class NavigationMeshPolyFootpath : IWritable
     {
         [Key(0)]
         public int Index { get; set; }
@@ -39,7 +39,6 @@ namespace NavMesh_Graph
 
         public static Dictionary<(int, int), List<NavigationMeshPolyFootpath>> navMeshesMap = new Dictionary<(int, int), List<NavigationMeshPolyFootpath>>();
 
-
         public static bool isNeighbour(NavigationMeshPolyFootpath poly1, NavigationMeshPolyFootpath poly2)
         {
             foreach (WorldVector3 vec1 in poly1.Vertices)
@@ -51,7 +50,8 @@ namespace NavMesh_Graph
             }
 
             return false;
-		}
+        }
+
         public void OnWrite(IMValueWriter writer)
         {
             writer.BeginObject();
@@ -63,5 +63,5 @@ namespace NavMesh_Graph
             writer.Value(this.Position.Z);
             writer.EndObject();
         }
-	}
+    }
 }
