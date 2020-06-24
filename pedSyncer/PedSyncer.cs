@@ -9,6 +9,7 @@ using AltV.Net.EntitySync;
 using AltV.Net.EntitySync.ServerEvent;
 using AltV.Net.EntitySync.SpatialPartitions;
 using navMesh_Graph_WebAPI;
+using pedSyncer.Task;
 
 namespace PedSyncer
 {
@@ -53,7 +54,10 @@ namespace PedSyncer
 
             Ped.CreateCitizenPeds();
         }
-
+        public override void OnTick()
+        {
+            TaskRunning.OnTick();
+        }
         public override void OnStop()
         {
             Console.WriteLine("Stopped");

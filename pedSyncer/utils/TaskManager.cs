@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading;
 
@@ -24,6 +25,7 @@ namespace pedSyncer.Task
             new TaskRunning(task);
         }
 
+        [HandleProcessCorruptedStateExceptionsAttribute]
         public static void OnTick()
         {
             int MaxBatch = 100;
