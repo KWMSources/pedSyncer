@@ -5,14 +5,20 @@ namespace PedSyncer
 {
     public class Utils
     {
-
+        /**
+         * Function to get the distance of two given positions without Z position
+         */
+        public static double GetDistanceBetweenPosWithoutZ(Vector2 Position1, Vector2 Position2)
+        {
+            return Vector2.Distance(Position1, Position2);      
+        }
 
         /**
-		 * Function to get the distance of two given positions
+		 * Function to get the distance of two given positions including Z position
 		 */
         public static double GetDistanceBetweenPos(Vector3 Position1, Vector3 Position2)
         {
-            return Math.Sqrt(Math.Pow(Position1.X - Position2.X, 2) + Math.Pow(Position1.Y - Position2.Y, 2) + Math.Pow(Position1.Z - Position2.Z, 2));
+            return Vector3.Distance(Position1, Position2);
         }
 
         /**
