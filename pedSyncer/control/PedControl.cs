@@ -158,7 +158,7 @@ namespace PedSyncer
 
             if (PedSyncer.DebugModeClientSide)
             {
-                player.Emit("pedSyncer:debugmode", true);
+                player.EmitLocked("pedSyncer:debugmode", true);
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using AltV.Net;
+using AltV.Net.Async;
 using AltV.Net.Elements.Entities;
 using AltV.Net.EntitySync;
 using NavMesh_Graph;
@@ -8,6 +9,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Threading.Tasks;
 
 namespace PedSyncer
 {
@@ -281,13 +283,15 @@ namespace PedSyncer
             this.Wandering = false;
             this.NearFinalPosition = false;
             this.CurrentNavmashPositionsIndex = 0;
-
-            AltEntitySync.AddEntity(this);
-            Alt.EmitAllClients("pedSyncer:server:create", this);
+            AltAsync.Do(() =>
+            {
+                AltEntitySync.AddEntity(this);
+                Alt.EmitAllClients("pedSyncer:server:create", this);
+            });
         }
 
         public void Destroy()
-        {
+        {      
             Alt.EmitAllClients("pedSyncer:server:delete", this.Id);
         }
 
@@ -347,13 +351,13 @@ namespace PedSyncer
         {
             NavigationMeshControl NavigationMeshControl = NavigationMeshControl.getInstance();
 
-            List<NavigationMeshPolyFootpath> RandomSpawns = NavigationMeshControl.getRandomSpawnMeshes();
+            List<NavigationMeshPolyFootpath> RandomSpawnsList = NavigationMeshControl.getRandomSpawnMeshes();
 
-            foreach (NavigationMeshPolyFootpath RandomSpawn in RandomSpawns)
+            Parallel.ForEach(RandomSpawnsList, RandomSpawn =>
             {
-                Ped ped = new Ped(RandomSpawn.Position.X, RandomSpawn.Position.Y, RandomSpawn.Position.Z);
-                ped.StartWandering(RandomSpawn);
-            }
+               Ped ped = new Ped(RandomSpawn.Position.X, RandomSpawn.Position.Y, RandomSpawn.Position.Z);
+               ped.StartWandering(RandomSpawn);
+            });
         }
 
         public void OnWrite(IMValueWriter writer)
