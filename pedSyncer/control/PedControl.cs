@@ -1,4 +1,5 @@
 ﻿using AltV.Net;
+using AltV.Net.Async;
 using AltV.Net.Elements.Entities;
 using AltV.Net.EntitySync;
 using AltV.Net.EntitySync.ServerEvent;
@@ -8,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Threading.Tasks;
 
 namespace PedSyncer
 {
@@ -151,7 +153,10 @@ namespace PedSyncer
 
 		public static void OnPlayerConnect(IPlayer player, string reason)
         {
-			foreach (Ped ped in Ped.All) player.Emit("pedSyncer:server:create", ped);
+			Parallel.ForEach(Ped.All, ped =>
+			{
+				player.EmitLocked("pedSyncer:server:create", ped);
+			});
         }
 
 		public static void OnEntityCreate(IClient client, AltV.Net.EntitySync.IEntity entity)
