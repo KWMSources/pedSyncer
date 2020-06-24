@@ -13,7 +13,12 @@ using navMesh_Graph_WebAPI;
 namespace PedSyncer
 {
     internal class PedSyncer : Resource
-    {
+    {            
+        //Define here if u want to activate the DebugMode Clientside
+        public static bool DebugModeClientSide = false;
+        //Define here if u want to activate the DebugMode ServerSide
+        public static bool DebugModeServerSide = false;
+
         private void InitEntitySync()
         {
             AltEntitySync.Init(

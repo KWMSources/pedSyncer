@@ -155,6 +155,11 @@ namespace PedSyncer
             {
                 player.EmitLocked("pedSyncer:server:create", ped);
             });
+
+            if (PedSyncer.DebugModeClientSide)
+            {
+                player.Emit("pedSyncer:debugmode", true);
+            }
         }
 
         public static void OnEntityCreate(IClient client, AltV.Net.EntitySync.IEntity entity)
@@ -167,7 +172,7 @@ namespace PedSyncer
             //If Ped Exist and don't have NetOwner then we can transfer NetOwner to player who have reated this entity in last.
             if (_ped != null && _ped.NetOwner == null) {
                 _ped.NetOwner = player;
-            } 
+            }
         }
 
         public static void OnEntityRemove(IClient client, AltV.Net.EntitySync.IEntity entity)
