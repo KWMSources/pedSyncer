@@ -2,10 +2,16 @@ import { startPedControler } from './pedSyncer/control/PedControler.mjs';
 import { Ped } from './pedSyncer/class/PedClass.mjs';
 import alt from 'alt';
 import native from 'natives';
+let DebugMode = false;
 
 startPedControler();
 
+alt.onServer("pedSyncer:debugmode", (state) => {
+    DebugMode = state;
+});
+
 alt.everyTick(() => {
+	if (!DebugMode) { return; }
     let playerPos = alt.Player.local.pos;
     for (let ped of Ped.getAllStreamedPeds()) {
         let playerPos2 = native.getEntityCoords(ped.scriptID);
@@ -15,7 +21,7 @@ alt.everyTick(() => {
         if (scale < 0.25) scale = 0.25;
 
         let screenPos = native.getScreenCoordFromWorldCoord(playerPos2.x, playerPos2.y, playerPos2.z + 0.94);
-
+		
         drawNameTags(`pedId: ${ped.id}, ${distance}`, screenPos[1], screenPos[2] - 0.030, 0.3, 255, 255, 255, 220, true);
     }
 });

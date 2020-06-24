@@ -23,7 +23,7 @@ namespace navMesh_Graph_WebAPI
         {
             //Load the pre-calculated navMeshes
             List<NavigationMeshPolyFootpath> navigationMeshesFootpathsList = LoadDataFromDumpFile<List<NavigationMeshPolyFootpath>>("resources/pedSyncer2/newNavigationMeshes.msgpack");
-            Alt.Log("Gelesen: " + navigationMeshesFootpathsList.Count);
+            Alt.Log("NavMeshFootPath Count: " + navigationMeshesFootpathsList.Count);
 
             //Parse the input and store them to the dictionaries
             foreach (NavigationMeshPolyFootpath navigationMeshesFootpath in navigationMeshesFootpathsList)
