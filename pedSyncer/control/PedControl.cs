@@ -23,7 +23,7 @@ namespace PedSyncer
         {
             if (!PedClient.TryGetValue("id", out string idStr)) return;
 
-            ulong id = (ulong)IntegerType.FromString(idStr);
+            ulong id = (ulong)int.Parse(idStr);
 
             Ped ped = Ped.GetByID(id);
 
@@ -32,85 +32,85 @@ namespace PedSyncer
             ped.Created = true;
 
             if (!PedClient.TryGetValue("drawable1", out string drawable1Str)) ped.Drawable1 = 0;
-            else ped.Drawable1 = IntegerType.FromString(drawable1Str);
+            else ped.Drawable1 = int.Parse(drawable1Str);
 
             if (!PedClient.TryGetValue("drawable2", out string drawable2Str)) ped.Drawable2 = 0;
-            else ped.Drawable2 = IntegerType.FromString(drawable2Str);
+            else ped.Drawable2 = int.Parse(drawable2Str);
 
             if (!PedClient.TryGetValue("drawable3", out string drawable3Str)) ped.Drawable3 = 0;
-            else ped.Drawable3 = IntegerType.FromString(drawable3Str);
+            else ped.Drawable3 = int.Parse(drawable3Str);
 
             if (!PedClient.TryGetValue("drawable4", out string drawable4Str)) ped.Drawable4 = 0;
-            else ped.Drawable4 = IntegerType.FromString(drawable4Str);
+            else ped.Drawable4 = int.Parse(drawable4Str);
 
             if (!PedClient.TryGetValue("drawable5", out string drawable5Str)) ped.Drawable5 = 0;
-            else ped.Drawable5 = IntegerType.FromString(drawable5Str);
+            else ped.Drawable5 = int.Parse(drawable5Str);
 
             if (!PedClient.TryGetValue("drawable6", out string drawable6Str)) ped.Drawable6 = 0;
-            else ped.Drawable6 = IntegerType.FromString(drawable6Str);
+            else ped.Drawable6 = int.Parse(drawable6Str);
 
             if (!PedClient.TryGetValue("drawable7", out string drawable7Str)) ped.Drawable7 = 0;
-            else ped.Drawable7 = IntegerType.FromString(drawable7Str);
+            else ped.Drawable7 = int.Parse(drawable7Str);
 
             if (!PedClient.TryGetValue("drawable8", out string drawable8Str)) ped.Drawable8 = 0;
-            else ped.Drawable8 = IntegerType.FromString(drawable8Str);
+            else ped.Drawable8 = int.Parse(drawable8Str);
 
             if (!PedClient.TryGetValue("drawable9", out string drawable9Str)) ped.Drawable9 = 0;
-            else ped.Drawable9 = IntegerType.FromString(drawable9Str);
+            else ped.Drawable9 = int.Parse(drawable9Str);
 
             if (!PedClient.TryGetValue("drawable10", out string drawable10Str)) ped.Drawable10 = 0;
-            else ped.Drawable10 = IntegerType.FromString(drawable10Str);
+            else ped.Drawable10 = int.Parse(drawable10Str);
 
             if (!PedClient.TryGetValue("drawable11", out string drawable11Str)) ped.Drawable11 = 0;
-            else ped.Drawable11 = IntegerType.FromString(drawable11Str);
+            else ped.Drawable11 = int.Parse(drawable11Str);
 
             if (!PedClient.TryGetValue("texture1", out string texture1Str)) ped.Texture1 = 0;
-            else ped.Texture1 = IntegerType.FromString(texture1Str);
+            else ped.Texture1 = int.Parse(texture1Str);
 
             if (!PedClient.TryGetValue("texture2", out string texture2Str)) ped.Texture2 = 0;
-            else ped.Texture2 = IntegerType.FromString(texture2Str);
+            else ped.Texture2 = int.Parse(texture2Str);
 
             if (!PedClient.TryGetValue("texture3", out string texture3Str)) ped.Texture3 = 0;
-            else ped.Texture3 = IntegerType.FromString(texture3Str);
+            else ped.Texture3 = int.Parse(texture3Str);
 
             if (!PedClient.TryGetValue("texture4", out string texture4Str)) ped.Texture4 = 0;
-            else ped.Texture4 = IntegerType.FromString(texture4Str);
+            else ped.Texture4 = int.Parse(texture4Str);
 
             if (!PedClient.TryGetValue("texture5", out string texture5Str)) ped.Texture5 = 0;
-            else ped.Texture5 = IntegerType.FromString(texture5Str);
+            else ped.Texture5 = int.Parse(texture5Str);
 
             if (!PedClient.TryGetValue("texture6", out string texture6Str)) ped.Texture6 = 0;
-            else ped.Texture6 = IntegerType.FromString(texture6Str);
+            else ped.Texture6 = int.Parse(texture6Str);
 
             if (!PedClient.TryGetValue("texture7", out string texture7Str)) ped.Texture7 = 0;
-            else ped.Texture7 = IntegerType.FromString(texture7Str);
+            else ped.Texture7 = int.Parse(texture7Str);
 
             if (!PedClient.TryGetValue("texture8", out string texture8Str)) ped.Texture8 = 0;
-            else ped.Texture8 = IntegerType.FromString(texture8Str);
+            else ped.Texture8 = int.Parse(texture8Str);
 
             if (!PedClient.TryGetValue("texture9", out string texture9Str)) ped.Texture9 = 0;
-            else ped.Texture9 = IntegerType.FromString(texture9Str);
+            else ped.Texture9 = int.Parse(texture9Str);
 
             if (!PedClient.TryGetValue("texture10", out string texture10Str)) ped.Texture10 = 0;
-            else ped.Texture10 = IntegerType.FromString(texture10Str);
+            else ped.Texture10 = int.Parse(texture10Str);
 
             if (!PedClient.TryGetValue("texture11", out string texture11Str)) ped.Texture11 = 0;
-            else ped.Texture11 = IntegerType.FromString(texture11Str);
+            else ped.Texture11 = int.Parse(texture11Str);
 
             if (!PedClient.TryGetValue("prop0", out string prop0Str)) ped.Prop0 = 0;
-            else ped.Prop0 = IntegerType.FromString(prop0Str);
+            else ped.Prop0 = int.Parse(prop0Str);
 
             if (!PedClient.TryGetValue("prop1", out string prop1Str)) ped.Prop1 = 0;
-            else ped.Prop1 = IntegerType.FromString(prop1Str);
+            else ped.Prop1 = int.Parse(prop1Str);
 
             if (!PedClient.TryGetValue("prop2", out string prop2Str)) ped.Prop2 = 0;
-            else ped.Prop2 = IntegerType.FromString(prop2Str);
+            else ped.Prop2 = int.Parse(prop2Str);
 
             if (!PedClient.TryGetValue("prop6", out string prop6Str)) ped.Prop6 = 0;
-            else ped.Prop6 = IntegerType.FromString(prop6Str);
+            else ped.Prop6 = int.Parse(prop6Str);
 
             if (!PedClient.TryGetValue("prop7", out string prop7Str)) ped.Prop7 = 0;
-            else ped.Prop7 = IntegerType.FromString(prop7Str);
+            else ped.Prop7 = int.Parse(prop7Str);
 
             if (PedClient.TryGetValue("model", out string model)) ped.Model = model;
 
