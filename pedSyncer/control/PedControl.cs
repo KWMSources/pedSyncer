@@ -163,8 +163,11 @@ namespace PedSyncer
 
             PlayerClient pClient = (PlayerClient)client;
             IPlayer player = pClient.GetPlayer();
-
-            Ped.GetByID(entity.Id).NetOwner = player;
+            Ped _ped = Ped.GetByID(entity.Id);
+            //If Ped Exist and don't have NetOwner then we can transfer NetOwner to player who have reated this entity in last.
+            if (_ped != null && _ped.NetOwner == null) {
+                _ped.NetOwner = player;
+            } 
         }
 
         public static void OnEntityRemove(IClient client, AltV.Net.EntitySync.IEntity entity)
