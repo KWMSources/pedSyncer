@@ -1,6 +1,7 @@
 import native from 'natives';
 import * as alt from 'alt';
 import { Ped } from '../class/PedClass.mjs';
+import { inDistanceBetweenPos } from '../utils/functions.mjs';
 
 var pedType = 1654;
 
@@ -31,6 +32,20 @@ export function startPedControler() {
     //Event which fires if the properties of a ped has been changed
     alt.onServer('pedSyncer:server:update', (ped) => {
         Ped.getByID(ped.id).updateProperties(ped);
+    });
+
+    //Event which fires if the position was changed
+    alt.onServer("entitySync:updatePosition", (entityId, entityType, position) => {
+        if (entityType != pedType) return;
+
+        let ped = Ped.getByID(entityId);
+
+        if (typeof ped !== "undefined") {
+            ped.pos = position;
+            if (ped.scriptID != 0 && !inDistanceBetweenPos(ped.pos, position, 1)) {
+                native.setEntityCoords2(ped.scriptID, position.x, position.y, position.z, 1, 0, 0, 1);
+            }
+        }
     });
 
     alt.onServer("entitySync:create", (entityId, entityType, position, newEntityData) => {
