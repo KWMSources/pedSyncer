@@ -22,6 +22,11 @@ namespace NavMesh_Graph
             this.Y = Y;
             this.Z = Z;
         }
+        
+        public Vector2 ToVector2()
+        {
+            return new Vector2(this.X, this.Y);
+        }
 
         public Vector3 ToVector3()
         {
