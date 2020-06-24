@@ -4,6 +4,7 @@ using AltV.Net.EntitySync;
 using NavMesh_Graph;
 using navMesh_Graph_WebAPI;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -12,26 +13,13 @@ namespace PedSyncer
 {
     public class Ped : AltV.Net.EntitySync.Entity, IWritable
     {
-        /**
-		 *
-		 *
-		 * pedSyncer PROPERTIES
-		 * start
-		 *
-		 *
-		 */
-        public const int PED_TYPE = 1654;
-        public const int STREAMING_RANGE = 200;
-        /**
-		 *
-		 *
-		 * pedSyncer PROPERTIES
-		 * ende
-		 *
-		 *
-		 */
 
-        public static Dictionary<ulong, Ped> peds = new Dictionary<ulong, Ped>();
+        #region Properties
+        public const ulong PED_TYPE = 1654;
+        public const int STREAMING_RANGE = 200;
+        #endregion
+
+        public static ConcurrentDictionary<ulong, Ped> peds = new ConcurrentDictionary<ulong, Ped>();
 
         /**
 		 * Just one Player is the netOwner of a Ped. This Player has the task to
@@ -276,31 +264,21 @@ namespace PedSyncer
         public Ped(float x, float y, float z, string model = null) : base(PED_TYPE, new Vector3(x, y, z), 0, STREAMING_RANGE)
         {
             peds[this.Id] = this;
-
             this.Valid = true;
-
             this.Heading = 0;
-
             this.Model = model;
-
             this.Invincible = false;
-
             this.Vehicle = null;
             this.Seat = 0;
-
             this.HasBlood = false;
             this.Health = 200;
             this.Armour = 0;
-
             this.Weapons = new List<string>();
             this.Ammo = new Dictionary<int, int>();
-
             this.CurrentTask = null;
             this.CurrentTaskParams = new List<string>();
-
             this.Freeze = false;
             this.Wandering = false;
-
             this.NearFinalPosition = false;
             this.CurrentNavmashPositionsIndex = 0;
 

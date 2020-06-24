@@ -5,10 +5,11 @@ namespace PedSyncer
 {
     public class Utils
     {
+
+
         /**
 		 * Function to get the distance of two given positions
 		 */
-
         public static double GetDistanceBetweenPos(Vector3 Position1, Vector3 Position2)
         {
             return Math.Sqrt(Math.Pow(Position1.X - Position2.X, 2) + Math.Pow(Position1.Y - Position2.Y, 2) + Math.Pow(Position1.Z - Position2.Z, 2));

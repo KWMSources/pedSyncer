@@ -12,9 +12,11 @@ namespace PedSyncer
 
         private PedMovementControl()
         {
-            Timer Timer = new Timer(TimeSpan.FromSeconds(1).TotalMilliseconds);
+            Timer Timer = new Timer();
+            Timer.Interval = TimeSpan.FromSeconds(1).TotalMilliseconds;
             Timer.AutoReset = true;
             Timer.Elapsed += new ElapsedEventHandler(MovePeds);
+            Timer.Enabled = true;
             Timer.Start();
         }
 
