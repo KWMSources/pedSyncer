@@ -224,6 +224,13 @@ class PedClass {
 
         //Store this ped by his scriptID as a key
         pedsToScriptID[this.scriptID] = this;
+
+        //Set Ped-Attributes
+        if (this.invincible) native.setEntityInvincible(this.scriptID, true);
+        native.setPedArmour(this.scriptID, this.armour);
+        native.setEntityHealth(this.scriptID, this.health, 0);
+        if (this.dead) native.setPedToRagdoll(this.scriptID, -1, -1, 0, false, false, false);
+        native.freezeEntityPosition(this.scriptID, this.freeze);
     }
 
     /**

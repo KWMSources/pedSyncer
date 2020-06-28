@@ -29,7 +29,7 @@ namespace PedSyncer
 
         public void AddPedMovementCalculcation(Ped ped, bool SetCurrentNavmashPositionsIndex = true)
         {
-            if (ped.Freeze) return;
+            if (ped.Freeze || ped.Dead) return;
             if (SetCurrentNavmashPositionsIndex) ped.CurrentNavmashPositionsIndex = GetNearestNavMeshOfPed(ped);
 
             if (ped.CurrentNavmashPositionsIndex < 0 || ped.NavmashPositions.Count >= ped.CurrentNavmashPositionsIndex)

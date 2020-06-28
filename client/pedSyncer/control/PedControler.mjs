@@ -50,22 +50,24 @@ export function startPedControler() {
 
     alt.onServer("entitySync:create", (entityId, entityType, position, newEntityData) => {
         if (entityType != pedType) return;
-        trySpawn(entityId, position, 0, 100);
+        trySpawn(entityId, position, 0, 100, newEntityData);
     });
 
-    function trySpawn(entityId, position, spawnTrys, spawnTrysTime) {
+    function trySpawn(entityId, position, spawnTrys, spawnTrysTime, newEntityData) {
         if (spawnTrys >= 10) return;
         let ped = Ped.getByID(entityId);
 
         if (typeof ped === "undefined" || typeof ped.id === "undefined" || ped.id != entityId) {
             alt.setTimeout(() => {
-                trySpawn(entityId, position, spawnTrys+1, spawnTrysTime*2);
+                trySpawn(entityId, position, spawnTrys+1, spawnTrysTime*2, newEntityData);
             }, spawnTrysTime);
         } else {
             ped.pedSpawnTrys = 0;
             ped.pedSpawnTryTime = 100;
             ped.pos = position;
             ped.spawn();
+
+            setPedProperties(entityId, newEntityData);
         }
     }
 
@@ -81,6 +83,10 @@ export function startPedControler() {
             return;
         }
 
+        setPedProperties(entityId, newEntityData);
+    });
+
+    function setPedProperties(entityId, newEntityData) {
         let ped = Ped.getByID(entityId);
         if (typeof ped === "undefined") return;
         for (let key in newEntityData) {
@@ -121,7 +127,7 @@ export function startPedControler() {
                 }
             }
         }
-    });
+    }
 
     function setNetOwner(entityId, setTrys, setTrysTime) {
         if (setTrys >= 10) return;
