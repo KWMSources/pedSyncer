@@ -59,7 +59,17 @@ namespace PedSyncer
 		 */
 
         public bool Valid
-        { get; }
+        {
+            get
+            {
+                if (this.TryGetData<bool>("valid", out bool value)) return value;
+                return true;
+            }
+            set
+            {
+                this.SetData("valid", value);
+            }
+        }
 
         /**
 		 * Tells if the ped was already created on one client
@@ -86,102 +96,402 @@ namespace PedSyncer
 		 */
 
         public double Heading
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<double>("heading", out double value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("heading", value);
+            }
+        }
 
         /**
 		 * Ped-Style Properties
 		 */
 
         public string Model
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<string>("model", out string value)) return value;
+                return "";
+            }
+            set
+            {
+                this.SetData("model", value);
+            }
+        }
 
         public int Drawable1
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("drawable1", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("drawable1", value);
+            }
+        }
 
         public int Drawable2
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("drawable2", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("drawable2", value);
+            }
+        }
 
         public int Drawable3
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("drawable3", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("drawable3", value);
+            }
+        }
 
         public int Drawable4
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("drawable4", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("drawable4", value);
+            }
+        }
 
         public int Drawable5
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("drawable5", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("drawable5", value);
+            }
+        }
 
         public int Drawable6
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("drawable6", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("drawable6", value);
+            }
+        }
 
         public int Drawable7
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("drawable7", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("drawable7", value);
+            }
+        }
 
         public int Drawable8
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("drawable8", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("drawable8", value);
+            }
+        }
 
         public int Drawable9
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("drawable9", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("drawable9", value);
+            }
+        }
 
         public int Drawable10
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("drawable10", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("drawable10", value);
+            }
+        }
 
         public int Drawable11
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("drawable11", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("drawable11", value);
+            }
+        }
 
         public int Texture1
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("texture1", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("texture1", value);
+            }
+        }
 
         public int Texture2
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("texture2", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("texture2", value);
+            }
+        }
 
         public int Texture3
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("texture3", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("texture3", value);
+            }
+        }
 
         public int Texture4
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("texture4", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("texture4", value);
+            }
+        }
 
         public int Texture5
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("texture5", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("texture5", value);
+            }
+        }
 
         public int Texture6
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("texture6", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("texture6", value);
+            }
+        }
 
         public int Texture7
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("texture7", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("texture7", value);
+            }
+        }
 
         public int Texture8
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("texture8", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("texture8", value);
+            }
+        }
 
         public int Texture9
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("texture9", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("texture9", value);
+            }
+        }
 
         public int Texture10
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("texture10", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("texture10", value);
+            }
+        }
 
         public int Texture11
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("texture11", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("texture11", value);
+            }
+        }
 
         public int Prop0
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("prop0", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("prop0", value);
+            }
+        }
 
         public int Prop1
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("prop1", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("prop1", value);
+            }
+        }
 
         public int Prop2
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("prop2", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("prop2", value);
+            }
+        }
 
         public int Prop6
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("prop6", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("prop6", value);
+            }
+        }
 
         public int Prop7
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("prop7", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("prop7", value);
+            }
+        }
 
         public string Gender
         { get; set; }
 
         //Currently inactive - will contain information if the ped is invincible
         public bool Invincible
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<bool>("invincible", out bool value)) return value;
+                return false;
+            }
+            set
+            {
+                this.SetData("invincible", value);
+            }
+        }
 
         //Currently inactive - The vehicle the ped sits in
         public IVehicle Vehicle
@@ -196,7 +506,17 @@ namespace PedSyncer
         { get; set; }
 
         public bool HasBlood
-        { get; }
+        {
+            get
+            {
+                if (this.TryGetData<bool>("hasBlood", out bool value)) return value;
+                return false;
+            }
+            set
+            {
+                this.SetData("hasBlood", value);
+            }
+        }
 
         public int Armour
         { get; set; }
@@ -224,12 +544,32 @@ namespace PedSyncer
 
         //Currently inactive - will contain information if the ped is never moving
         public bool Freeze
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<bool>("freeze", out bool value)) return value;
+                return false;
+            }
+            set
+            {
+                this.SetData("freeze", value);
+            }
+        }
 
         //Currently inactive - Tells if the ped is randomly wandering
         //Caution: if the ped is not freezed, it will not wandering
         public bool Wandering
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<bool>("wandering", out bool value)) return value;
+                return false;
+            }
+            set
+            {
+                this.SetData("wandering", value);
+            }
+        }
 
         /**
 		 * If the Ped is Wandering, this tells the intermediate position

@@ -77,6 +77,12 @@ export function startPedControler() {
     alt.onServer("entitySync:updateData", (entityId, entityType, newEntityData) => {
         if (entityType != pedType) return;
         if (newEntityData["netOwner"] == alt.Player.local.id) setNetOwner(entityId, 0, 100);
+
+        let ped = Ped.getByID(entityId);
+        if (typeof ped === "undefined") return;
+        for (let key in newEntityData) {
+            if (ped[key] != newEntityData[key]) ped[key] = newEntityData[key];
+        }
     });
 
     function setNetOwner(entityId, setTrys, setTrysTime) {
