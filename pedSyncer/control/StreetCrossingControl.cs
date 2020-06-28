@@ -10,6 +10,7 @@ namespace pedSyncer.control
 {
     class StreetCrossingControl
     {
+        //Dictionary of StreetCrossings to their stringed position
         public static Dictionary<string, StreetCrossing> MappedStreetCrossings = new Dictionary<string, StreetCrossing>();
 
         //Singleton

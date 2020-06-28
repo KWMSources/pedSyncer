@@ -4,6 +4,25 @@ using System;
 using System.Collections.Generic;
 using System.Timers;
 
+/**
+ * The idea of the service-side calculation of the ped-movement is to move the peds to its next
+ * navmeshPosition.
+ * 
+ * So the assumption is, that the ped moves one feet (one unit in the distance of two positions)
+ * every second. If the next navmeshPosition is in a distance of around 4 feet, the server will
+ * move this ped to the next navmeshPosition after 4 seconds.
+ * 
+ * The variable pedMovements stores the peds to move by the seconds till the peds have to move 
+ * in seconds.
+ * 
+ * Example: If ped A has a distance of 2 feet to the next navmeshPosition, it will stored in
+ * pedMovements[2]. After one second, it will be in pedMovements[1]. After the next second, it
+ * will be in pedMovements[0] and then will be moved to the next navmeshPositions - then start
+ * again.
+ * 
+ * It will now be called as pedMovments-queue
+ */
+
 namespace PedSyncer
 {
     internal class PedMovementControl
@@ -11,6 +30,7 @@ namespace PedSyncer
         private static PedMovementControl Instance = null;
         private Timer Timer;
 
+        //Start the movement controller with setting up the calculation interval
         private PedMovementControl()
         {
             Timer Timer = new Timer();
@@ -21,12 +41,18 @@ namespace PedSyncer
             Timer.Start();
         }
 
+        //Singleton
         public static PedMovementControl GetInstance()
         {
             if (Instance == null) Instance = new PedMovementControl();
             return Instance;
         }
 
+        /**
+        * Activate the server-side path calculation for a given ped
+        * 
+        * @param ped Ped which path should be calculated by the server
+        */
         public void AddPedMovementCalculcation(Ped ped, bool SetCurrentNavmashPositionsIndex = true)
         {
             if (ped.Freeze || ped.Dead) return;
@@ -54,12 +80,16 @@ namespace PedSyncer
 
         private Dictionary<int, List<Ped>> PedMovements = new Dictionary<int, List<Ped>>();
 
+        //Method to add the ped to the pedMovments-queue
         private void AddPedMovement(int Distance, Ped Ped)
         {
             if (!PedMovements.ContainsKey(Distance)) PedMovements.Add(Distance, new List<Ped>());
             PedMovements[Distance].Add(Ped);
         }
 
+        /**
+         * Return the peds which have to be moved now (index 0) and decrease all keys by one
+         */
         private List<Ped> PopPedMovements()
         {
             //Store peds to return
@@ -79,6 +109,9 @@ namespace PedSyncer
             return ToReturn;
         }
 
+        /**
+         * Move peds in pedMovement-queue at key 0 to their next navmeshPosition
+         */
         private void MovePeds(object sender, ElapsedEventArgs e)
         {
             //Pop the peds at key 0 and decrease all other keys by 1
@@ -98,6 +131,7 @@ namespace PedSyncer
             }
         }
 
+        //Function to determine the nearest navMesh to the ped
         public static int GetNearestNavMeshOfPed(Ped Ped)
         {
             if (Ped.NavmashPositions.Count == 0) return -1;

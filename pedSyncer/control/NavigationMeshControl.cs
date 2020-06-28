@@ -153,6 +153,7 @@ namespace navMesh_Graph_WebAPI
             return dumpResult;
         }
 
+        //Method to determine if a given position is in a polygon
         private static bool isPointInPolygon(List<WorldVector3> polygon, WorldVector3 testPoint)
         {
             bool result = false;

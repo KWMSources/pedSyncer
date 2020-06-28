@@ -39,8 +39,7 @@ namespace NavMesh_Graph
         {
         }
 
-        public static Dictionary<(int, int), List<NavigationMeshPolyFootpath>> navMeshesMap = new Dictionary<(int, int), List<NavigationMeshPolyFootpath>>();
-
+        //Method to check if two navMeshes are neighbours
         public static bool isNeighbour(NavigationMeshPolyFootpath poly1, NavigationMeshPolyFootpath poly2)
         {
             foreach (WorldVector3 vec1 in poly1.Vertices)
@@ -54,10 +53,12 @@ namespace NavMesh_Graph
             return false;
         }
 
+        //Get neighbours of this navMesh as IPathElement
         public override List<IPathElement> GetNeighbours()
         {
             List<IPathElement> pathElementList = new List<IPathElement>();
 
+            //Collect all navMesh neighbours
             if (this.NeighboursObjects != null) 
             {
                 foreach (NavigationMeshPolyFootpath navigationMeshPolyFootpath in this.NeighboursObjects)
@@ -66,6 +67,7 @@ namespace NavMesh_Graph
                 }
             }
 
+            //Collect all streetCrossings neighbours
             if (this.StreetCrossings != null)
             {
                 foreach (WorldVector3 streetCrossing in this.StreetCrossings)

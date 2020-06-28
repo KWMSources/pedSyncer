@@ -8,6 +8,15 @@ using System.Text;
 
 namespace pedSyncer.model
 {
+    /**
+     * 
+     * StreetCrossing elements
+     * 
+     * StreetCrossings are positions connecting with other positions (as 
+     * navMeshes or other StreetCrossings) going over streets
+     * 
+     */
+
     [MessagePackObject]
     public class StreetCrossing: IPathElement
     {
@@ -22,16 +31,19 @@ namespace pedSyncer.model
         {
         }
 
+        //Get neighbours of this streetcrossing as IPathElement
         public override List<IPathElement> GetNeighbours()
         {
             List<IPathElement> pathElementList = new List<IPathElement>();
             NavigationMeshControl navigationMeshControl = NavigationMeshControl.getInstance();
 
+            //Collect all navMesh neighbours
             foreach (WorldVector3 navigationMeshPolyFootpath in this.NavMeshes)
             {
                 pathElementList.Add(navigationMeshControl.getMeshByPosition(navigationMeshPolyFootpath));
             }
 
+            //Collect all streetCrossings neighbours
             foreach (WorldVector3 streetCrossing in this.StreetCrossings)
             {
                 pathElementList.Add(StreetCrossingControl.MappedStreetCrossings[streetCrossing.ToString()]);

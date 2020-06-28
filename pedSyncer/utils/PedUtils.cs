@@ -24,7 +24,6 @@ namespace PedSyncer
         /**
 		 * Boolean-Function which gives true if the distance of two positions is smaller than an given distance, else false
 		 */
-
         public static bool InDistanceBetweenPos(Vector3 Position1, Vector3 Position2, float Distance)
         {
             if (

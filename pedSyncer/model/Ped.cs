@@ -21,7 +21,7 @@ namespace PedSyncer
         public const ulong PED_TYPE = 1654;
         public const int STREAMING_RANGE = 200;
         #endregion
-
+        //Directory to handle all peds
         public static ConcurrentDictionary<ulong, Ped> peds = new ConcurrentDictionary<ulong, Ped>();
 
         /**
@@ -518,6 +518,7 @@ namespace PedSyncer
             }
         }
 
+        //Property to set the armour of the ped
         public int Armour
         {
             get
@@ -531,6 +532,7 @@ namespace PedSyncer
             }
         }
 
+        //Property to set the health of the ped
         public int Health
         {
             get
@@ -544,6 +546,7 @@ namespace PedSyncer
             }
         }
 
+        //Property to set the death of the ped
         public bool Dead
         {
             get
@@ -575,7 +578,7 @@ namespace PedSyncer
         public List<string> CurrentTaskParams
         { get; set; }
 
-        //Currently inactive - will contain information if the ped is never moving
+        //Set the ped freezing and holding the position
         public bool Freeze
         {
             get
@@ -641,20 +644,17 @@ namespace PedSyncer
         {
             peds[this.Id] = this;
             this.Valid = true;
-            this.Heading = 0;
             this.Model = model;
-            this.Invincible = false;
+
             this.Vehicle = null;
             this.Seat = 0;
-            this.HasBlood = false;
-            this.Health = 200;
-            this.Armour = 0;
+
             this.Weapons = new List<string>();
             this.Ammo = new Dictionary<int, int>();
+
             this.CurrentTask = null;
             this.CurrentTaskParams = new List<string>();
-            this.Freeze = false;
-            this.Wandering = false;
+
             this.NearFinalPosition = false;
             this.CurrentNavmashPositionsIndex = 0;
             //AltAsync.Do(() =>
@@ -669,6 +669,7 @@ namespace PedSyncer
             Alt.EmitAllClients("pedSyncer:server:delete", this.Id);
         }
 
+        //Method to start the wandering of the ped
         public void StartWandering(IPathElement StartNavMesh = null)
         {
             NavigationMeshControl NavigationMeshControl = NavigationMeshControl.getInstance();
@@ -681,6 +682,7 @@ namespace PedSyncer
             this.NavmashPositions = StartNavMesh.GetWanderingPath();
         }
 
+        //Method to let the ped further wander at the moment the ped reaches the final destination
         public void ContinueWandering()
         {
             if (NavmashPositions.Count < 2) return;
@@ -727,8 +729,10 @@ namespace PedSyncer
         {
             NavigationMeshControl NavigationMeshControl = NavigationMeshControl.getInstance();
 
+            //Load random navMeshes to spawn peds on it
             List<NavigationMeshPolyFootpath> RandomSpawnsList = NavigationMeshControl.getRandomSpawnMeshes();
 
+            //Spawn the peds on these navMeshes and let the ped wander
             Parallel.ForEach(RandomSpawnsList, RandomSpawn =>
             {
                Ped ped = new Ped(RandomSpawn.Position.X, RandomSpawn.Position.Y, RandomSpawn.Position.Z);

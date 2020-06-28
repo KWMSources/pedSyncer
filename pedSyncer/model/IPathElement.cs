@@ -7,6 +7,14 @@ using System.Text;
 
 namespace pedSyncer.model
 {
+    /**
+     * 
+     * Base element of navMeshes and StreetCrossings
+     * 
+     * Providing functions for path calculation
+     * 
+     */
+
     [Union(0, typeof(NavigationMeshPolyFootpath))]
     [MessagePackObject]
     public abstract class IPathElement: IWritable
@@ -27,6 +35,7 @@ namespace pedSyncer.model
             return neighbours[randomKey];
         }
 
+        //Select a random new neighbour by the given path
         public IPathElement GetRandomNewNeighbour(List<IPathElement> pathElements)
         {
             int trys = 0;
