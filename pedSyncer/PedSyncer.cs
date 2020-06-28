@@ -9,7 +9,7 @@ using AltV.Net.EntitySync;
 using AltV.Net.EntitySync.ServerEvent;
 using AltV.Net.EntitySync.SpatialPartitions;
 using navMesh_Graph_WebAPI;
-using pedSyncer.control;
+using pedSyncer.Task;
 
 namespace PedSyncer
 {
@@ -28,7 +28,7 @@ namespace PedSyncer
                 (threadCount, repository) => new ServerEventNetworkLayer(threadCount, repository),
                 (entity, threadCount) => (entity.Id % threadCount),
                 (entityId, entityType, threadCount) => (entityId % threadCount),
-                (threadId) => new LimitedGrid3(50_000, 50_000, 100, 10_000, 10_000, 128),
+                (threadId) => new LimitedGrid3(50_000, 50_000, 100, 10_000, 10_000, 256),
                 new IdProvider()
             );
 
@@ -55,7 +55,10 @@ namespace PedSyncer
 
             Ped.CreateCitizenPeds();
         }
-
+        public override void OnTick()
+        {
+            TaskRunning.OnTick();
+        }
         public override void OnStop()
         {
             Console.WriteLine("Stopped");
