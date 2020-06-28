@@ -9,7 +9,8 @@ using AltV.Net.EntitySync;
 using AltV.Net.EntitySync.ServerEvent;
 using AltV.Net.EntitySync.SpatialPartitions;
 using navMesh_Graph_WebAPI;
-using pedSyncer.Task;
+using pedSyncer.control;
+//using pedSyncer.Task;
 
 namespace PedSyncer
 {
@@ -57,7 +58,7 @@ namespace PedSyncer
         }
         public override void OnTick()
         {
-            TaskRunning.OnTick();
+            //TaskRunning.OnTick();
         }
         public override void OnStop()
         {

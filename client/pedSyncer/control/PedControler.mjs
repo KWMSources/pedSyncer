@@ -89,7 +89,7 @@ export function startPedControler() {
 
                 switch (key) {
                     case 'heading':
-                        native.setEntityHeading(ped.scriptID, ped[key]);
+                        //native.setEntityHeading(ped.scriptID, ped[key]);
                         break;
                     case 'model':
                         //TODO ???
