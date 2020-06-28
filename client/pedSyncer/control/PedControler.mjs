@@ -79,6 +79,14 @@ export function startPedControler() {
         if (newEntityData["netOwner"] == alt.Player.local.id) setNetOwner(entityId, 0, 100);
     });
 
+    alt.onServer("entitySync:netOwner", (entityId, entityType, isNetOwner) => {
+        if (entityType != pedType) return;
+        if (isNetOwner) {
+            alt.log("Become NetOwner: " + entityId);
+            setNetOwner(entityId, 0, 100);
+        }
+    });
+
     function setNetOwner(entityId, setTrys, setTrysTime) {
         if (setTrys >= 10) return;
         let ped = Ped.getByID(entityId);

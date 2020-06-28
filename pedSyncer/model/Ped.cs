@@ -25,33 +25,6 @@ namespace PedSyncer
         public static ConcurrentDictionary<ulong, Ped> peds = new ConcurrentDictionary<ulong, Ped>();
 
         /**
-		 * Just one Player is the netOwner of a Ped. This Player has the task to
-		 * tell the server the current position of the Ped.
-		 *
-		 * The first netOwner has also the task to creat the ped on the first time.
-		 */
-
-        public IPlayer NetOwner
-        {
-            get
-            {
-                if (this.TryGetData<ushort>("netOwner", out ushort value))
-                {
-                    foreach (IPlayer player in Alt.GetAllPlayers())
-                    {
-                        if (player.Id == value) return player;
-                    }
-                }
-                return null;
-            }
-            set
-            {
-                if (value == null) this.SetData("netOwner", null);
-                else this.SetData("netOwner", value.Id);
-            }
-        }
-
-        /**
 		 * Always true currently
 		 *
 		 * Will give information about the validity
