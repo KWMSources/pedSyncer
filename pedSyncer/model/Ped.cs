@@ -519,10 +519,43 @@ namespace PedSyncer
         }
 
         public int Armour
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("armour", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("armour", value);
+            }
+        }
 
         public int Health
-        { get; set; }
+        {
+            get
+            {
+                if (this.TryGetData<int>("health", out int value)) return value;
+                return 200;
+            }
+            set
+            {
+                this.SetData("health", value);
+            }
+        }
+
+        public bool Dead
+        {
+            get
+            {
+                if (this.TryGetData<bool>("dead", out bool value)) return value;
+                return false;
+            }
+            set
+            {
+                this.SetData("dead", value);
+            }
+        }
 
         //Currently inactive - Weapons of the ped
         public List<string> Weapons

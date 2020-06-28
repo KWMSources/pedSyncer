@@ -146,6 +146,9 @@ namespace PedSyncer
                         ped.ContinueWandering();
                     }
                 }
+                if (PedClient.TryGetValue("armour", out object armourObj)) ped.Armour = Convert.ToInt32(armourObj);
+                if (PedClient.TryGetValue("health", out object healthObj)) ped.Health = Convert.ToInt32(healthObj);
+                if (PedClient.TryGetValue("dead", out object deadObj)) ped.Dead = Convert.ToBoolean(deadObj);
             }
         }
 

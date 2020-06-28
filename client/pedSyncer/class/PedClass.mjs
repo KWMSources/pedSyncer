@@ -99,6 +99,7 @@ class PedClass {
     hasBlood = null;
     armour = 0;
     health = 200;
+    dead = false;
 
     //Currently inactive - Weapons of the ped
     weapons = [];
@@ -528,6 +529,9 @@ class PedClass {
             ped.pos = {x: pos.x, y: pos.y, z: pos.z};
             ped.rot = {x: rot.x, y: rot.y, z: rot.z};
             ped.heading = native.getEntityHeading(ped.scriptID);
+            ped.armour = native.getPedArmour(ped.scriptID);
+            ped.health = native.getEntityHealth(ped.scriptID);
+            ped.dead = native.isPedDeadOrDying(ped.scriptID, 1);
 
             /**
              * If this peds path has a finalDestination, the position is valid and the final position

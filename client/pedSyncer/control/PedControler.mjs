@@ -76,12 +76,50 @@ export function startPedControler() {
 
     alt.onServer("entitySync:updateData", (entityId, entityType, newEntityData) => {
         if (entityType != pedType) return;
-        if (newEntityData["netOwner"] == alt.Player.local.id) setNetOwner(entityId, 0, 100);
+        if (newEntityData["netOwner"] == alt.Player.local.id) {
+            setNetOwner(entityId, 0, 100);
+            return;
+        }
 
         let ped = Ped.getByID(entityId);
         if (typeof ped === "undefined") return;
         for (let key in newEntityData) {
-            if (ped[key] != newEntityData[key]) ped[key] = newEntityData[key];
+            if (ped[key] != newEntityData[key]) {
+                ped[key] = newEntityData[key];
+
+                switch (key) {
+                    case 'heading':
+                        native.setEntityHeading(ped.scriptID, ped[key]);
+                        break;
+                    case 'model':
+                        //TODO ???
+                        break;
+                    case key.match(/drawable/):
+                    case key.match(/texture/):
+                    case key.match(/prop/):
+                        ped.setPedComponentVariation();
+                        break;
+                    case 'invincible':
+                        native.setEntityInvincible(ped.scriptID, ped[key]);
+                        break;
+                    case 'hasBlood':
+                        if (ped[key]) native.clearPedBloodDamage(ped.scriptID);
+                        //TODO: else
+                        break;
+                    case 'armour':
+                        native.setPedArmour(ped.scriptID, ped[key]);
+                        break;
+                    case 'health':
+                        native.setEntityHealth(ped.scriptID, ped[key], 0);
+                        break;
+                    case 'dead':
+                        if (!native.isPedDeadOrDying(ped.scriptID, 1)) native.setPedToRagdoll(ped.scriptID, -1, -1, 0, false, false, false);
+                        break;
+                    case 'freeze':
+                        native.freezeEntityPosition(ped.scriptID, ped[key]);
+                        break;
+                }
+            }
         }
     });
 
