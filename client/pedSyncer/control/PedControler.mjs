@@ -42,7 +42,7 @@ export function startPedControler() {
 
         if (typeof ped !== "undefined") {
             ped.pos = position;
-            if (ped.scriptID != 0 && !inDistanceBetweenPos(ped.pos, position, 1)) {
+            if (ped.scriptID != 0 && !inDistanceBetweenPos(ped.pos, position, 2)) {
                 native.setEntityCoords2(ped.scriptID, position.x, position.y, position.z, 1, 0, 0, 1);
             }
         }

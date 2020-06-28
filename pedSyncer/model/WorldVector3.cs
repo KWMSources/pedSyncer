@@ -32,6 +32,10 @@ namespace NavMesh_Graph
         {
             return new WorldVector3(vector.X, vector.Y, vector.Z);
         }
+        public string ToString()
+        {
+            return X.ToString() + "; " + Y.ToString() + "; " + Z.ToString();
+        }
 
         //Method to check if two WorldVelctor3s are equal
         public static bool equals(WorldVector3 vec1, WorldVector3 vec2)
@@ -40,6 +44,19 @@ namespace NavMesh_Graph
         }
 
         //Method to get the directional angle of two WorldVector3, also know as "gon"
+        public static double directionalAngle(WorldVector3 vec1, Vector3 vec2)
+        {
+            return directionalAngle(vec1, WorldVector3.ToWorldVector3(vec2));
+        }
+        public static double directionalAngle(Vector3 vec1, WorldVector3 vec2)
+        {
+            return directionalAngle(WorldVector3.ToWorldVector3(vec1), vec2);
+        }
+        public static double directionalAngle(Vector3 vec1, Vector3 vec2)
+        {
+            return directionalAngle(WorldVector3.ToWorldVector3(vec1), WorldVector3.ToWorldVector3(vec2));
+        }
+
         public static double directionalAngle(WorldVector3 vec1, WorldVector3 vec2)
         {
             if ((vec2.Y - vec1.Y) > 0 && (vec2.X - vec1.X) > 0) return radianToGon(Math.Atan((vec2.Y - vec1.Y) / (vec2.X - vec1.X)));

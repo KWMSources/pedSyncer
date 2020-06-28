@@ -9,6 +9,7 @@ using AltV.Net.EntitySync;
 using AltV.Net.EntitySync.ServerEvent;
 using AltV.Net.EntitySync.SpatialPartitions;
 using navMesh_Graph_WebAPI;
+using pedSyncer.control;
 
 namespace PedSyncer
 {
@@ -49,6 +50,7 @@ namespace PedSyncer
             Console.WriteLine("Started");
 
             NavigationMeshControl.getInstance();
+            StreetCrossingControl.getInstance();
             PedMovementControl.GetInstance();
 
             Ped.CreateCitizenPeds();

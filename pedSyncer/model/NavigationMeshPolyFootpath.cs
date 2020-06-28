@@ -1,21 +1,20 @@
 ﻿using AltV.Net;
 using MessagePack;
+using pedSyncer.control;
+using pedSyncer.model;
 using System;
 using System.Collections.Generic;
 
 namespace NavMesh_Graph
 {
     [MessagePackObject]
-    public class NavigationMeshPolyFootpath : IWritable
+    public class NavigationMeshPolyFootpath : IPathElement
     {
         [Key(0)]
         public int Index { get; set; }
 
         [Key(1)]
         public int PartId { get; set; }
-
-        [Key(2)]
-        public WorldVector3 Position { get; set; }
 
         [Key(3)]
         public List<WorldVector3> Vertices { get; set; }
@@ -28,6 +27,9 @@ namespace NavMesh_Graph
 
         [Key(6)]
         public List<int> Neighbours { get; set; }
+
+        [Key(7)]
+        public List<WorldVector3> StreetCrossings { get; set; }
 
         [IgnoreMember]
         public List<NavigationMeshPolyFootpath> NeighboursObjects { get; set; }
@@ -52,16 +54,28 @@ namespace NavMesh_Graph
             return false;
         }
 
-        public void OnWrite(IMValueWriter writer)
+        public override List<IPathElement> GetNeighbours()
         {
-            writer.BeginObject();
-            writer.Name("x");
-            writer.Value(this.Position.X);
-            writer.Name("y");
-            writer.Value(this.Position.Y);
-            writer.Name("z");
-            writer.Value(this.Position.Z);
-            writer.EndObject();
+            List<IPathElement> pathElementList = new List<IPathElement>();
+
+            if (this.NeighboursObjects != null) 
+            {
+                foreach (NavigationMeshPolyFootpath navigationMeshPolyFootpath in this.NeighboursObjects)
+                {
+                    pathElementList.Add(navigationMeshPolyFootpath);
+                }
+            }
+
+            if (this.StreetCrossings != null)
+            {
+                foreach (WorldVector3 streetCrossing in this.StreetCrossings)
+                {
+                    if (!StreetCrossingControl.MappedStreetCrossings.ContainsKey(streetCrossing.ToString())) continue;
+                    pathElementList.Add(StreetCrossingControl.MappedStreetCrossings[streetCrossing.ToString()]);
+                }
+            }
+
+            return pathElementList;
         }
     }
 }

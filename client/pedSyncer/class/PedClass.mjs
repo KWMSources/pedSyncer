@@ -126,6 +126,7 @@ class PedClass {
      */
     navmashPositions = [];
     nearFinalPosition = false;
+    nextNavMeshStation = 200;
     
     pedSpawnTryTime = null;
     pedSpawnTrys = null;
@@ -307,6 +308,20 @@ class PedClass {
     startPath() {
         //If there are no navmeshPositions: Stop
         if (this.navmashPositions.length == 0) return;
+        
+        /**
+         * Set nextNavMeshStation
+         * 
+         * nextNavMeshStation is the index of the next street crossing position in navmashPositions
+         */
+        this.nextNavMeshStation = this.navmashPositions.length-1;
+
+        for (let navMeshKey in this.navmashPositions) {
+            if (this.navmashPositions[navMeshKey].streetCrossing) {
+                this.nextNavMeshStation = navMeshKey;
+                break;
+            }
+        }
 
         //If the ped is spawned: Let it wander
         if (this.scriptID != 0) {
@@ -329,8 +344,48 @@ class PedClass {
              * If there is no other native or gta5-natural solution the navMeshes has to be smoothed,
              * maybe by linear regression.
              */
-            native.taskFollowNavMeshToCoord(this.scriptID, this.navmashPositions[this.navmashPositions.length-1].x, this.navmashPositions[this.navmashPositions.length-1].y, this.navmashPositions[this.navmashPositions.length-1].z, 1.0, -1, 0.0, true, 0.0);
+            native.taskFollowNavMeshToCoord(this.scriptID, this.navmashPositions[this.nextNavMeshStation].x, this.navmashPositions[this.nextNavMeshStation].y, this.navmashPositions[this.nextNavMeshStation].z, 1.0, -1, 0.0, true, 0.0);
         }
+    }
+
+    pathPositionReached() {
+        //If there are no navmeshPositions: Stop
+        if (this.navmashPositions.length == 0) return;
+
+        let currenctNextNavMeshStation = this.nextNavMeshStation;
+        
+        /**
+         * Set nextNavMeshStation
+         * 
+         * nextNavMeshStation is the index of the next street crossing position in navmashPositions
+         */
+        this.nextNavMeshStation = this.navmashPositions.length-1;
+
+        for (let navMeshKey in this.navmashPositions) {
+            if (currenctNextNavMeshStation >= navMeshKey) continue;
+            if (this.navmashPositions[navMeshKey].streetCrossing) {
+                this.nextNavMeshStation = navMeshKey;
+                break;
+            }
+        }
+
+        /**
+         * Let the ped walk to the end of its path
+         * 
+         * taskFollowNavMeshToCoord seems not to be the best task-native for this task
+         * because it will not follow the gta5-internal navMeshes, it selects the shortest
+         * path regardless of the navMeshes. By this, it walks threw streets, alleys, back- & 
+         * courtyards which all don't have navMeshes.
+         * 
+         * So a solution could be to let the ped walk threw all navMeshes in .navmashPositions.
+         * This will not be a good solution because the walking of the ped will looks very
+         * weird and not smooth. It will walk like zigzag. So this solution is the smoothing-
+         * solution.
+         * 
+         * If there is no other native or gta5-natural solution the navMeshes has to be smoothed,
+         * maybe by linear regression.
+         */
+        native.taskFollowNavMeshToCoord(this.scriptID, this.navmashPositions[this.nextNavMeshStation].x, this.navmashPositions[this.nextNavMeshStation].y, this.navmashPositions[this.nextNavMeshStation].z, 1.0, -1, 0.0, true, 0.0);
     }
 
     /**
@@ -482,9 +537,22 @@ class PedClass {
             if (
                 ped.getPathFinalDestination() != null && 
                 ped.pos != null && 
-                native.getDistanceBetweenCoords(ped.getPathFinalDestination().x, ped.getPathFinalDestination().y, ped.getPathFinalDestination().z, ped.pos.x, ped.pos.y, ped.pos.z, false) < 5
+                native.getDistanceBetweenCoords(ped.getPathFinalDestination().x, ped.getPathFinalDestination().y, ped.getPathFinalDestination().z, ped.pos.x, ped.pos.y, ped.pos.z, false) < 2
             ) {
                 ped.nearFinalPosition = true;
+            }
+
+            /**
+             * If this peds path has a nextNavMeshStation and the station is closer than 5 feet: This
+             * peds station is reached, a next station will be calculated
+             */
+            if (
+                ped.getPathFinalDestination() != null && 
+                ped.pos != null && 
+                ped.nextNavMeshStation < ped.navmashPositions.length && 
+                native.getDistanceBetweenCoords(ped.navmashPositions[ped.nextNavMeshStation].x, ped.navmashPositions[ped.nextNavMeshStation].y, ped.navmashPositions[ped.nextNavMeshStation].z, ped.pos.x, ped.pos.y, ped.pos.z, false) < 2
+            ) {
+                ped.pathPositionReached();
             }
         }
         alt.setTimeout(Ped.setMyPedPoses, 500);

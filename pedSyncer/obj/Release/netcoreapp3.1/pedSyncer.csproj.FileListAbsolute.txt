@@ -1,6 +1,7 @@
 F:\Projekte\pedSyncer\pedSyncer\bin\Release\netcoreapp3.1\pedSyncer.deps.json
 F:\Projekte\pedSyncer\pedSyncer\bin\Release\netcoreapp3.1\pedSyncer.dll
 F:\Projekte\pedSyncer\pedSyncer\bin\Release\netcoreapp3.1\pedSyncer.pdb
+F:\Projekte\pedSyncer\pedSyncer\obj\Release\netcoreapp3.1\pedSyncer.csprojAssemblyReference.cache
 F:\Projekte\pedSyncer\pedSyncer\obj\Release\netcoreapp3.1\pedSyncer.AssemblyInfoInputs.cache
 F:\Projekte\pedSyncer\pedSyncer\obj\Release\netcoreapp3.1\pedSyncer.AssemblyInfo.cs
 F:\Projekte\pedSyncer\pedSyncer\obj\Release\netcoreapp3.1\pedSyncer.csproj.CoreCompileInputs.cache

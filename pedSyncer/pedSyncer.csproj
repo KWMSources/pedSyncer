@@ -6,19 +6,22 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>F:\Projekte\pedSyncer\</OutputPath>
+    <OutputPath>F:/Projekte/pedSyncer/</OutputPath>
     <WarningLevel>0</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="control\PedMovementControl.cs" />
-    <Compile Include="PedSyncer.cs" />
-    <Compile Include="model/Ped.cs" />
-    <Compile Include="utils/PedUtils.cs" />
-    <Compile Include="control\PedControl.cs" />
-    <Compile Include="control\NavigationMeshControl.cs" />
-    <Compile Include="model\WorldVector3.cs" />
-    <Compile Include="model\NavigationMeshPolyFootpath.cs" />
+    <Compile Include="./control/StreetCrossingControl.cs" />
+    <Compile Include="./control/PedMovementControl.cs" />
+    <Compile Include="./control/PedControl.cs" />
+    <Compile Include="./control/NavigationMeshControl.cs" />
+    <Compile Include="./model/Ped.cs" />
+    <Compile Include="./model/IPathElement.cs" />
+    <Compile Include="./model/StreetCrossing.cs" />
+    <Compile Include="./model/WorldVector3.cs" />
+    <Compile Include="./model/NavigationMeshPolyFootpath.cs" />
+    <Compile Include="./utils/PedUtils.cs" />
+    <Compile Include="./PedSyncer.cs" />
   </ItemGroup>
 
   <ItemGroup>

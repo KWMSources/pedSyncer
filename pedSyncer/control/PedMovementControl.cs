@@ -1,4 +1,5 @@
 ﻿using NavMesh_Graph;
+using pedSyncer.model;
 using System;
 using System.Collections.Generic;
 using System.Timers;
@@ -28,6 +29,7 @@ namespace PedSyncer
 
         public void AddPedMovementCalculcation(Ped ped, bool SetCurrentNavmashPositionsIndex = true)
         {
+            if (ped.Freeze) return;
             if (SetCurrentNavmashPositionsIndex) ped.CurrentNavmashPositionsIndex = GetNearestNavMeshOfPed(ped);
 
             if (ped.CurrentNavmashPositionsIndex < 0 || ped.NavmashPositions.Count >= ped.CurrentNavmashPositionsIndex)
@@ -104,7 +106,7 @@ namespace PedSyncer
             double MinimumDistance = 1000;
 
             int i = 0;
-            foreach (NavigationMeshPolyFootpath NavMesh in Ped.NavmashPositions)
+            foreach (IPathElement NavMesh in Ped.NavmashPositions)
             {
                 double Distance = Utils.GetDistanceBetweenPos(Ped.Position, NavMesh.Position.ToVector3());
 

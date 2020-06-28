@@ -4,6 +4,7 @@ using AltV.Net.Elements.Entities;
 using AltV.Net.EntitySync;
 using NavMesh_Graph;
 using navMesh_Graph_WebAPI;
+using pedSyncer.model;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -236,9 +237,9 @@ namespace PedSyncer
 		 *
 		 * After the ped reached his final position a new route will be calculated.
 		 */
-        public List<NavigationMeshPolyFootpath> navmashPositions = new List<NavigationMeshPolyFootpath>();
+        public List<IPathElement> navmashPositions = new List<IPathElement>();
 
-        public List<NavigationMeshPolyFootpath> NavmashPositions
+        public List<IPathElement> NavmashPositions
         {
             get
             {
@@ -283,11 +284,11 @@ namespace PedSyncer
             this.Wandering = false;
             this.NearFinalPosition = false;
             this.CurrentNavmashPositionsIndex = 0;
-            AltAsync.Do(() =>
-            {
+            //AltAsync.Do(() =>
+            //{
                 AltEntitySync.AddEntity(this);
                 Alt.EmitAllClients("pedSyncer:server:create", this);
-            });
+            //});
         }
 
         public void Destroy()
@@ -295,13 +296,16 @@ namespace PedSyncer
             Alt.EmitAllClients("pedSyncer:server:delete", this.Id);
         }
 
-        public void StartWandering(NavigationMeshPolyFootpath StartNavMesh = null)
+        public void StartWandering(IPathElement StartNavMesh = null)
         {
             NavigationMeshControl NavigationMeshControl = NavigationMeshControl.getInstance();
 
             if (StartNavMesh == null) StartNavMesh = NavigationMeshControl.getMeshByPosition(WorldVector3.ToWorldVector3(this.Position));
 
-            this.NavmashPositions = NavigationMeshControl.getRandomPathByMesh(StartNavMesh);
+            //TODO: Invinite Loop
+            if (StartNavMesh == null) this.Freeze = true;
+
+            this.NavmashPositions = StartNavMesh.GetWanderingPath();
         }
 
         public void ContinueWandering()
@@ -310,8 +314,7 @@ namespace PedSyncer
 
             NavigationMeshControl NavigationMeshControl = NavigationMeshControl.getInstance();
 
-            this.NavmashPositions = NavigationMeshControl.getRandomPathByMeshAndGon(
-                this.NavmashPositions[this.NavmashPositions.Count - 1],
+            this.NavmashPositions = this.NavmashPositions[this.NavmashPositions.Count - 1].GetWanderingPathByDirection(
                 WorldVector3.directionalAngle(this.NavmashPositions[this.NavmashPositions.Count - 1].Position, this.NavmashPositions[this.NavmashPositions.Count - 2].Position)
             );
 
@@ -514,7 +517,7 @@ namespace PedSyncer
 
             writer.Name("navmashPositions");
             writer.BeginArray();
-            foreach (NavigationMeshPolyFootpath navMeshPos in this.NavmashPositions)
+            foreach (IPathElement navMeshPos in this.NavmashPositions)
             {
                 writer.BeginObject();
                 writer.Name("x");
@@ -523,6 +526,8 @@ namespace PedSyncer
                 writer.Value(navMeshPos.Position.Y);
                 writer.Name("z");
                 writer.Value(navMeshPos.Position.Z);
+                writer.Name("streetCrossing");
+                writer.Value(typeof(StreetCrossing).IsInstanceOfType(navMeshPos));
                 writer.EndObject();
             }
             writer.EndArray();
