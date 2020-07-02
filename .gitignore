@@ -1,4 +1,9 @@
+netcoreapp3.1/
 
-pedSyncer/obj/
+src/obj/
+
+src/bin/
 
 .vs/
+
+src/pedSyncer.csproj.user
