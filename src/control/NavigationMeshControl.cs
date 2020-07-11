@@ -5,6 +5,7 @@ using System.Text;
 using MessagePack;
 using AltV.Net;
 using NavMesh_Graph;
+using System.Numerics;
 
 namespace navMesh_Graph_WebAPI
 {
@@ -49,7 +50,7 @@ namespace navMesh_Graph_WebAPI
             }
         }
 
-        //Function to get the navMesh given by the permission (check if position is in a polygon)
+        //Function to get the navMesh given by the current position (check if position is in a polygon)
         public NavigationMeshPolyFootpath getMeshByPosition(WorldVector3 Position)
         {
             //Check if position is in one of the zones
@@ -83,6 +84,50 @@ namespace navMesh_Graph_WebAPI
                 }
             }
             return null;
+        }
+
+        //Function to get the nearest navMesh given by the current position (check if position is in a polygon)
+        public NavigationMeshPolyFootpath getNearestMeshByPosition(WorldVector3 Position)
+        {
+            //Check if position is in one of the zones
+            int cellX = (int)Math.Ceiling(Position.X / 100.0), cellY = (int)Math.Ceiling(Position.Y / 100.0);
+            if (
+                !navMeshesMap.ContainsKey((cellX, cellY)) &&
+                !navMeshesMap.ContainsKey((cellX, cellY - 1)) &&
+                !navMeshesMap.ContainsKey((cellX, cellY + 1)) &&
+                !navMeshesMap.ContainsKey((cellX - 1, cellY)) &&
+                !navMeshesMap.ContainsKey((cellX - 1, cellY - 1)) &&
+                !navMeshesMap.ContainsKey((cellX - 1, cellY + 1)) &&
+                !navMeshesMap.ContainsKey((cellX + 1, cellY)) &&
+                !navMeshesMap.ContainsKey((cellX + 1, cellY - 1)) &&
+                !navMeshesMap.ContainsKey((cellX + 1, cellY + 1))
+                ) return null;
+
+            //Iterate over all navMeshes in the zones related to the position - return the first match
+            NavigationMeshPolyFootpath minMesh = null;
+            float minValue = 999999;
+            for (int i = -1; i < 2; i++)
+            {
+                for (int j = -1; j < 2; j++)
+                {
+                    //Check if zone exists
+                    if (navMeshesMap.ContainsKey((cellX + i, cellY + j)))
+                    {
+                        foreach (NavigationMeshPolyFootpath navMesh in navMeshesMap[(cellX + i, cellY + j)])
+                        {
+                            float distance = Vector3.Distance(Position.ToVector3(), navMesh.Position.ToVector3());
+                            if (distance < minValue)
+                            {
+                                minValue = distance;
+                                minMesh = navMesh;
+                            }
+                        }
+                    }
+                }
+            }
+            if (minMesh == null) Console.WriteLine("No Near NavMesh found");
+            else Console.WriteLine("Near NavMesh: " + minMesh.Id + " " + minMesh.AreaId);
+            return minMesh;
         }
 
         /*

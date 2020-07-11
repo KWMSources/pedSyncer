@@ -479,6 +479,20 @@ namespace PedSyncer
         public string Gender
         { get; set; }
 
+        //Ped Flags
+        public bool[] Flags
+        {
+            get
+            {
+                if (this.TryGetData<bool[]>("flags", out bool[] value)) return value;
+                return new bool[0];
+            }
+            set
+            {
+                this.SetData("flags", value);
+            }
+        }
+
         //Currently inactive - will contain information if the ped is invincible
         public bool Invincible
         {
@@ -655,6 +669,8 @@ namespace PedSyncer
             this.CurrentTask = null;
             this.CurrentTaskParams = new List<string>();
 
+            this.Flags = new bool[426];
+
             this.NearFinalPosition = false;
             this.CurrentNavmashPositionsIndex = 0;
             //AltAsync.Do(() =>
@@ -677,7 +693,13 @@ namespace PedSyncer
             if (StartNavMesh == null) StartNavMesh = NavigationMeshControl.getMeshByPosition(WorldVector3.ToWorldVector3(this.Position));
 
             //TODO: Invinite Loop
-            if (StartNavMesh == null) this.Freeze = true;
+            if (StartNavMesh == null)
+            {
+                this.NavmashPositions = new List<IPathElement>();
+                this.NavmashPositions.Add(NavigationMeshControl.getNearestMeshByPosition((WorldVector3.ToWorldVector3(this.Position))));
+                Console.WriteLine("Wandering at null: " + this.Id);
+                return;
+            }
 
             this.NavmashPositions = StartNavMesh.GetWanderingPath();
         }
@@ -694,6 +716,11 @@ namespace PedSyncer
             );
 
             this.NearFinalPosition = false;
+        }
+
+        //Method to set the flags
+        public void SetFlags(bool[] flags) {
+            this.Flags = flags;
         }
 
         /**

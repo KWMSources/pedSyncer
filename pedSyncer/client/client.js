@@ -22,7 +22,7 @@ alt.everyTick(() => {
 
         let screenPos = native.getScreenCoordFromWorldCoord(playerPos2.x, playerPos2.y, playerPos2.z + 0.94);
 		
-        drawNameTags(`pedId: ${ped.id}, ${distance}`, screenPos[1], screenPos[2] - 0.030, 0.3, 255, 255, 255, 220, true);
+        drawNameTags(`pedId: ${ped.id}, ${distance} [${ped.navmashPositions.length}]`, screenPos[1], screenPos[2] - 0.030, 0.3, 255, 255, 255, 220, true);
     }
 });
 

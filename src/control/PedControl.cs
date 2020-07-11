@@ -171,6 +171,17 @@ namespace PedSyncer
 
                 //Update dead
                 if (PedClient.TryGetValue("dead", out object deadObj)) ped.Dead = Convert.ToBoolean(deadObj);
+
+                //Set Ped flags
+                /*if (PedClient.TryGetValue("flags", out object[] flagsObj))
+                {
+                    List<bool> flagsBool = new List<bool>();
+                    foreach(object flag in flagsObj)
+                    {
+                        flagsBool.Add(Convert.ToBoolean(flag));
+                    }
+                    ped.SetFlags(flagsBool.ToArray());
+                }*/
             }
         }
 

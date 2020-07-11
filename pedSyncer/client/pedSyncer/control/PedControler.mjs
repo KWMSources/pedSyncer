@@ -136,6 +136,11 @@ export function startPedControler() {
                     case 'freeze':
                         native.freezeEntityPosition(ped.scriptID, ped[key]);
                         break;
+                    /*case 'flags':
+                        for (let flag in newEntityData[key]) {
+                            native.setPedConfigFlag(ped.scriptID, flag, newEntityData[key][flag]);
+                        }
+                        break;*/
                 }
             }
         }
@@ -163,5 +168,17 @@ export function startPedControler() {
     //Delete all current peds if the ressource stop (important for development)
     alt.on("resourceStop", () => {
         for (let ped of Ped.getAllStreamedPeds()) native.deletePed(ped.scriptID);
+    });
+
+    alt.on("consoleCommand", (name, args) => {
+        if (name == "pedDebug") {
+            let ped = Ped.getByID(args[0]);
+            
+            if (typeof ped !== "undefined") {
+                let isNetowner = ped.netOwner == alt.Player.local.id;
+                alt.log("Ped Debug: " + ped.id + " " + !ped.debug + " " + isNetowner);
+                ped.debug = !ped.debug;
+            }
+        }
     });
 }

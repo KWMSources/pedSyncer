@@ -2,12 +2,16 @@ import { inDistanceBetweenPos } from "../utils/functions.mjs";
 import alt from 'alt';
 import native from 'natives';
 import { loadModel } from "../utils/functions.mjs";
+import { getDistanceBetweenPos } from "../utils/functions.mjs";
 
 var i = 0;
 var peds = {};
 var pedsToScriptID = {};
 var pedsProxies = {};
 class PedClass {
+    //Flag to debug this one ped
+    debug = false;
+
     //Not active currently
     dimension = 0;
 
@@ -132,6 +136,9 @@ class PedClass {
     pedSpawnTryTime = null;
     pedSpawnTrys = null;
 
+    //The peds flags
+    flags = {};
+
     /**
      * Object Methods
      */
@@ -139,6 +146,7 @@ class PedClass {
         //Has to be forbidden on client side
         //Should only be allowed for onServer-Creation
         this.id = ped.id;
+        this.flags = {};
         peds[ped.id] = this;
 
         for (let key of Object.keys(this)) {
@@ -533,6 +541,11 @@ class PedClass {
             //Get the current positions and set them to the ped
             let pos = native.getEntityCoords(ped.scriptID, true);
             let rot = native.getEntityRotation(ped.scriptID, true);
+
+            if (ped.debug) {
+                alt.log("ped " + ped.id + " " + JSON.stringify(ped.pos) + " " + JSON.stringify(pos));
+            }
+
             ped.pos = {x: pos.x, y: pos.y, z: pos.z};
             ped.rot = {x: rot.x, y: rot.y, z: rot.z};
             ped.heading = native.getEntityHeading(ped.scriptID);
@@ -548,7 +561,7 @@ class PedClass {
             if (
                 ped.getPathFinalDestination() != null && 
                 ped.pos != null && 
-                native.getDistanceBetweenCoords(ped.getPathFinalDestination().x, ped.getPathFinalDestination().y, ped.getPathFinalDestination().z, ped.pos.x, ped.pos.y, ped.pos.z, false) < 2
+                native.getDistanceBetweenCoords(ped.getPathFinalDestination().x, ped.getPathFinalDestination().y, ped.getPathFinalDestination().z, ped.pos.x, ped.pos.y, ped.pos.z, false) < 0.5
             ) {
                 ped.nearFinalPosition = true;
             }
@@ -565,6 +578,13 @@ class PedClass {
             ) {
                 ped.pathPositionReached();
             }
+
+            /**
+             * Set Ped flags
+             
+            for (let j = 0; j <= 426; j++) {
+                ped.flags[j] = native.getPedConfigFlag(ped.scriptID, j, 1);
+            }*/
         }
         alt.setTimeout(Ped.setMyPedPoses, 500);
     }
