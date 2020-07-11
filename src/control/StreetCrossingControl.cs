@@ -37,7 +37,7 @@ namespace pedSyncer.control
         /**
          * Support-Methods
          */
-        static TDumpType LoadDataFromJsonFile<TDumpType>(string dumpFileName)
+        public static TDumpType LoadDataFromJsonFile<TDumpType>(string dumpFileName)
             where TDumpType : new()
         {
             TDumpType dumpResult = default;

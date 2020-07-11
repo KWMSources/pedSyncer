@@ -125,8 +125,6 @@ namespace navMesh_Graph_WebAPI
                     }
                 }
             }
-            if (minMesh == null) Console.WriteLine("No Near NavMesh found");
-            else Console.WriteLine("Near NavMesh: " + minMesh.Id + " " + minMesh.AreaId);
             return minMesh;
         }
 

@@ -2,7 +2,7 @@ import { inDistanceBetweenPos } from "../utils/functions.mjs";
 import alt from 'alt';
 import native from 'natives';
 import { loadModel } from "../utils/functions.mjs";
-import { getDistanceBetweenPos } from "../utils/functions.mjs";
+import { getPedModelString } from "../utils/functions.mjs";
 
 var i = 0;
 var peds = {};
@@ -160,13 +160,17 @@ class PedClass {
      * users. This client decide the style of this ped and gives it back to the
      * server for sync.
      */
-    firstSpawn() {
+    async firstSpawn() {
         //Check if created - if so: stop!
         if (this.created) return;
         this.created = true;
+
+        //Load the model of this ped
+        await loadModel(getPedModelString(this.model));
         
         //Create a random ped with a random style fitting to the current location
-        this.scriptID = native.createRandomPed(this.pos.x, this.pos.y, this.pos.z);
+        this.scriptID = native.createPed(4, native.getHashKey(getPedModelString(this.model)), this.pos.x, this.pos.y, this.pos.z);
+        native.setPedRandomComponentVariation(this.scriptID, 0);
 
         //Store this ped by his scriptID as a key
         pedsToScriptID[this.scriptID] = this;
@@ -174,8 +178,6 @@ class PedClass {
         /**
          * Get all important information to give it back to the server for sync
          */
-        this.model = native.getEntityModel(this.scriptID);
-
         this.pos = JSON.parse(JSON.stringify(native.getEntityCoords(this.scriptID, true)));
         this.rot = native.getEntityRotation(this.scriptID, 0);
 
@@ -249,7 +251,7 @@ class PedClass {
         //If already created, respawn it
         if (this.created) await this.respawn();
         //If it wasn't created and this client is the netOwner: spawn it first time
-        else if (this.netOwner == alt.Player.local.id) this.firstSpawn();
+        else if (this.netOwner == alt.Player.local.id) await this.firstSpawn();
 
         //Start the peds wandering
         if (typeof this.scriptID !== "undefined" && this.scriptID != 0) {
@@ -258,8 +260,8 @@ class PedClass {
         }
 
         if (spawned == false && this.pedSpawnTrys < 10) {
-            alt.setTimeout(() => {
-                Ped.getByID(this.id).spawn();
+            alt.setTimeout(async () => {
+                await Ped.getByID(this.id).spawn();
             }, this.pedSpawnTryTime);
             this.pedSpawnTryTime *= 2;
             this.pedSpawnTrys += 1;
@@ -544,7 +546,7 @@ class PedClass {
 
             if (ped.debug) {
                 alt.log("ped " + ped.id + " " + JSON.stringify(ped.pos) + " " + JSON.stringify(pos));
-            }
+            }   
 
             ped.pos = {x: pos.x, y: pos.y, z: pos.z};
             ped.rot = {x: rot.x, y: rot.y, z: rot.z};

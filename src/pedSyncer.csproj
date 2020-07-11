@@ -15,6 +15,7 @@
     <Compile Include="control/PedMovementControl.cs" />
     <Compile Include="control/PedControl.cs" />
     <Compile Include="control/NavigationMeshControl.cs" />
+    <Compile Include="control\PedModelGenerator.cs" />
     <Compile Include="model/Ped.cs" />
     <Compile Include="model/IPathElement.cs" />
     <Compile Include="model/StreetCrossing.cs" />

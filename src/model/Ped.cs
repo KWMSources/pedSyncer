@@ -4,6 +4,7 @@ using AltV.Net.Elements.Entities;
 using AltV.Net.EntitySync;
 using NavMesh_Graph;
 using navMesh_Graph_WebAPI;
+using pedSyncer.control;
 using pedSyncer.model;
 using System;
 using System.Collections.Concurrent;
@@ -762,8 +763,9 @@ namespace PedSyncer
             //Spawn the peds on these navMeshes and let the ped wander
             Parallel.ForEach(RandomSpawnsList, RandomSpawn =>
             {
-               Ped ped = new Ped(RandomSpawn.Position.X, RandomSpawn.Position.Y, RandomSpawn.Position.Z);
-               ped.StartWandering(RandomSpawn);
+                Ped ped = new Ped(RandomSpawn.Position.X, RandomSpawn.Position.Y, RandomSpawn.Position.Z);
+                ped.Model = PedModelGenerator.getInstance().GetRandomModelByAreaId(RandomSpawn.AreaId).ToString();
+                ped.StartWandering(RandomSpawn);
             });
         }
 
