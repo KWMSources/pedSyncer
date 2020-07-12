@@ -8,9 +8,9 @@ using AltV.Net.Elements.Entities;
 using AltV.Net.EntitySync;
 using AltV.Net.EntitySync.ServerEvent;
 using AltV.Net.EntitySync.SpatialPartitions;
-using navMesh_Graph_WebAPI;
 using pedSyncer;
-using pedSyncer.control;
+using PedSyncer.Control;
+using PedSyncer.Model;
 //using pedSyncer.Task;
 
 namespace PedSyncer
@@ -18,9 +18,9 @@ namespace PedSyncer
     internal class PedSyncer : Resource
     {            
         //Define here if u want to activate the DebugMode Clientside
-        public static bool DebugModeClientSide = false;
+        public static bool DebugModeClientSide = true;
         //Define here if u want to activate the DebugMode ServerSide
-        public static bool DebugModeServerSide = false;
+        public static bool DebugModeServerSide = true;
 
         private void InitEntitySync()
         {
@@ -45,27 +45,27 @@ namespace PedSyncer
             /**
              * Prepare the Events and route them to the controllers
              */
-            Alt.OnClient<IPlayer, Dictionary<string, string>>("pedSyncer:client:firstSpawn", Controller.OnFirstSpawn);
-            Alt.OnClient<IPlayer, object[]>("pedSyncer:client:positions", Controller.OnPositionUpdate);
+            Alt.OnClient<IPlayer, Dictionary<string, string>>("pedSyncer:client:firstSpawn", Events.OnFirstSpawn);
+            Alt.OnClient<IPlayer, object[]>("pedSyncer:client:positions", Events.OnPositionUpdate);
 
-            Alt.OnPlayerConnect += Controller.OnPlayerConnect;
+            Alt.OnPlayerConnect += Events.OnPlayerConnect;
 
-            AltEntitySync.OnEntityCreate += Controller.OnEntityCreate;
-            AltEntitySync.OnEntityRemove += Controller.OnEntityRemove;
+            AltEntitySync.OnEntityCreate += Events.OnEntityCreate;
+            AltEntitySync.OnEntityRemove += Events.OnEntityRemove;
 
             Console.WriteLine("Started");
 
             /**
              * Load all files (navMeshes & StreetCrossing)
              */
-            NavigationMeshControl.getInstance();
+            NavigationMesh.getInstance();
             StreetCrossingControl.getInstance();
 
             //Start serverside ped movement calculation
-            PedMovementControl.GetInstance();
+            PedMovement.GetInstance();
 
             //Create citizen peds who wanders - delete this line if you don't wanna have citizens
-            //Ped.CreateCitizenPeds();
+            Ped.CreateCitizenPeds();
 
             //NodeJS Wrapper
             PedSyncerWrapper.RegisterWrapperFunctions();

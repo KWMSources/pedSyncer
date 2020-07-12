@@ -1,12 +1,11 @@
 ﻿using MessagePack;
-using NavMesh_Graph;
-using navMesh_Graph_WebAPI;
-using pedSyncer.control;
+using PedSyncer.Control;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 
-namespace pedSyncer.model
+namespace PedSyncer.Model
 {
     /**
      * 
@@ -21,10 +20,36 @@ namespace pedSyncer.model
     public class StreetCrossing: IPathElement
     {
         [Key(1)]
-        public List<WorldVector3> StreetCrossings { get; set; }
+        public List<WorldVector3> StreetCrossingsTemp
+        {
+            set
+            {
+                this.StreetCrossings = new List<Vector3>();
+
+                if (value == null) return;
+                foreach (WorldVector3 worldVector3 in value)
+                    this.StreetCrossings.Add(worldVector3.ToVector3());
+            }
+        }
+
+        [IgnoreMember]
+        public List<Vector3> StreetCrossings { get; set; }
 
         [Key(2)]
-        public List<WorldVector3> NavMeshes { get; set; }
+        public List<WorldVector3> NavMeshesTemp
+        {
+            set
+            {
+                this.NavMeshes = new List<Vector3>();
+
+                if (value == null) return;
+                foreach (WorldVector3 worldVector3 in value)
+                    this.NavMeshes.Add(worldVector3.ToVector3());
+            }
+        }
+
+        [IgnoreMember]
+        public List<Vector3> NavMeshes { get; set; }
 
         [SerializationConstructor]
         public StreetCrossing()
@@ -35,16 +60,16 @@ namespace pedSyncer.model
         public override List<IPathElement> GetNeighbours()
         {
             List<IPathElement> pathElementList = new List<IPathElement>();
-            NavigationMeshControl navigationMeshControl = NavigationMeshControl.getInstance();
+            NavigationMesh navigationMeshControl = NavigationMesh.getInstance();
 
             //Collect all navMesh neighbours
-            foreach (WorldVector3 navigationMeshPolyFootpath in this.NavMeshes)
+            foreach (Vector3 navigationMeshPolyFootpath in this.NavMeshes)
             {
                 pathElementList.Add(navigationMeshControl.getMeshByPosition(navigationMeshPolyFootpath));
             }
 
             //Collect all streetCrossings neighbours
-            foreach (WorldVector3 streetCrossing in this.StreetCrossings)
+            foreach (Vector3 streetCrossing in this.StreetCrossings)
             {
                 pathElementList.Add(StreetCrossingControl.MappedStreetCrossings[streetCrossing.ToString()]);
             }

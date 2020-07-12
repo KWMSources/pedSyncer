@@ -1,11 +1,11 @@
 ﻿using AltV.Net;
 using MessagePack;
-using pedSyncer.control;
-using pedSyncer.model;
+using PedSyncer.Control;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
-namespace NavMesh_Graph
+namespace PedSyncer.Model
 {
     [MessagePackObject]
     public class NavigationMeshPolyFootpath : IPathElement
@@ -17,7 +17,19 @@ namespace NavMesh_Graph
         public int PartId { get; set; }
 
         [Key(3)]
-        public List<WorldVector3> Vertices { get; set; }
+        public List<WorldVector3> VerticesTemp 
+        { 
+            set {
+                this.Vertices = new List<Vector3>();
+
+                if (value == null) return;
+                foreach (WorldVector3 worldVector3 in value)
+                    this.Vertices.Add(worldVector3.ToVector3());
+            } 
+        }
+
+        [IgnoreMember]
+        public List<Vector3> Vertices { get; set; }
 
         [Key(4)]
         public int Id { get; set; }
@@ -29,7 +41,20 @@ namespace NavMesh_Graph
         public List<int> Neighbours { get; set; }
 
         [Key(7)]
-        public List<WorldVector3> StreetCrossings { get; set; }
+        public List<WorldVector3> StreetCrossingsTemp
+        {
+            set
+            {
+                this.StreetCrossings = new List<Vector3>();
+
+                if (value == null) return;
+                foreach (WorldVector3 worldVector3 in value)
+                    this.StreetCrossings.Add(worldVector3.ToVector3());
+            }
+        }
+
+        [IgnoreMember]
+        public List<Vector3> StreetCrossings { get; set; }
 
         [IgnoreMember]
         public List<NavigationMeshPolyFootpath> NeighboursObjects { get; set; }
@@ -42,11 +67,11 @@ namespace NavMesh_Graph
         //Method to check if two navMeshes are neighbours
         public static bool isNeighbour(NavigationMeshPolyFootpath poly1, NavigationMeshPolyFootpath poly2)
         {
-            foreach (WorldVector3 vec1 in poly1.Vertices)
+            foreach (Vector3 vec1 in poly1.Vertices)
             {
-                foreach (WorldVector3 vec2 in poly2.Vertices)
+                foreach (Vector3 vec2 in poly2.Vertices)
                 {
-                    if (WorldVector3.@equals(vec1, vec2)) return true;
+                    if (Vector3.Equals(vec1, vec2)) return true;
                 }
             }
 
@@ -70,7 +95,7 @@ namespace NavMesh_Graph
             //Collect all streetCrossings neighbours
             if (this.StreetCrossings != null)
             {
-                foreach (WorldVector3 streetCrossing in this.StreetCrossings)
+                foreach (Vector3 streetCrossing in this.StreetCrossings)
                 {
                     if (!StreetCrossingControl.MappedStreetCrossings.ContainsKey(streetCrossing.ToString())) continue;
                     pathElementList.Add(StreetCrossingControl.MappedStreetCrossings[streetCrossing.ToString()]);

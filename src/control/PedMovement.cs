@@ -1,5 +1,5 @@
-﻿using NavMesh_Graph;
-using pedSyncer.model;
+﻿using PedSyncer.Model;
+using PedSyncer.Utils;
 using System;
 using System.Collections.Generic;
 using System.Timers;
@@ -23,15 +23,15 @@ using System.Timers;
  * It will now be called as pedMovments-queue
  */
 
-namespace PedSyncer
+namespace PedSyncer.Control
 {
-    internal class PedMovementControl
+    internal class PedMovement
     {
-        private static PedMovementControl Instance = null;
+        private static PedMovement Instance = null;
         private Timer Timer;
 
         //Start the movement controller with setting up the calculation interval
-        private PedMovementControl()
+        private PedMovement()
         {
             Timer Timer = new Timer();
             Timer.Interval = TimeSpan.FromSeconds(1).TotalMilliseconds;
@@ -42,9 +42,9 @@ namespace PedSyncer
         }
 
         //Singleton
-        public static PedMovementControl GetInstance()
+        public static PedMovement GetInstance()
         {
-            if (Instance == null) Instance = new PedMovementControl();
+            if (Instance == null) Instance = new PedMovement();
             return Instance;
         }
 
@@ -58,22 +58,22 @@ namespace PedSyncer
             if (ped.Freeze || ped.Dead) return;
             if (SetCurrentNavmashPositionsIndex) ped.CurrentNavmashPositionsIndex = GetNearestNavMeshOfPed(ped);
 
-            if (ped.CurrentNavmashPositionsIndex < 0 || ped.NavmashPositions.Count >= ped.CurrentNavmashPositionsIndex)
+            if (ped.CurrentNavmashPositionsIndex < 0 || ped.PathPositions.Count >= ped.CurrentNavmashPositionsIndex)
             {
                 ped.StartWandering();
                 return;
             }
 
-            ped.Position = ped.NavmashPositions[ped.CurrentNavmashPositionsIndex].Position.ToVector3();
+            ped.Position = ped.PathPositions[ped.CurrentNavmashPositionsIndex].Position;
 
-            if (ped.NavmashPositions.Count < ped.CurrentNavmashPositionsIndex + 1)
+            if (ped.PathPositions.Count < ped.CurrentNavmashPositionsIndex + 1)
             {
                 ped.ContinueWandering();
                 ped.CurrentNavmashPositionsIndex = 0;
             }
 
             AddPedMovement(
-                (int)Math.Ceiling(Utils.GetDistanceBetweenPos(ped.Position, ped.NavmashPositions[ped.CurrentNavmashPositionsIndex + 1].Position.ToVector3())),
+                (int)Math.Ceiling(Vector3Utils.GetDistanceBetweenPos(ped.Position, ped.PathPositions[ped.CurrentNavmashPositionsIndex + 1].Position)),
                 ped
             );
         }
@@ -126,7 +126,7 @@ namespace PedSyncer
 
                 //Set ped to the next navmeshPosition
                 Ped.CurrentNavmashPositionsIndex = Ped.CurrentNavmashPositionsIndex + 1;
-                Ped.Position = Ped.NavmashPositions[Ped.CurrentNavmashPositionsIndex].Position.ToVector3();
+                Ped.Position = Ped.PathPositions[Ped.CurrentNavmashPositionsIndex].Position;
                 AddPedMovementCalculcation(Ped, false);
             }
         }
@@ -134,15 +134,15 @@ namespace PedSyncer
         //Function to determine the nearest navMesh to the ped
         public static int GetNearestNavMeshOfPed(Ped Ped)
         {
-            if (Ped.NavmashPositions.Count == 0) return -1;
+            if (Ped.PathPositions.Count == 0) return -1;
 
             int MinimumPos = -1;
             double MinimumDistance = 1000;
 
             int i = 0;
-            foreach (IPathElement NavMesh in Ped.NavmashPositions)
+            foreach (IPathElement NavMesh in Ped.PathPositions)
             {
-                double Distance = Utils.GetDistanceBetweenPos(Ped.Position, NavMesh.Position.ToVector3());
+                double Distance = Vector3Utils.GetDistanceBetweenPos(Ped.Position, NavMesh.Position);
 
                 if (MinimumDistance > Distance)
                 {

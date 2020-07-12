@@ -6,7 +6,7 @@ using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading;
 
-namespace pedSyncer.Task
+namespace PedSyncer.Task
 {
     public class TaskRunning
     {

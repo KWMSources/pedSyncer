@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Text;
 using MessagePack;
 using AltV.Net;
-using NavMesh_Graph;
 using System.Numerics;
+using PedSyncer.Utils;
+using PedSyncer.Model;
 
-namespace navMesh_Graph_WebAPI
+namespace PedSyncer.Control
 {
-    public class NavigationMeshControl
+    public class NavigationMesh
     {
         //Map navMeshes as their IDs as the key
         private Dictionary<int, NavigationMeshPolyFootpath> navMeshes = new Dictionary<int, NavigationMeshPolyFootpath>();
@@ -18,12 +19,12 @@ namespace navMesh_Graph_WebAPI
         private Dictionary<(int, int), List<NavigationMeshPolyFootpath>> navMeshesMap = new Dictionary<(int, int), List<NavigationMeshPolyFootpath>>();
 
         //Singleton
-        private static NavigationMeshControl instance = null;
+        private static NavigationMesh instance = null;
 
-        private NavigationMeshControl()
+        private NavigationMesh()
         {
             //Load the pre-calculated navMeshes
-            List<NavigationMeshPolyFootpath> navigationMeshesFootpathsList = LoadDataFromDumpFile<List<NavigationMeshPolyFootpath>>("resources/pedSyncer/newNavigationMeshes.msgpack");
+            List<NavigationMeshPolyFootpath> navigationMeshesFootpathsList = FileControl.LoadDataFromDumpFile<List<NavigationMeshPolyFootpath>>("resources/pedSyncer/newNavigationMeshes.msgpack");
             Alt.Log("NavMeshFootPath Count: " + navigationMeshesFootpathsList.Count);
 
             //Parse the input and store them to the dictionaries
@@ -51,7 +52,7 @@ namespace navMesh_Graph_WebAPI
         }
 
         //Function to get the navMesh given by the current position (check if position is in a polygon)
-        public NavigationMeshPolyFootpath getMeshByPosition(WorldVector3 Position)
+        public NavigationMeshPolyFootpath getMeshByPosition(Vector3 Position)
         {
             //Check if position is in one of the zones
             int cellX = (int)Math.Ceiling(Position.X / 100.0), cellY = (int)Math.Ceiling(Position.Y / 100.0);
@@ -87,7 +88,7 @@ namespace navMesh_Graph_WebAPI
         }
 
         //Function to get the nearest navMesh given by the current position (check if position is in a polygon)
-        public NavigationMeshPolyFootpath getNearestMeshByPosition(WorldVector3 Position)
+        public NavigationMeshPolyFootpath getNearestMeshByPosition(Vector3 Position)
         {
             //Check if position is in one of the zones
             int cellX = (int)Math.Ceiling(Position.X / 100.0), cellY = (int)Math.Ceiling(Position.Y / 100.0);
@@ -115,7 +116,7 @@ namespace navMesh_Graph_WebAPI
                     {
                         foreach (NavigationMeshPolyFootpath navMesh in navMeshesMap[(cellX + i, cellY + j)])
                         {
-                            float distance = Vector3.Distance(Position.ToVector3(), navMesh.Position.ToVector3());
+                            float distance = Vector3.Distance(Position, navMesh.Position);
                             if (distance < minValue)
                             {
                                 minValue = distance;
@@ -161,43 +162,17 @@ namespace navMesh_Graph_WebAPI
         /**
          * Singleton-Methods
          */
-        public static NavigationMeshControl getInstance()
+        public static NavigationMesh getInstance()
         {
-            if (instance == null) instance = new NavigationMeshControl();
+            if (instance == null) instance = new NavigationMesh();
             return instance;
         }
 
         /**
          * Support-Methods
          */
-        static TDumpType LoadDataFromDumpFile<TDumpType>(string dumpFileName)
-            where TDumpType : new()
-        {
-            TDumpType dumpResult = default;
-            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dumpFileName);
-            Alt.Log("Search File " + filePath);
-            if (!File.Exists(filePath))
-            {
-                Alt.Log($"Could not find dump file at {filePath}");
-                return default;
-            }
-
-            try
-            {
-                MessagePackSerializerOptions lz4Options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
-                dumpResult = MessagePackSerializer.Deserialize<TDumpType>(File.ReadAllBytes(filePath), lz4Options);
-                Alt.Log($"Successfully loaded dump file {dumpFileName}.");
-            }
-            catch (Exception e)
-            {
-                Alt.Log($"Failed loading dump: {e}");
-            }
-
-            return dumpResult;
-        }
-
         //Method to determine if a given position is in a polygon
-        private static bool isPointInPolygon(List<WorldVector3> polygon, WorldVector3 testPoint)
+        private static bool isPointInPolygon(List<Vector3> polygon, Vector3 testPoint)
         {
             bool result = false;
             int j = polygon.Count - 1;

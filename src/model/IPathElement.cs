@@ -1,11 +1,12 @@
 ﻿using AltV.Net;
 using MessagePack;
-using NavMesh_Graph;
+using PedSyncer.Utils;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 
-namespace pedSyncer.model
+namespace PedSyncer.Model
 {
     /**
      * 
@@ -20,7 +21,16 @@ namespace pedSyncer.model
     public abstract class IPathElement: IWritable
     {
         [Key(2)]
-        public WorldVector3 Position { get; set; }
+        public WorldVector3 PositionTemp 
+        { 
+            set
+            {
+                this.Position = value.ToVector3();
+            }
+        }
+
+        [IgnoreMember]
+        public Vector3 Position { get; set; }
 
         public abstract List<IPathElement> GetNeighbours();
 
@@ -73,11 +83,11 @@ namespace pedSyncer.model
                  * If the difference of the given gon and the gon calculated by the startNavMesh to the current viewed member
                  * is smaller than the current minimum and the neighbour is not already visited: store it.
                  */
-                if (Math.Abs(preGon - WorldVector3.directionalAngle(this.Position, neighbourMesh.Position)) <
+                if (Math.Abs(preGon - Vector3Utils.directionalAngle(this.Position, neighbourMesh.Position)) <
                     minDifference && ((pathTillHere != null && !pathTillHere.Contains(neighbourMesh)) || pathTillHere == null))
                 {
                     minDifference =
-                        Math.Abs(preGon - WorldVector3.directionalAngle(this.Position, neighbourMesh.Position));
+                        Math.Abs(preGon - Vector3Utils.directionalAngle(this.Position, neighbourMesh.Position));
                     minNavMesh = neighbourMesh;
                 }
             }
@@ -107,7 +117,7 @@ namespace pedSyncer.model
             {
                 //Expand the previous navMesh, select the neighbour by the given directional angle
                 pathMesh = path[path.Count - 1].GetRandomNewNeighbourByDirectionAndPath(
-                    WorldVector3.directionalAngle(path[path.Count - 2].Position, path[path.Count - 1].Position), path);
+                    Vector3Utils.directionalAngle(path[path.Count - 2].Position, path[path.Count - 1].Position), path);
 
                 //If this new station is noll (no neighbours could be selected): Stop
                 if (pathMesh == null) return path;
@@ -145,7 +155,7 @@ namespace pedSyncer.model
             {
                 //Expand the previous navMesh, select the neighbour by the given directional angle
                 IPathElement pathMesh = path[path.Count - 1].GetRandomNewNeighbourByDirectionAndPath(
-                    WorldVector3.directionalAngle(path[path.Count - 2].Position, path[path.Count - 1].Position), path);
+                    Vector3Utils.directionalAngle(path[path.Count - 2].Position, path[path.Count - 1].Position), path);
 
                 //If this new station is noll (no neighbours could be selected): Stop
                 if (pathMesh == null) return path;

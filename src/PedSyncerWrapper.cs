@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Text;
 using AltV.Net;
 using PedSyncer;
+using PedSyncer.Model;
 
 namespace pedSyncer
 {

@@ -10,15 +10,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+using PedSyncer.Model;
 
-namespace PedSyncer
+namespace PedSyncer.Control
 {
-    public class Controller
+    public class Events
     {
-        public Controller()
-        {
-        }
-
         /**
          * Event which is fired on the time the first netOwner of a ped created the ped and decided
          * the 'look' of the ped.
@@ -238,7 +235,7 @@ namespace PedSyncer
             if (PedStreamedToClients.Count == 1)
             {
                 ped.NetOwner = null;
-                PedMovementControl.GetInstance().AddPedMovementCalculcation(ped);
+                PedMovement.GetInstance().AddPedMovementCalculcation(ped);
             }
             //An other player got the ped streamed in, set him as the new netOwner
             else
@@ -259,7 +256,7 @@ namespace PedSyncer
 
                 //No valid player found, start serverside ped movement calculation
                 ped.NetOwner = null;
-                PedMovementControl.GetInstance().AddPedMovementCalculcation(ped);
+                PedMovement.GetInstance().AddPedMovementCalculcation(ped);
             }
         }
     }

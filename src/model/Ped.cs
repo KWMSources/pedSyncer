@@ -2,10 +2,9 @@
 using AltV.Net.Async;
 using AltV.Net.Elements.Entities;
 using AltV.Net.EntitySync;
-using NavMesh_Graph;
-using navMesh_Graph_WebAPI;
-using pedSyncer.control;
-using pedSyncer.model;
+using PedSyncer.Control;
+using PedSyncer.Model;
+using PedSyncer.Utils;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -13,7 +12,7 @@ using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 
-namespace PedSyncer
+namespace PedSyncer.Model
 {
     public class Ped : AltV.Net.EntitySync.Entity, IWritable
     {
@@ -22,6 +21,7 @@ namespace PedSyncer
         public const ulong PED_TYPE = 1654;
         public const int STREAMING_RANGE = 200;
         #endregion
+
         //Directory to handle all peds
         public static ConcurrentDictionary<ulong, Ped> peds = new ConcurrentDictionary<ulong, Ped>();
 
@@ -628,20 +628,20 @@ namespace PedSyncer
 		 *
 		 * After the ped reached his final position a new route will be calculated.
 		 */
-        public List<IPathElement> navmashPositions = new List<IPathElement>();
+        public List<IPathElement> pathPositions = new List<IPathElement>();
 
-        public List<IPathElement> NavmashPositions
+        public List<IPathElement> PathPositions
         {
             get
             {
-                return navmashPositions;
+                return pathPositions;
             }
             set
             {
                 if (value.Count == 0) return;
-                this.navmashPositions = value;
+                this.pathPositions = value;
                 this.NearFinalPosition = false;
-                Alt.EmitAllClients("pedSyncer:server:path", this.Id, this.NavmashPositions);
+                Alt.EmitAllClients("pedSyncer:server:path", this.Id, this.PathPositions);
             }
         }
 
@@ -654,7 +654,6 @@ namespace PedSyncer
         /**
 		 * Object Methods
 		 */
-
         public Ped(float x, float y, float z, string model = null) : base(PED_TYPE, new Vector3(x, y, z), 0, STREAMING_RANGE)
         {
             peds[this.Id] = this;
@@ -689,31 +688,31 @@ namespace PedSyncer
         //Method to start the wandering of the ped
         public void StartWandering(IPathElement StartNavMesh = null)
         {
-            NavigationMeshControl NavigationMeshControl = NavigationMeshControl.getInstance();
+            NavigationMesh NavigationMeshControl = NavigationMesh.getInstance();
 
-            if (StartNavMesh == null) StartNavMesh = NavigationMeshControl.getMeshByPosition(WorldVector3.ToWorldVector3(this.Position));
+            if (StartNavMesh == null) StartNavMesh = NavigationMeshControl.getMeshByPosition(this.Position);
 
             //TODO: Invinite Loop
             if (StartNavMesh == null)
             {
-                this.NavmashPositions = new List<IPathElement>();
-                this.NavmashPositions.Add(NavigationMeshControl.getNearestMeshByPosition((WorldVector3.ToWorldVector3(this.Position))));
+                this.PathPositions = new List<IPathElement>();
+                this.PathPositions.Add(NavigationMeshControl.getNearestMeshByPosition(this.Position));
                 Console.WriteLine("Wandering at null: " + this.Id);
                 return;
             }
 
-            this.NavmashPositions = StartNavMesh.GetWanderingPath();
+            this.PathPositions = StartNavMesh.GetWanderingPath();
         }
 
         //Method to let the ped further wander at the moment the ped reaches the final destination
         public void ContinueWandering()
         {
-            if (NavmashPositions.Count < 2) return;
+            if (PathPositions.Count < 2) return;
 
-            NavigationMeshControl NavigationMeshControl = NavigationMeshControl.getInstance();
+            NavigationMesh NavigationMeshControl = NavigationMesh.getInstance();
 
-            this.NavmashPositions = this.NavmashPositions[this.NavmashPositions.Count - 1].GetWanderingPathByDirection(
-                WorldVector3.directionalAngle(this.NavmashPositions[this.NavmashPositions.Count - 1].Position, this.NavmashPositions[this.NavmashPositions.Count - 2].Position)
+            this.PathPositions = this.PathPositions[this.PathPositions.Count - 1].GetWanderingPathByDirection(
+                Vector3Utils.directionalAngle(this.PathPositions[this.PathPositions.Count - 1].Position, this.PathPositions[this.PathPositions.Count - 2].Position)
             );
 
             this.NearFinalPosition = false;
@@ -724,51 +723,25 @@ namespace PedSyncer
             this.Flags = flags;
         }
 
-        /**
-		 * Class Methods
-		 */
+        //Property and Method to generate a random ped model
+        private static Dictionary<int, List<int>> ModelsToNavMeshAreas = new Dictionary<int, List<int>>();
 
-        public static List<Ped> All
+        public void SetRandomModel()
         {
-            get
+            if (this.Model == "")
             {
-                return peds.Values.ToList<Ped>();
+                if (ModelsToNavMeshAreas.Count == 0) 
+                    Ped.ModelsToNavMeshAreas = FileControl.LoadDataFromJsonFile<Dictionary<int, List<int>>>("resources/pedSyncer/ModelsToAreas.json");
+
+                Random RandomKey = new Random();
+
+                NavigationMeshPolyFootpath nearestNavMesh = NavigationMesh.getInstance().getNearestMeshByPosition(this.Position);
+
+                this.Model = Ped.ModelsToNavMeshAreas[nearestNavMesh.AreaId][RandomKey.Next(0, Ped.ModelsToNavMeshAreas[nearestNavMesh.AreaId].Count - 1)].ToString();
             }
         }
 
-        public static Ped GetByID(ulong Id)
-        {
-            if (!peds.ContainsKey(Id)) return null;
-            return peds[Id];
-        }
-
-        public static List<Ped> GetNear(Vector3 Position, float Distance)
-        {
-            List<Ped> NearPeds = new List<Ped>();
-            foreach (Ped ped in peds.Values)
-            {
-                if (Utils.InDistanceBetweenPos(ped.Position, Position, Distance)) NearPeds.Add(ped);
-            }
-
-            return NearPeds;
-        }
-
-        public static void CreateCitizenPeds()
-        {
-            NavigationMeshControl NavigationMeshControl = NavigationMeshControl.getInstance();
-
-            //Load random navMeshes to spawn peds on it
-            List<NavigationMeshPolyFootpath> RandomSpawnsList = NavigationMeshControl.getRandomSpawnMeshes();
-
-            //Spawn the peds on these navMeshes and let the ped wander
-            Parallel.ForEach(RandomSpawnsList, RandomSpawn =>
-            {
-                Ped ped = new Ped(RandomSpawn.Position.X, RandomSpawn.Position.Y, RandomSpawn.Position.Z);
-                ped.Model = PedModelGenerator.getInstance().GetRandomModelByAreaId(RandomSpawn.AreaId).ToString();
-                ped.StartWandering(RandomSpawn);
-            });
-        }
-
+        //Method to serialize this object
         public void OnWrite(IMValueWriter writer)
         {
             writer.BeginObject();
@@ -923,7 +896,7 @@ namespace PedSyncer
 
             writer.Name("navmashPositions");
             writer.BeginArray();
-            foreach (IPathElement navMeshPos in this.NavmashPositions)
+            foreach (IPathElement navMeshPos in this.PathPositions)
             {
                 writer.BeginObject();
                 writer.Name("x");
@@ -945,6 +918,51 @@ namespace PedSyncer
             writer.Value(this.CurrentNavmashPositionsIndex);
 
             writer.EndObject();
+        }
+
+        /**
+		 * Class Methods
+		 */
+        public static List<Ped> All
+        {
+            get
+            {
+                return peds.Values.ToList<Ped>();
+            }
+        }
+
+        public static Ped GetByID(ulong Id)
+        {
+            if (!peds.ContainsKey(Id)) return null;
+            return peds[Id];
+        }
+
+        public static List<Ped> GetNear(Vector3 Position, float Distance)
+        {
+            List<Ped> NearPeds = new List<Ped>();
+            foreach (Ped ped in peds.Values)
+            {
+                if (Vector3Utils.InDistanceBetweenPos(ped.Position, Position, Distance)) NearPeds.Add(ped);
+            }
+
+            return NearPeds;
+        }
+
+        //Method to generate wandering peds as citizens
+        public static void CreateCitizenPeds()
+        {
+            NavigationMesh NavigationMeshControl = NavigationMesh.getInstance();
+
+            //Load random navMeshes to spawn peds on it
+            List<NavigationMeshPolyFootpath> RandomSpawnsList = NavigationMeshControl.getRandomSpawnMeshes();
+
+            //Spawn the peds on these navMeshes and let the ped wander
+            Parallel.ForEach(RandomSpawnsList, RandomSpawn =>
+            {
+                Ped ped = new Ped(RandomSpawn.Position.X, RandomSpawn.Position.Y, RandomSpawn.Position.Z);
+                ped.SetRandomModel();
+                ped.StartWandering(RandomSpawn);
+            });
         }
     }
 }

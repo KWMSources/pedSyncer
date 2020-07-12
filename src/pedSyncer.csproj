@@ -12,18 +12,18 @@
 
   <ItemGroup>
     <Compile Include="control/StreetCrossingControl.cs" />
-    <Compile Include="control/PedMovementControl.cs" />
-    <Compile Include="control/PedControl.cs" />
-    <Compile Include="control/NavigationMeshControl.cs" />
-    <Compile Include="control\PedModelGenerator.cs" />
+    <Compile Include="control\PedMovement.cs" />
+    <Compile Include="control\Events.cs" />
+    <Compile Include="control\NavigationMesh.cs" />
     <Compile Include="model/Ped.cs" />
     <Compile Include="model/IPathElement.cs" />
     <Compile Include="model/StreetCrossing.cs" />
-    <Compile Include="model/WorldVector3.cs" />
     <Compile Include="model/NavigationMeshPolyFootpath.cs" />
-    <Compile Include="utils/PedUtils.cs" />
+    <Compile Include="utils\WorldVector3.cs" />
     <Compile Include="PedSyncer.cs" />
     <Compile Include="PedSyncerWrapper.cs" />
+    <Compile Include="utils\Vector3Utils.cs" />
+    <Compile Include="utils\FileControl.cs" />
     <Compile Include="utils\TaskManager.cs" />
   </ItemGroup>
 
