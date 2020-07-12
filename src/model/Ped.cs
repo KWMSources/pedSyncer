@@ -2,6 +2,7 @@
 using AltV.Net.Async;
 using AltV.Net.Elements.Entities;
 using AltV.Net.EntitySync;
+using AltV.Net.EntitySync.ServerEvent;
 using PedSyncer.Control;
 using PedSyncer.Model;
 using PedSyncer.Utils;
@@ -24,33 +25,6 @@ namespace PedSyncer.Model
 
         //Directory to handle all peds
         public static ConcurrentDictionary<ulong, Ped> peds = new ConcurrentDictionary<ulong, Ped>();
-
-        /**
-		 * Just one Player is the netOwner of a Ped. This Player has the task to
-		 * tell the server the current position of the Ped.
-		 *
-		 * The first netOwner has also the task to creat the ped on the first time.
-		 */
-
-        public IPlayer NetOwner
-        {
-            get
-            {
-                if (this.TryGetData<ushort>("netOwner", out ushort value))
-                {
-                    foreach (IPlayer player in Alt.GetAllPlayers())
-                    {
-                        if (player.Id == value) return player;
-                    }
-                }
-                return null;
-            }
-            set
-            {
-                if (value == null) this.SetData("netOwner", null);
-                else this.SetData("netOwner", value.Id);
-            }
-        }
 
         /**
 		 * Always true currently
@@ -763,7 +737,7 @@ namespace PedSyncer.Model
             writer.EndObject();
 
             writer.Name("netOwner");
-            if (this.NetOwner != null) writer.Value(this.NetOwner.Id);
+            if (this.NetOwner != null) writer.Value(((PlayerClient)this.NetOwner).GetPlayer().Id);
             else writer.Value("");
 
             writer.Name("valid");

@@ -201,24 +201,6 @@ namespace PedSyncer.Control
         }
 
         /**
-         * Event which fires if a ped was streamed to a player
-         * 
-         * Determine the netOwner of the ped
-         */
-        public static void OnEntityCreate(IClient client, AltV.Net.EntitySync.IEntity entity)
-        {
-            if (entity.Type != Ped.PED_TYPE) return;
-
-            PlayerClient pClient = (PlayerClient)client;
-            IPlayer player = pClient.GetPlayer();
-            Ped _ped = Ped.GetByID(entity.Id);
-            //If Ped Exist and don't have NetOwner then we can transfer NetOwner to player who have reated this entity in last.
-            if (_ped != null && _ped.NetOwner == null) {
-                _ped.NetOwner = player;
-            }
-        }
-
-        /**
          * Event which fires if a ped was streamed out of a player
          * 
          * Determine the new netOwner or start the serverside ped movement calculcation
@@ -247,9 +229,9 @@ namespace PedSyncer.Control
                 {
                     IPlayer pNewPlayer = ((PlayerClient)pNewClient).GetPlayer();
 
-                    if (pNewPlayer.Exists && pNewPlayer.Id != ped.NetOwner.Id)
+                    if (pNewPlayer.Exists && pNewPlayer.Id != ((PlayerClient)ped.NetOwner).GetPlayer().Id)
                     {
-                        ped.NetOwner = pNewPlayer;
+                        ped.NetOwner = pNewClient;
                         return;
                     }
                 }

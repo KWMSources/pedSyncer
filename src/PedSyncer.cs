@@ -18,9 +18,9 @@ namespace PedSyncer
     internal class PedSyncer : Resource
     {            
         //Define here if u want to activate the DebugMode Clientside
-        public static bool DebugModeClientSide = true;
+        public static bool DebugModeClientSide = false;
         //Define here if u want to activate the DebugMode ServerSide
-        public static bool DebugModeServerSide = true;
+        public static bool DebugModeServerSide = false;
 
         private void InitEntitySync()
         {
@@ -28,6 +28,7 @@ namespace PedSyncer
             AltEntitySync.Init(
                 4,
                 100,
+                true,
                 (threadCount, repository) => new ServerEventNetworkLayer(threadCount, repository),
                 (entity, threadCount) => (entity.Id % threadCount),
                 (entityId, entityType, threadCount) => (entityId % threadCount),
@@ -50,7 +51,6 @@ namespace PedSyncer
 
             Alt.OnPlayerConnect += Events.OnPlayerConnect;
 
-            AltEntitySync.OnEntityCreate += Events.OnEntityCreate;
             AltEntitySync.OnEntityRemove += Events.OnEntityRemove;
 
             Console.WriteLine("Started");
@@ -65,7 +65,7 @@ namespace PedSyncer
             PedMovement.GetInstance();
 
             //Create citizen peds who wanders - delete this line if you don't wanna have citizens
-            Ped.CreateCitizenPeds();
+            //Ped.CreateCitizenPeds();
 
             //NodeJS Wrapper
             PedSyncerWrapper.RegisterWrapperFunctions();

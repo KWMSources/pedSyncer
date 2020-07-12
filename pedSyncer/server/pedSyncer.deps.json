@@ -8,9 +8,9 @@
     ".NETCoreApp,Version=v3.1": {
       "pedSyncer/1.0.0": {
         "dependencies": {
-          "AltV.Net": "1.31.1",
-          "AltV.Net.EntitySync": "1.3.0-dev-preview",
-          "AltV.Net.EntitySync.ServerEvent": "1.3.0-dev-preview",
+          "AltV.Net": "1.36.7-rc",
+          "AltV.Net.EntitySync": "1.7.0-dev-preview",
+          "AltV.Net.EntitySync.ServerEvent": "1.7.0-dev-preview",
           "MessagePack": "2.1.115",
           "Newtonsoft.Json": "12.0.3"
         },
@@ -18,7 +18,7 @@
           "pedSyncer.dll": {}
         }
       },
-      "AltV.Net/1.31.1": {
+      "AltV.Net/1.36.7-rc": {
         "runtime": {
           "lib/netcoreapp3.1/AltV.Net.dll": {
             "assemblyVersion": "1.0.0.0",
@@ -26,9 +26,9 @@
           }
         }
       },
-      "AltV.Net.Async/1.27.2": {
+      "AltV.Net.Async/1.36.6-rc": {
         "dependencies": {
-          "AltV.Net": "1.31.1",
+          "AltV.Net": "1.36.7-rc",
           "System.Threading.Channels": "4.7.0"
         },
         "runtime": {
@@ -38,7 +38,10 @@
           }
         }
       },
-      "AltV.Net.EntitySync/1.3.0-dev-preview": {
+      "AltV.Net.EntitySync/1.7.0-dev-preview": {
+        "dependencies": {
+          "System.Threading.Channels": "4.7.0"
+        },
         "runtime": {
           "lib/netcoreapp3.1/AltV.Net.EntitySync.dll": {
             "assemblyVersion": "1.0.0.0",
@@ -46,11 +49,11 @@
           }
         }
       },
-      "AltV.Net.EntitySync.ServerEvent/1.3.0-dev-preview": {
+      "AltV.Net.EntitySync.ServerEvent/1.7.0-dev-preview": {
         "dependencies": {
-          "AltV.Net": "1.31.1",
-          "AltV.Net.Async": "1.27.2",
-          "AltV.Net.EntitySync": "1.3.0-dev-preview",
+          "AltV.Net": "1.36.7-rc",
+          "AltV.Net.Async": "1.36.6-rc",
+          "AltV.Net.EntitySync": "1.7.0-dev-preview",
           "System.Threading.Channels": "4.7.0"
         },
         "runtime": {
@@ -115,33 +118,33 @@
       "serviceable": false,
       "sha512": ""
     },
-    "AltV.Net/1.31.1": {
+    "AltV.Net/1.36.7-rc": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-gmUsPsvKVm2HhCDFh+D74ei2KXkr5D2cBFtKjojL1YY5+xGIVJrO/uxeIHAJVTj4/O/H/kIFCIWVnavLI0SZIg==",
-      "path": "altv.net/1.31.1",
-      "hashPath": "altv.net.1.31.1.nupkg.sha512"
+      "sha512": "sha512-UcYrPeJpP1Q85mTYhke5JvZsTTwx23u1ZJETj+M2tnAyJP0gJIXsM9BOR8TBlAxY5V1LJgO6clahClnAHIFMKA==",
+      "path": "altv.net/1.36.7-rc",
+      "hashPath": "altv.net.1.36.7-rc.nupkg.sha512"
     },
-    "AltV.Net.Async/1.27.2": {
+    "AltV.Net.Async/1.36.6-rc": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-MOusdyMT/zmEccTaACoc0Fe+3qbfLG/viXRlFinH/JYqJQwTaIic3KmJA4F+n44tu+bhWL/SRs9MvpOs8Cuifg==",
-      "path": "altv.net.async/1.27.2",
-      "hashPath": "altv.net.async.1.27.2.nupkg.sha512"
+      "sha512": "sha512-KDPJXrQb4kWl612RWKEaWZMqTnrGWLj8zIAgVBunewBoNmmMQi0SUdMxYKSX/VBefVDK8Sz7f0S/dtzRoghP/A==",
+      "path": "altv.net.async/1.36.6-rc",
+      "hashPath": "altv.net.async.1.36.6-rc.nupkg.sha512"
     },
-    "AltV.Net.EntitySync/1.3.0-dev-preview": {
+    "AltV.Net.EntitySync/1.7.0-dev-preview": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-im15WZOq51PToWTso0/gajC9nb8zqWVbQ1R9fK2o/0dqtRgYfEXldGIm3Qn0RPoaJbxmVUIdAOjAP0i9Xy9dBA==",
-      "path": "altv.net.entitysync/1.3.0-dev-preview",
-      "hashPath": "altv.net.entitysync.1.3.0-dev-preview.nupkg.sha512"
+      "sha512": "sha512-ZZo6J6Y5gNJsIIDW2rIY2slsxOheWXDIo0TvZ9knnSXiwC0lwFGktzqjFtt0ZXPdf44l3OpnTH3B2geas2jOqA==",
+      "path": "altv.net.entitysync/1.7.0-dev-preview",
+      "hashPath": "altv.net.entitysync.1.7.0-dev-preview.nupkg.sha512"
     },
-    "AltV.Net.EntitySync.ServerEvent/1.3.0-dev-preview": {
+    "AltV.Net.EntitySync.ServerEvent/1.7.0-dev-preview": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-YR7wo1NR7YKOkTrES86POR9hPHHpeT8lLYML36OBzZzlX5k3uuubShe5ymILEzGKQiaKLDS9UKnuuHqKoYo8nQ==",
-      "path": "altv.net.entitysync.serverevent/1.3.0-dev-preview",
-      "hashPath": "altv.net.entitysync.serverevent.1.3.0-dev-preview.nupkg.sha512"
+      "sha512": "sha512-tPbFh92xWQ2SkgKmMFh+JFKaryg/5ZbYGzBXXPfl4Im6RG9DmG/l31CmepiqBszF7k+Iwa5sE09odZiVFUcG5A==",
+      "path": "altv.net.entitysync.serverevent/1.7.0-dev-preview",
+      "hashPath": "altv.net.entitysync.serverevent.1.7.0-dev-preview.nupkg.sha512"
     },
     "MessagePack/2.1.115": {
       "type": "package",

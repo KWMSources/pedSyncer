@@ -278,6 +278,10 @@ class PedClass {
         this.netOwner = alt.Player.local.id;
     }
 
+    releaseNetOwner() {
+        this.netOwner = null;
+    }
+
     /**
      * This will be executed at the time this client leaves the streaming-range of
      * the ped.
