@@ -567,6 +567,20 @@ namespace PedSyncer.Model
         public List<string> CurrentTaskParams
         { get; set; }
 
+        //Current Scenario the ped is playing
+        public string Scenario
+        {
+            get
+            {
+                if (this.TryGetData<string>("Scenario", out string value)) return value;
+                return "";
+            }
+            set
+            {
+                this.SetData("Scenario", value);
+            }
+        }
+
         //Set the ped freezing and holding the position
         public bool Freeze
         {
@@ -705,7 +719,7 @@ namespace PedSyncer.Model
             if (this.Model == "")
             {
                 if (ModelsToNavMeshAreas.Count == 0) 
-                    Ped.ModelsToNavMeshAreas = FileControl.LoadDataFromJsonFile<Dictionary<int, List<int>>>("resources/pedSyncer/ModelsToAreas.json");
+                    Ped.ModelsToNavMeshAreas = FileControl.LoadDataFromJsonFile<Dictionary<int, List<int>>>("resources/pedSyncer/server/ModelsToAreas.json");
 
                 Random RandomKey = new Random();
 
@@ -862,6 +876,9 @@ namespace PedSyncer.Model
             foreach (string value in this.CurrentTaskParams) writer.Value(value);
             writer.EndArray();
 
+            writer.Name("scenario");
+            writer.Value(this.Scenario);
+
             writer.Name("freeze");
             writer.Value(this.Freeze);
 
@@ -937,6 +954,18 @@ namespace PedSyncer.Model
                 ped.SetRandomModel();
                 ped.StartWandering(RandomSpawn);
             });
+
+            Scenarios Scenarios = Scenarios.getInstance();
+
+            //Load random ScenarioPoints to spawn peds on it
+            List<ScenarioPoint> ScenarioPoints = Scenarios.GetRandomScenarioSpots();
+            foreach(ScenarioPoint ScenarioPoint in ScenarioPoints)
+            {
+                Ped ped = new Ped(ScenarioPoint.Position.X, ScenarioPoint.Position.Y, ScenarioPoint.Position.Z);
+                ped.Heading = ScenarioPoint.Position.W/Math.PI*180;
+                ped.Scenario = ScenarioPoint.IType;
+                ped.Model = Scenarios.GetRandomModelByScenarioPoint(ScenarioPoint);
+            }
         }
     }
 }

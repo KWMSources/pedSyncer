@@ -65,7 +65,7 @@ namespace PedSyncer
             PedMovement.GetInstance();
 
             //Create citizen peds who wanders - delete this line if you don't wanna have citizens
-            //Ped.CreateCitizenPeds();
+            Ped.CreateCitizenPeds();
 
             //NodeJS Wrapper
             PedSyncerWrapper.RegisterWrapperFunctions();

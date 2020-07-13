@@ -116,6 +116,9 @@ class PedClass {
     currentTask = null;
     currentTaskParams = [];
 
+    //Current Scenario the ped is playing
+    scenario = null;
+
     //Currently inactive - will contain information if the ped is never moving
     freeze = null;
 
@@ -255,7 +258,8 @@ class PedClass {
 
         //Start the peds wandering
         if (typeof this.scriptID !== "undefined" && this.scriptID != 0) {
-            this.startPath();
+            if (this.navmashPositions.length > 0) this.startPath();
+            if (this.scenario != null) this.startScenario();
             spawned = true;
         }
 
@@ -414,7 +418,18 @@ class PedClass {
      * Method to get the the last navmashPositions
      */
     getPathFinalDestination() {
-        return this.navmashPositions[this.navmashPositions.length-1];
+        if (this.navmashPositions.length > 0) return this.navmashPositions[this.navmashPositions.length-1];
+        return null;
+    }
+
+    /**
+     * Method to start the peds scenario
+     */
+    startScenario() {
+        native.setEntityHeading(this.scriptID, this.heading);
+        alt.setTimeout(() => {
+            native.taskStartScenarioInPlace(this.scriptID, this.scenario, 0, false);
+        }, 1000);
     }
 
     /**

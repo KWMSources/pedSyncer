@@ -20,7 +20,7 @@ namespace PedSyncer.Control
         private StreetCrossingControl()
         {
             //Load the pre-calculated StreetCrossings
-            List<StreetCrossing> streetCrossings = FileControl.LoadDataFromJsonFile<List<StreetCrossing>>("resources/pedSyncer/StreetCrossings.json");
+            List<StreetCrossing> streetCrossings = FileControl.LoadDataFromJsonFile<List<StreetCrossing>>("resources/pedSyncer/server/StreetCrossings.json");
             Alt.Log("StreetCrossings Count: " + streetCrossings.Count);
 
             foreach(StreetCrossing streetCrossing in streetCrossings)
