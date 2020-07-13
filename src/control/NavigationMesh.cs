@@ -24,7 +24,7 @@ namespace PedSyncer.Control
         private NavigationMesh()
         {
             //Load the pre-calculated navMeshes
-            List<NavigationMeshPolyFootpath> navigationMeshesFootpathsList = FileControl.LoadDataFromDumpFile<List<NavigationMeshPolyFootpath>>("resources/pedSyncer/newNavigationMeshes.msgpack");
+            List<NavigationMeshPolyFootpath> navigationMeshesFootpathsList = FileControl.LoadDataFromDumpFile<List<NavigationMeshPolyFootpath>>("resources/pedSyncer/server/newNavigationMeshes.msgpack");
             Alt.Log("NavMeshFootPath Count: " + navigationMeshesFootpathsList.Count);
 
             //Parse the input and store them to the dictionaries
