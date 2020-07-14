@@ -89,7 +89,7 @@ class PedClass {
 
     gender = null;
 
-    //Currently inactive - will contain information if the ped is invincible
+    //Will contain information if the ped is invincible
     invincible = null;
 
     //Currently inactive - The vehicle the ped sits in
@@ -98,9 +98,11 @@ class PedClass {
     //Currently inactive - If the ped is in a vehicle, this tells the current seat of the ped
     seat = null;
 
-    //Currently inactive - HP-Stats of the ped
+    //Currently inactive
     injuries = null;
     hasBlood = null;
+    
+    //HP-Stats of the ped
     armour = 0;
     health = 200;
     dead = false;
@@ -119,7 +121,7 @@ class PedClass {
     //Current Scenario the ped is playing
     scenario = null;
 
-    //Currently inactive - will contain information if the ped is never moving
+    //Will contain information if the ped is never moving
     freeze = null;
 
     //Tells if the ped is randomly wandering
@@ -211,6 +213,9 @@ class PedClass {
         this.texture11 = native.getPedTextureVariation(this.scriptID, 11);
         this.created = true;
 
+        native.setEntityInvincible(this.scriptID, this.invincible);
+        native.freezeEntityPosition(this.scriptID, this.freeze);
+
         //Send back to the server for sync with other players
         alt.emitServer("pedSyncer:client:firstSpawn", Ped.emitParse(this));
     }
@@ -243,6 +248,7 @@ class PedClass {
         native.setPedArmour(this.scriptID, this.armour);
         native.setEntityHealth(this.scriptID, this.health, 0);
         if (this.dead) native.setPedToRagdoll(this.scriptID, -1, -1, 0, false, false, false);
+        native.setEntityInvincible(this.scriptID, this.invincible);
         native.freezeEntityPosition(this.scriptID, this.freeze);
     }
 

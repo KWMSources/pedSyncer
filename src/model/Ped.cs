@@ -468,7 +468,7 @@ namespace PedSyncer.Model
             }
         }
 
-        //Currently inactive - will contain information if the ped is invincible
+        //Will contain information if the ped is invincible
         public bool Invincible
         {
             get
