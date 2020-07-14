@@ -23,14 +23,15 @@ export function inDistanceBetweenPos(pos1, pos2, distance) {
 
 export function loadModel(classname) {
     return new Promise((resolve, reject) => {
+        let orig = classname;
         if (typeof classname === 'string' && classname.substr(0, 2) === '0x') {
             classname = parseInt(classname);
-        } else if (typeof classname === 'string') {
+        } else if (typeof classname === 'string' && isNaN(classname)) {
             classname = native.getHashKey(classname);
         }
 
         if (!native.isModelValid(classname)) {
-            //alt.log("Model Invalid: " + classname);
+            alt.log("Model Invalid:", classname, orig);
             return resolve(false);
         }
 

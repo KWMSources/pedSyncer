@@ -375,10 +375,8 @@ class PedClass {
     }
 
     pathPositionReached() {
-        alt.log("Position Reached1: " + this.id);
         //If there are no navmeshPositions: Stop
         if (!this.wandering) return;
-        alt.log("Position Reached2: " + this.id);
 
         let currenctNextNavMeshStation = this.nextNavMeshStation;
         
