@@ -329,7 +329,7 @@ class PedClass {
         this.navmashPositions = [];
 
         //Store and parse the navmeshPositions
-        for (let pos of navmashPositionsToAdd) this.navmashPositions.push({x: pos.x, y: pos.y, z: pos.z});
+        for (let pos of navmashPositionsToAdd) this.navmashPositions.push(pos);
 
         //Reset the nearFinalPosition-variable
         this.nearFinalPosition = false;
