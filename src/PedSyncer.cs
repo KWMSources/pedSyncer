@@ -39,7 +39,7 @@ namespace PedSyncer
             Console.WriteLine("[INFO] GameEntityResource InitEntitySync startet");
         }
 
-        async public override void OnStart()
+        public override void OnStart()
         {
             this.InitEntitySync();
 

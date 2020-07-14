@@ -30,7 +30,7 @@ export function loadModel(classname) {
         }
 
         if (!native.isModelValid(classname)) {
-            alt.log("Model Invalid: " + classname);
+            //alt.log("Model Invalid: " + classname);
             return resolve(false);
         }
 

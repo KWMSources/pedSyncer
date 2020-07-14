@@ -11,7 +11,7 @@ namespace PedSyncer.Control
     class Scenarios
     {
         //Singleton
-        private static Scenarios instance = null;
+        private static Scenarios? instance = null;
 
         public static Scenarios getInstance()
         {

@@ -27,15 +27,15 @@ namespace pedSyncer
 
         public static void SetPedData(ulong Id, string Key, object Value)
         {
-            Ped Ped = Ped.GetByID(Id);
+            Ped? Ped = Ped.GetByID(Id);
             if (Ped == null || Ped.GetType().GetProperty(Key) == null) return;
 
             Ped.GetType().GetProperty(Key).SetValue(Ped, Value);
         }
 
-        public static object GetPedData(ulong Id, string Key)
+        public static object? GetPedData(ulong Id, string Key)
         {
-            Ped Ped = Ped.GetByID(Id);
+            Ped? Ped = Ped.GetByID(Id);
             if (Ped == null || Ped.GetType().GetProperty(Key) == null) return null;
 
             return Ped.GetType().GetProperty(Key).GetValue(Ped);
@@ -74,7 +74,7 @@ namespace pedSyncer
 
         }*/
 
-        public static ulong CreatePed(float x, float y, float z, string model = null)
+        public static ulong CreatePed(float x, float y, float z, string? model = null)
         {
             Ped ped = new Ped(x, y, z, model);
             
@@ -83,7 +83,7 @@ namespace pedSyncer
 
         public static void DestroyPed(ulong Id)
         {
-            Ped Ped = Ped.GetByID(Id);
+            Ped? Ped = Ped.GetByID(Id);
             if (Ped == null) return;
 
             Ped.Destroy();
@@ -91,15 +91,15 @@ namespace pedSyncer
 
         public static void StartWandering(ulong Id)
         {
-            Ped Ped = Ped.GetByID(Id);
+            Ped? Ped = Ped.GetByID(Id);
             if (Ped == null) return;
 
-            Ped.StartWandering();
+            Ped.Wandering = true;
         }
 
         public static void ContinueWandering(ulong Id)
         {
-            Ped Ped = Ped.GetByID(Id);
+            Ped? Ped = Ped.GetByID(Id);
             if (Ped == null) return;
 
             Ped.ContinueWandering();
@@ -119,7 +119,7 @@ namespace pedSyncer
 
         public static bool IsPedIdExisting(ulong Id)
         {
-            Ped Ped = Ped.GetByID(Id);
+            Ped? Ped = Ped.GetByID(Id);
 
             return Ped != null;
         }

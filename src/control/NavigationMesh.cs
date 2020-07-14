@@ -19,7 +19,7 @@ namespace PedSyncer.Control
         private Dictionary<(int, int), List<NavigationMeshPolyFootpath>> navMeshesMap = new Dictionary<(int, int), List<NavigationMeshPolyFootpath>>();
 
         //Singleton
-        private static NavigationMesh instance = null;
+        private static NavigationMesh? instance = null;
 
         private NavigationMesh()
         {
@@ -52,7 +52,7 @@ namespace PedSyncer.Control
         }
 
         //Function to get the navMesh given by the current position (check if position is in a polygon)
-        public NavigationMeshPolyFootpath getMeshByPosition(Vector3 Position)
+        public NavigationMeshPolyFootpath? getMeshByPosition(Vector3 Position)
         {
             //Check if position is in one of the zones
             int cellX = (int)Math.Ceiling(Position.X / 100.0), cellY = (int)Math.Ceiling(Position.Y / 100.0);
@@ -88,7 +88,7 @@ namespace PedSyncer.Control
         }
 
         //Function to get the nearest navMesh given by the current position (check if position is in a polygon)
-        public NavigationMeshPolyFootpath getNearestMeshByPosition(Vector3 Position)
+        public NavigationMeshPolyFootpath? getNearestMeshByPosition(Vector3 Position)
         {
             //Check if position is in one of the zones
             int cellX = (int)Math.Ceiling(Position.X / 100.0), cellY = (int)Math.Ceiling(Position.Y / 100.0);
@@ -105,7 +105,7 @@ namespace PedSyncer.Control
                 ) return null;
 
             //Iterate over all navMeshes in the zones related to the position - return the first match
-            NavigationMeshPolyFootpath minMesh = null;
+            NavigationMeshPolyFootpath? minMesh = null;
             float minValue = 999999;
             for (int i = -1; i < 2; i++)
             {

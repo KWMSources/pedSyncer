@@ -27,8 +27,7 @@ namespace PedSyncer.Control
 {
     internal class PedMovement
     {
-        private static PedMovement Instance = null;
-        private Timer Timer;
+        private static PedMovement? Instance = null;
 
         //Start the movement controller with setting up the calculation interval
         private PedMovement()
@@ -55,12 +54,12 @@ namespace PedSyncer.Control
         */
         public void AddPedMovementCalculcation(Ped ped, bool SetCurrentNavmashPositionsIndex = true)
         {
-            if (ped.Freeze || ped.Dead) return;
+            if (ped.Freeze || ped.Dead || !ped.Wandering) return;
             if (SetCurrentNavmashPositionsIndex) ped.CurrentNavmashPositionsIndex = GetNearestNavMeshOfPed(ped);
 
             if (ped.CurrentNavmashPositionsIndex < 0 || ped.PathPositions.Count >= ped.CurrentNavmashPositionsIndex)
             {
-                ped.StartWandering();
+                ped.Wandering = true;
                 return;
             }
 

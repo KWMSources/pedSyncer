@@ -15,7 +15,7 @@ namespace PedSyncer.Control
         public static Dictionary<string, StreetCrossing> MappedStreetCrossings = new Dictionary<string, StreetCrossing>();
 
         //Singleton
-        private static StreetCrossingControl instance = null;
+        private static StreetCrossingControl? instance = null;
 
         private StreetCrossingControl()
         {

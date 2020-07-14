@@ -63,19 +63,19 @@ namespace PedSyncer.Model
          *
          * Optional: Exclude the navMeshes which are already included in the path calculated till now
          */
-        public IPathElement GetRandomNewNeighbourByDirectionAndPath(double preGon = 0, List<IPathElement> pathTillHere = null)
+        public IPathElement? GetRandomNewNeighbourByDirectionAndPath(double preGon = 0, List<IPathElement>? pathTillHere = null)
         {
             //If this neighbour hasn't any neighbours: Stop
             if (this.GetNeighbours().Count == 0) return null;
 
-            if (preGon == null) preGon = 0;
+            if (pathTillHere == null) preGon = 0;
 
             //Prepare the minimum difference search
             double minDifference = 500;
-            IPathElement minNavMesh = null;
+            IPathElement? minNavMesh = null;
 
             //Iterate over all neighbours of the given startNavMesh
-            foreach (IPathElement neighbourMesh in this.GetNeighbours())
+            foreach (IPathElement? neighbourMesh in this.GetNeighbours())
             {
                 if (neighbourMesh == null) continue;
 
@@ -105,7 +105,7 @@ namespace PedSyncer.Model
             path.Add(this);
 
             //Expand the starting navMesh, select the neighbour by the given directional angle
-            IPathElement pathMesh = this.GetRandomNewNeighbourByDirectionAndPath(gon);
+            IPathElement? pathMesh = this.GetRandomNewNeighbourByDirectionAndPath(gon);
 
             //If this new station is noll (no neighbours could be selected): Stop
             if (pathMesh == null) return path;
@@ -154,7 +154,7 @@ namespace PedSyncer.Model
             for (int i = path.Count; i < 200; i++)
             {
                 //Expand the previous navMesh, select the neighbour by the given directional angle
-                IPathElement pathMesh = path[path.Count - 1].GetRandomNewNeighbourByDirectionAndPath(
+                IPathElement? pathMesh = path[path.Count - 1].GetRandomNewNeighbourByDirectionAndPath(
                     Vector3Utils.directionalAngle(path[path.Count - 2].Position, path[path.Count - 1].Position), path);
 
                 //If this new station is noll (no neighbours could be selected): Stop

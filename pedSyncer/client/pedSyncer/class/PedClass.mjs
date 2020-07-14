@@ -122,7 +122,7 @@ class PedClass {
     //Currently inactive - will contain information if the ped is never moving
     freeze = null;
 
-    //Currently inactive - Tells if the ped is randomly wandering
+    //Tells if the ped is randomly wandering
     //Caution: if the ped is not freezed, it will not wandering
     wandering = false;
 
@@ -258,7 +258,7 @@ class PedClass {
 
         //Start the peds wandering
         if (typeof this.scriptID !== "undefined" && this.scriptID != 0) {
-            if (this.navmashPositions.length > 0) this.startPath();
+            if (this.wandering) this.startPath();
             if (this.scenario != null) this.startScenario();
             spawned = true;
         }
@@ -313,7 +313,7 @@ class PedClass {
      */
     setPath(navmashPositionsToAdd) {
         //If there are no navmeshPositions: Stop
-        if (navmashPositionsToAdd.length < 1) return;
+        if (!this.wandering) return;
 
         //Reset the route of the player
         this.navmashPositions = [];
@@ -333,7 +333,7 @@ class PedClass {
      */
     startPath() {
         //If there are no navmeshPositions: Stop
-        if (this.navmashPositions.length == 0) return;
+        if (!this.wandering) return;
         
         /**
          * Set nextNavMeshStation
@@ -375,8 +375,10 @@ class PedClass {
     }
 
     pathPositionReached() {
+        alt.log("Position Reached1: " + this.id);
         //If there are no navmeshPositions: Stop
-        if (this.navmashPositions.length == 0) return;
+        if (!this.wandering) return;
+        alt.log("Position Reached2: " + this.id);
 
         let currenctNextNavMeshStation = this.nextNavMeshStation;
         
@@ -574,30 +576,32 @@ class PedClass {
             ped.health = native.getEntityHealth(ped.scriptID);
             ped.dead = native.isPedDeadOrDying(ped.scriptID, 1);
 
-            /**
-             * If this peds path has a finalDestination, the position is valid and the final position
-             * is closer than 5 feet: This ped is near to its finalDestination - it path sould be
-             * new calculated
-             */
-            if (
-                ped.getPathFinalDestination() != null && 
-                ped.pos != null && 
-                native.getDistanceBetweenCoords(ped.getPathFinalDestination().x, ped.getPathFinalDestination().y, ped.getPathFinalDestination().z, ped.pos.x, ped.pos.y, ped.pos.z, false) < 0.5
-            ) {
-                ped.nearFinalPosition = true;
-            }
+            if (ped.wandering) {
+                /**
+                 * If this peds path has a finalDestination, the position is valid and the final position
+                 * is closer than 5 feet: This ped is near to its finalDestination - it path sould be
+                 * new calculated
+                 */
+                if (
+                    ped.getPathFinalDestination() != null && 
+                    ped.pos != null && 
+                    native.getDistanceBetweenCoords(ped.getPathFinalDestination().x, ped.getPathFinalDestination().y, ped.getPathFinalDestination().z, ped.pos.x, ped.pos.y, ped.pos.z, false) < 0.5
+                ) {
+                    ped.nearFinalPosition = true;
+                }
 
-            /**
-             * If this peds path has a nextNavMeshStation and the station is closer than 5 feet: This
-             * peds station is reached, a next station will be calculated
-             */
-            if (
-                ped.getPathFinalDestination() != null && 
-                ped.pos != null && 
-                ped.nextNavMeshStation < ped.navmashPositions.length && 
-                native.getDistanceBetweenCoords(ped.navmashPositions[ped.nextNavMeshStation].x, ped.navmashPositions[ped.nextNavMeshStation].y, ped.navmashPositions[ped.nextNavMeshStation].z, ped.pos.x, ped.pos.y, ped.pos.z, false) < 2
-            ) {
-                ped.pathPositionReached();
+                /**
+                 * If this peds path has a nextNavMeshStation and the station is closer than 5 feet: This
+                 * peds station is reached, a next station will be calculated
+                 */
+                if (
+                    ped.getPathFinalDestination() != null && 
+                    ped.pos != null && 
+                    ped.nextNavMeshStation < ped.navmashPositions.length && 
+                    native.getDistanceBetweenCoords(ped.navmashPositions[ped.nextNavMeshStation].x, ped.navmashPositions[ped.nextNavMeshStation].y, ped.navmashPositions[ped.nextNavMeshStation].z, ped.pos.x, ped.pos.y, ped.pos.z, false) < 2
+                ) {
+                    ped.pathPositionReached();
+                }
             }
 
             /**
@@ -634,6 +638,10 @@ export const Ped = new Proxy(PedClass, {
         let ped = new Proxy(new target(...args), {
             set(pedTarget, property, value) {
                 peds[pedTarget.id][property] = value;
+                if (property == "wandering") { 
+                    if (value == true) pedTarget.startPath();
+                    else if(pedTarget.scriptID != 0) native.clearPedTasks(pedTarget.scriptID);
+                }
                 return true;
             },
             get: (pedTarget, property, receiver) => {

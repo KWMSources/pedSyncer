@@ -595,7 +595,7 @@ namespace PedSyncer.Model
             }
         }
 
-        //Currently inactive - Tells if the ped is randomly wandering
+        //Tells if the ped is randomly wandering
         //Caution: if the ped is not freezed, it will not wandering
         public bool Wandering
         {
@@ -606,6 +606,15 @@ namespace PedSyncer.Model
             }
             set
             {
+                if (value)
+                {
+                    this.StartWandering();
+                } else
+                {
+                    pathPositions = new List<IPathElement>();
+                    this.NearFinalPosition = false;
+                    this.CurrentNavmashPositionsIndex = 0;
+                }
                 this.SetData("wandering", value);
             }
         }
@@ -642,7 +651,7 @@ namespace PedSyncer.Model
         /**
 		 * Object Methods
 		 */
-        public Ped(float x, float y, float z, string model = null) : base(PED_TYPE, new Vector3(x, y, z), 0, STREAMING_RANGE)
+        public Ped(float x, float y, float z, string? model = null) : base(PED_TYPE, new Vector3(x, y, z), 0, STREAMING_RANGE)
         {
             peds[this.Id] = this;
             this.Valid = true;
@@ -674,7 +683,7 @@ namespace PedSyncer.Model
         }
 
         //Method to start the wandering of the ped
-        public void StartWandering(IPathElement StartNavMesh = null)
+        private void StartWandering(IPathElement? StartNavMesh = null)
         {
             NavigationMesh NavigationMeshControl = NavigationMesh.getInstance();
 
@@ -695,9 +704,8 @@ namespace PedSyncer.Model
         //Method to let the ped further wander at the moment the ped reaches the final destination
         public void ContinueWandering()
         {
+            if (!this.Wandering) return;
             if (PathPositions.Count < 2) return;
-
-            NavigationMesh NavigationMeshControl = NavigationMesh.getInstance();
 
             this.PathPositions = this.PathPositions[this.PathPositions.Count - 1].GetWanderingPathByDirection(
                 Vector3Utils.directionalAngle(this.PathPositions[this.PathPositions.Count - 1].Position, this.PathPositions[this.PathPositions.Count - 2].Position)
@@ -922,7 +930,7 @@ namespace PedSyncer.Model
             }
         }
 
-        public static Ped GetByID(ulong Id)
+        public static Ped? GetByID(ulong Id)
         {
             if (!peds.ContainsKey(Id)) return null;
             return peds[Id];
@@ -952,7 +960,7 @@ namespace PedSyncer.Model
             {
                 Ped ped = new Ped(RandomSpawn.Position.X, RandomSpawn.Position.Y, RandomSpawn.Position.Z);
                 ped.SetRandomModel();
-                ped.StartWandering(RandomSpawn);
+                ped.Wandering = true;
             });
 
             Scenarios Scenarios = Scenarios.getInstance();
