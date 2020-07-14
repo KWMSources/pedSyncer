@@ -733,7 +733,7 @@ namespace PedSyncer.Model
 
                 NavigationMeshPolyFootpath nearestNavMesh = NavigationMesh.getInstance().getNearestMeshByPosition(this.Position);
 
-                this.Model = Ped.ModelsToNavMeshAreas[nearestNavMesh.AreaId][RandomKey.Next(0, Ped.ModelsToNavMeshAreas[nearestNavMesh.AreaId].Count - 1)].ToString();
+                this.Model = ParseModelHash(Ped.ModelsToNavMeshAreas[nearestNavMesh.AreaId][RandomKey.Next(0, Ped.ModelsToNavMeshAreas[nearestNavMesh.AreaId].Count - 1)]);
             }
         }
 
@@ -947,6 +947,15 @@ namespace PedSyncer.Model
             return NearPeds;
         }
 
+        static Dictionary<string, string> PedsToHashes = new Dictionary<string, string>();
+        public static string ParseModelHash(int ModelHash)
+        {
+            if (PedsToHashes.Count == 0) PedsToHashes = FileControl.LoadDataFromJsonFile<Dictionary<string, string>>("resources/pedSyncer/server/HashesToStrings.json");
+
+            if (!PedsToHashes.ContainsKey(ModelHash.ToString("X"))) return "";
+            return PedsToHashes[ModelHash.ToString("X")];
+        }
+
         //Method to generate wandering peds as citizens
         public static void CreateCitizenPeds()
         {
@@ -969,10 +978,9 @@ namespace PedSyncer.Model
             List<ScenarioPoint> ScenarioPoints = Scenarios.GetRandomScenarioSpots();
             foreach(ScenarioPoint ScenarioPoint in ScenarioPoints)
             {
-                Ped ped = new Ped(ScenarioPoint.Position.X, ScenarioPoint.Position.Y, ScenarioPoint.Position.Z);
+                Ped ped = new Ped(ScenarioPoint.Position.X, ScenarioPoint.Position.Y, ScenarioPoint.Position.Z, Scenarios.GetRandomModelByScenarioPoint(ScenarioPoint));
                 ped.Heading = ScenarioPoint.Position.W/Math.PI*180;
                 ped.Scenario = ScenarioPoint.IType;
-                ped.Model = Scenarios.GetRandomModelByScenarioPoint(ScenarioPoint);
             }
         }
     }

@@ -1,5 +1,6 @@
 import native from 'natives';
 import alt from 'alt';
+import { Ped } from '../class/PedClass.mjs';
 
 export function getDistanceBetweenPos(pos1, pos2) {
     if (typeof pos1 !== 'undefined' && typeof pos2 !== 'undefined' && typeof pos1.x !== 'undefined' && typeof pos2.x !== 'undefined') {
@@ -24,14 +25,13 @@ export function inDistanceBetweenPos(pos1, pos2, distance) {
 export function loadModel(classname) {
     return new Promise((resolve, reject) => {
         let orig = classname;
-        if (typeof classname === 'string' && classname.substr(0, 2) === '0x') {
+        if ((typeof classname === 'string' && classname.substr(0, 2) === '0x') || parseInt(orig) < 0) {
             classname = parseInt(classname);
         } else if (typeof classname === 'string' && isNaN(classname)) {
             classname = native.getHashKey(classname);
         }
 
         if (!native.isModelValid(classname)) {
-            alt.log("Model Invalid:", classname, orig);
             return resolve(false);
         }
 
@@ -47,6 +47,20 @@ export function loadModel(classname) {
             }
         }, 10);
     });
+}
+
+export function unloadModel(classname) {
+    if (typeof classname === 'string' && classname.substr(0, 2) === '0x') {
+        classname = parseInt(classname);
+    } else if (typeof classname === 'string' && isNaN(classname)) {
+        classname = native.getHashKey(classname);
+    }
+
+    if (!native.isModelValid(classname)) {
+        return;
+    }
+
+    if (Ped.all.filter(ped => native.getEntityModel(ped.scriptID) == classname).length == 0) native.setModelAsNoLongerNeeded(classname);
 }
 
 let pedToHash = {   

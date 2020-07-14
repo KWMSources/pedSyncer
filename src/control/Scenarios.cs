@@ -154,11 +154,11 @@ namespace PedSyncer.Control
 
             //If the ModelType is none or there are no peds in the ModelType: Use the standard ped models
             if (
-                ScenarioPoint.IType == "none" || 
-                !PedModelGroups.ContainsKey(ScenarioPoint.IType.ToUpper())
-            ) return NonePedGroupModels[Randomizer.Next(0, NonePedGroupModels.Count - 1)].ToString();
+                ScenarioPoint.ModelType == "none" || 
+                !PedModelGroups.ContainsKey(ScenarioPoint.ModelType.ToUpper())
+            ) return Ped.ParseModelHash(NonePedGroupModels[Randomizer.Next(0, NonePedGroupModels.Count - 1)]);
 
-            return Alt.Hash(PedModelGroups[ScenarioPoint.IType.ToUpper()][Randomizer.Next(0, PedModelGroups[ScenarioPoint.IType.ToUpper()].Count - 1)]).ToString();
+            return PedModelGroups[ScenarioPoint.ModelType.ToUpper()][Randomizer.Next(0, PedModelGroups[ScenarioPoint.ModelType.ToUpper()].Count - 1)];
         }
     }
 }

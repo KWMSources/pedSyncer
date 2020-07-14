@@ -2,7 +2,7 @@ import { inDistanceBetweenPos } from "../utils/functions.mjs";
 import alt from 'alt';
 import native from 'natives';
 import { loadModel } from "../utils/functions.mjs";
-import { getPedModelString } from "../utils/functions.mjs";
+import { unloadModel } from "../utils/functions.mjs";
 
 var i = 0;
 var peds = {};
@@ -169,10 +169,10 @@ class PedClass {
         this.created = true;
 
         //Load the model of this ped
-        await loadModel(getPedModelString(this.model));
+        await loadModel(this.model);
         
         //Create a random ped with a random style fitting to the current location
-        this.scriptID = native.createPed(4, native.getHashKey(getPedModelString(this.model)), this.pos.x, this.pos.y, this.pos.z);
+        this.scriptID = native.createPed(4, native.getHashKey(this.model), this.pos.x, this.pos.y, this.pos.z);
         native.setPedRandomComponentVariation(this.scriptID, 0);
 
         //Store this ped by his scriptID as a key
@@ -224,7 +224,7 @@ class PedClass {
         await loadModel(this.model);
 
         //Create the ped with the giving properties of the ped
-        this.scriptID = native.createPed(this.gender=="male"?4:5, this.model, this.pos.x, this.pos.y, this.pos.z, this.heading, false, false);
+        this.scriptID = native.createPed(this.gender=="male"?4:5, native.getHashKey(this.model), this.pos.x, this.pos.y, this.pos.z, this.heading, false, false);
 
         //Set the heading of the ped
         native.setEntityHeading(this.scriptID, this.heading);
@@ -301,6 +301,10 @@ class PedClass {
 
         //Set scriptID of the ped to 0
         this.scriptID = 0;
+        
+        alt.setTimeout(() => {
+            unloadModel(this.model);
+        }, 5000);
     }
 
     /**
