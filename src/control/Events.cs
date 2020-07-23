@@ -243,5 +243,35 @@ namespace PedSyncer.Control
                 PedMovement.GetInstance().AddPedMovementCalculcation(ped);
             }
         }
+
+        public static void OnTaskUpdate(IPlayer Player, ulong PedId, string TaskString, object[] TaskParams)
+        {
+            Ped? Ped = Ped.GetByID(PedId);
+
+            if (Ped == null) return;
+
+            if (Ped.NetOwner != null && ((PlayerClient)Ped.NetOwner).GetPlayer().Id != Player.Id) return;
+
+            bool ParamCheck = false;
+            if (TaskParams.Length != Ped.TaskParams.Count) ParamCheck = true;
+            else
+            {
+                for (int i = 0; i < TaskParams.Length; i++)
+                {
+                    if (TaskParams[i] != Ped.TaskParams[i])
+                    {
+                        ParamCheck = true;
+                        break;
+                    }
+                }
+            }
+
+
+            if (Ped.Task != TaskString || ParamCheck)
+            {
+                Ped.TaskParams = TaskParams.ToList<object>();
+                Ped.Task = TaskString;
+            }
+        }
     }
 }

@@ -560,12 +560,32 @@ namespace PedSyncer.Model
         public Vector3 WeaponAimPos
         { get; set; }
 
-        //Currently inactive - Current Task of the Ped with its params
-        public string CurrentTask
-        { get; set; }
+        //Current Task of the Ped with its params
+        public string Task
+        {
+            get
+            {
+                if (this.TryGetData<string>("task", out string value)) return value;
+                return "";
+            }
+            set
+            {
+                this.SetData("task", value);
+            }
+        }
 
-        public List<string> CurrentTaskParams
-        { get; set; }
+        public List<object> TaskParams
+        {
+            get
+            {
+                if (this.TryGetData<List<object>>("taskParams", out List<object> value)) return value;
+                return new List<object>();
+            }
+            set
+            {
+                this.SetData("taskParams", value);
+            }
+        }
 
         //Current Scenario the ped is playing
         public string Scenario
@@ -662,9 +682,6 @@ namespace PedSyncer.Model
 
             this.Weapons = new List<string>();
             this.Ammo = new Dictionary<int, int>();
-
-            this.CurrentTask = null;
-            this.CurrentTaskParams = new List<string>();
 
             this.Flags = new bool[426];
 
@@ -876,12 +893,12 @@ namespace PedSyncer.Model
             writer.Name("health");
             writer.Value(this.Health);
 
-            writer.Name("currentTask");
-            writer.Value(this.CurrentTask);
+            writer.Name("task");
+            writer.Value(this.Task);
 
-            writer.Name("currentTaskParams");
+            writer.Name("taskParams");
             writer.BeginArray();
-            foreach (string value in this.CurrentTaskParams) writer.Value(value);
+            foreach (string value in this.TaskParams) writer.Value(value);
             writer.EndArray();
 
             writer.Name("scenario");

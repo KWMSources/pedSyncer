@@ -114,9 +114,9 @@ class PedClass {
     //Currently inactive - Aim-Position of the Ped
     weaponAimPos = {x: 0, y: 0, z: 0};
 
-    //Currently inactive - Current Task of the Ped with its params
-    currentTask = null;
-    currentTaskParams = [];
+    //Current Task of the Ped with its params
+    task = null;
+    taskParams = [];
 
     //Current Scenario the ped is playing
     scenario = null;
@@ -381,6 +381,10 @@ class PedClass {
              * maybe by linear regression.
              */
             native.taskFollowNavMeshToCoord(this.scriptID, this.navmashPositions[this.nextNavMeshStation].x, this.navmashPositions[this.nextNavMeshStation].y, this.navmashPositions[this.nextNavMeshStation].z, 1.0, -1, 0.0, true, 0.0);
+            
+            this.task = "taskFollowNavMeshToCoord";
+            this.taskParams = [this.scriptID, this.navmashPositions[this.nextNavMeshStation].x, this.navmashPositions[this.nextNavMeshStation].y, this.navmashPositions[this.nextNavMeshStation].z, 1.0, -1, 0.0, true, 0.0];
+            this.sendTask();
         }
     }
 
@@ -422,6 +426,10 @@ class PedClass {
          * maybe by linear regression.
          */
         native.taskFollowNavMeshToCoord(this.scriptID, this.navmashPositions[this.nextNavMeshStation].x, this.navmashPositions[this.nextNavMeshStation].y, this.navmashPositions[this.nextNavMeshStation].z, 1.0, -1, 0.0, true, 0.0);
+        
+        this.task = "taskFollowNavMeshToCoord";
+        this.taskParams = [this.scriptID, this.navmashPositions[this.nextNavMeshStation].x, this.navmashPositions[this.nextNavMeshStation].y, this.navmashPositions[this.nextNavMeshStation].z, 1.0, -1, 0.0, true, 0.0];
+        this.sendTask();
     }
 
     /**
@@ -437,8 +445,13 @@ class PedClass {
      */
     startScenario() {
         native.setEntityHeading(this.scriptID, this.heading);
+        let that = this;
         alt.setTimeout(() => {
-            native.taskStartScenarioInPlace(this.scriptID, this.scenario, 0, false);
+            native.taskStartScenarioInPlace(that.scriptID, that.scenario, 0, false);
+            
+            that.task = "taskStartScenarioInPlace";
+            that.taskParams = [that.scriptID, that.scenario, 0, false];
+            this.sendTask();
         }, 1000);
     }
 
@@ -487,6 +500,18 @@ class PedClass {
         this.pos = ped.pos;
         this.rot = ped.rot;
         this.heading = ped.heading;
+    }
+
+    sendTask() {
+        if (this.netOwner == alt.Player.local.id) {
+            let params = [];
+            for (let key in this.taskParams) {
+                if (this.taskParams[key] == this.scriptID) params.push("scriptID");
+                else params.push(this.taskParams[key]);
+            }
+
+            alt.emitServer("pedSyncer:client:task", this.id, this.task, params);
+        }
     }
 
     /**
@@ -649,6 +674,16 @@ export const Ped = new Proxy(PedClass, {
                 if (property == "wandering") { 
                     if (value == true) pedTarget.startPath();
                     else if(pedTarget.scriptID != 0) native.clearPedTasks(pedTarget.scriptID);
+                } else if (property == "task" && value != "" && peds[pedTarget.id]["wandering"] == false) {
+                    for (let key in peds[pedTarget.id]["taskParams"]) {
+                        if (peds[pedTarget.id]["taskParams"][key] == "scriptID") {
+                            peds[pedTarget.id]["taskParams"][key] = pedTarget.scriptID;
+                            break;
+                        }
+                    }
+
+                    if(pedTarget.scriptID != 0) native[peds[pedTarget.id][property]](...peds[pedTarget.id]["taskParams"]);
+                    pedTarget.sendTask();
                 }
                 return true;
             },
