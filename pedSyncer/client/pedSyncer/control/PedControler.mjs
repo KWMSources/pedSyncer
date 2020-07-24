@@ -64,7 +64,11 @@ export function startPedControler() {
     //Event which fires on ped get streamed in
     alt.onServer("entitySync:create", (entityId, entityType, position, newEntityData) => {
         if (entityType != pedType) return;
-        if (Ped.getByID(entityId).vehicle != null) return;
+        let ped = Ped.getByID(entityId);
+        if (
+            typeof ped === "undefined" ||
+            (ped.vehicle != null && ped.vehicle != "")
+        ) return;
         trySpawn(entityId, position, 0, 100, newEntityData);
     });
 
@@ -92,7 +96,7 @@ export function startPedControler() {
         if (entityType != pedType) return;
 
         let ped = Ped.getByID(entityId);
-        if (typeof ped["vehicle"] !== "undefined") return;
+        if (typeof ped === "undefined" || ped.vehicle != null) return;
 
         ped.outOfRange();
     });
@@ -179,31 +183,35 @@ export function startPedControler() {
 
     let streamedInVehicle = [];
     function checkStreamedInVehicle() {
-        let newStreamedInVehicle = [];
-        for (let vehicle of alt.Vehicle.all) {
-            if (
-                vehicle.scriptID != 0 && 
-                vehicle.hasSyncedMeta("ped")
-            ) {
-                newStreamedInVehicle.push(vehicle.id);
-                
-                if (streamedInVehicle.indexOf(vehicle.id) == -1) {
-                    let ped = Ped.getByID(vehicle.getSyncedMeta("ped"));
-                    ped.pedSpawnTrys = 0;
-                    ped.pedSpawnTryTime = 100;
-                    ped.spawn();
+        try {
+            let newStreamedInVehicle = [];
+            for (let vehicle of alt.Vehicle.all) {
+                if (
+                    vehicle.scriptID != 0 && 
+                    vehicle.hasSyncedMeta("ped")
+                ) {
+                    newStreamedInVehicle.push(vehicle.id);
+                    
+                    if (streamedInVehicle.indexOf(vehicle.id) == -1) {
+                        let ped = Ped.getByID(parseInt(vehicle.getSyncedMeta("ped")));
+                        ped.pedSpawnTrys = 0;
+                        ped.pedSpawnTryTime = 100;
+                        ped.spawn();
+                    }
                 }
             }
-        }
 
-        for (let vehicleId of streamedInVehicle.filter(vehicleIdCheck => newStreamedInVehicle.indexOf(vehicleIdCheck) == -1)) {
-            if (
-                alt.Vehicle.all.filter(v => v.id == vehicleId).length > 0 && 
-                alt.Vehicle.all.filter(v => v.id == vehicleId)[0].hasSyncedMeta("ped")
-            ) Ped.getByID(alt.Vehicle.all.filter(v => v.id == vehicleId)[0].getSyncedMeta("ped")).outOfRange();
-        }
+            for (let vehicleId of streamedInVehicle.filter(vehicleIdCheck => newStreamedInVehicle.indexOf(vehicleIdCheck) == -1)) {
+                if (
+                    alt.Vehicle.all.filter(v => v.id == vehicleId).length > 0 && 
+                    alt.Vehicle.all.filter(v => v.id == vehicleId)[0].hasSyncedMeta("ped")
+                ) Ped.getByID(alt.Vehicle.all.filter(v => v.id == vehicleId)[0].getSyncedMeta("ped")).outOfRange();
+            }
 
-        streamedInVehicle = newStreamedInVehicle;
+            streamedInVehicle = newStreamedInVehicle;
+        } catch (error) {
+            
+        }
 
         alt.setTimeout(checkStreamedInVehicle, 100);
     }

@@ -587,12 +587,12 @@ namespace PedSyncer.Model
             }
         }
 
-        public List<object> TaskParams
+        public List<string> TaskParams
         {
             get
             {
-                if (this.TryGetData<List<object>>("taskParams", out List<object> value)) return value;
-                return new List<object>();
+                if (this.TryGetData<List<string>>("taskParams", out List<string> value)) return value;
+                return new List<string>();
             }
             set
             {

@@ -231,7 +231,7 @@ namespace PedSyncer.Control
                 {
                     IPlayer pNewPlayer = ((PlayerClient)pNewClient).GetPlayer();
 
-                    if (pNewPlayer.Exists && pNewPlayer.Id != ((PlayerClient)ped.NetOwner).GetPlayer().Id)
+                    if (pNewPlayer.Exists && (ped.NetOwner == null || pNewPlayer.Id != ((PlayerClient)ped.NetOwner).GetPlayer().Id))
                     {
                         ped.NetOwner = pNewClient;
                         return;
@@ -244,7 +244,7 @@ namespace PedSyncer.Control
             }
         }
 
-        public static void OnTaskUpdate(IPlayer Player, ulong PedId, string TaskString, object[] TaskParams)
+        public static void OnTaskUpdate(IPlayer Player, ulong PedId, string TaskString, string[] TaskParams)
         {
             Ped? Ped = Ped.GetByID(PedId);
 
@@ -269,7 +269,7 @@ namespace PedSyncer.Control
 
             if (Ped.Task != TaskString || ParamCheck)
             {
-                Ped.TaskParams = TaskParams.ToList<object>();
+                Ped.TaskParams = TaskParams.ToList<string>();
                 Ped.Task = TaskString;
             }
         }

@@ -48,7 +48,7 @@ namespace PedSyncer
              */
             Alt.OnClient<IPlayer, Dictionary<string, string>>("pedSyncer:client:firstSpawn", Events.OnFirstSpawn);
             Alt.OnClient<IPlayer, object[]>("pedSyncer:client:positions", Events.OnPositionUpdate);
-            Alt.OnClient<IPlayer, ulong, string, object[]>("pedSyncer:client:task", Events.OnTaskUpdate);
+            Alt.OnClient<IPlayer, ulong, string, string[]>("pedSyncer:client:task", Events.OnTaskUpdate);
 
             Alt.OnPlayerConnect += Events.OnPlayerConnect;
 
@@ -66,7 +66,7 @@ namespace PedSyncer
             PedMovement.GetInstance();
 
             //Create citizen vehicles
-            PedVehicles.GetInstance().SpawnRandomCitizenVehicles(2000);
+            PedVehicles.GetInstance().SpawnRandomCitizenVehicles(3000);
 
             //Create citizen peds who wanders - delete this line if you don't wanna have citizens
             Ped.CreateCitizenPeds();

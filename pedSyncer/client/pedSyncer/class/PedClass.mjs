@@ -237,7 +237,10 @@ class PedClass {
         else {
             let veh = alt.Vehicle.all.filter(v => v.id == this.vehicle)[0];
             this.scriptID = native.createPedInsideVehicle(veh.scriptID, 4, native.getHashKey(this.model), this.seat, false, false);
-            native.taskVehicleDriveWander(this.scriptID, veh.scriptID, 10, 786491);
+
+            this.taskParams = ["scriptID", veh.scriptID, 10, 786491];
+            this.task = "taskVehicleDriveWander";
+            this.sendTask();
         }
 
         //Store this ped by his scriptID as a key
@@ -276,6 +279,8 @@ class PedClass {
      */
     becomeNetOwner() {
         this.netOwner = alt.Player.local.id;
+
+        if (this.vehicle != null || this.task == "taskVehicleDriveWander") native.taskVehicleDriveWander(this.scriptID, alt.Vehicle.all.filter(v => v.id == this.vehicle)[0].scriptID, 10, 786491);
     }
 
     releaseNetOwner() {
@@ -373,8 +378,8 @@ class PedClass {
              */
             native.taskFollowNavMeshToCoord(this.scriptID, this.navmashPositions[this.nextNavMeshStation].x, this.navmashPositions[this.nextNavMeshStation].y, this.navmashPositions[this.nextNavMeshStation].z, 1.0, -1, 0.0, true, 0.0);
             
+            this.taskParams = ["scriptID", this.navmashPositions[this.nextNavMeshStation].x, this.navmashPositions[this.nextNavMeshStation].y, this.navmashPositions[this.nextNavMeshStation].z, 1.0, -1, 0.0, true, 0.0];
             this.task = "taskFollowNavMeshToCoord";
-            this.taskParams = [this.scriptID, this.navmashPositions[this.nextNavMeshStation].x, this.navmashPositions[this.nextNavMeshStation].y, this.navmashPositions[this.nextNavMeshStation].z, 1.0, -1, 0.0, true, 0.0];
             this.sendTask();
         }
     }
@@ -418,8 +423,8 @@ class PedClass {
          */
         native.taskFollowNavMeshToCoord(this.scriptID, this.navmashPositions[this.nextNavMeshStation].x, this.navmashPositions[this.nextNavMeshStation].y, this.navmashPositions[this.nextNavMeshStation].z, 1.0, -1, 0.0, true, 0.0);
         
+        this.taskParams = ["scriptID", this.navmashPositions[this.nextNavMeshStation].x, this.navmashPositions[this.nextNavMeshStation].y, this.navmashPositions[this.nextNavMeshStation].z, 1.0, -1, 0.0, true, 0.0];
         this.task = "taskFollowNavMeshToCoord";
-        this.taskParams = [this.scriptID, this.navmashPositions[this.nextNavMeshStation].x, this.navmashPositions[this.nextNavMeshStation].y, this.navmashPositions[this.nextNavMeshStation].z, 1.0, -1, 0.0, true, 0.0];
         this.sendTask();
     }
 
@@ -673,7 +678,13 @@ export const Ped = new Proxy(PedClass, {
                         }
                     }
 
-                    if(pedTarget.scriptID != 0) native[peds[pedTarget.id][property]](...peds[pedTarget.id]["taskParams"]);
+                    if(
+                        pedTarget.scriptID != 0 &&
+                        (
+                            peds[pedTarget.id][property] != "taskVehicleDriveWander" ||
+                            pedTarget.netOwner == alt.Player.local.id
+                        )
+                    ) native[peds[pedTarget.id][property]](...peds[pedTarget.id]["taskParams"]);
                     pedTarget.sendTask();
                 }
                 return true;
