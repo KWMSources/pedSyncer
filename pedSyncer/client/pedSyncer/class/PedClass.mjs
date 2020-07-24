@@ -4,7 +4,6 @@ import native from 'natives';
 import { loadModel } from "../utils/functions.mjs";
 import { unloadModel } from "../utils/functions.mjs";
 
-var i = 0;
 var peds = {};
 var pedsToScriptID = {};
 var pedsProxies = {};
@@ -92,10 +91,10 @@ class PedClass {
     //Will contain information if the ped is invincible
     invincible = null;
 
-    //Currently inactive - The vehicle the ped sits in
+    //The vehicle the ped sits in
     vehicle = null;
 
-    //Currently inactive - If the ped is in a vehicle, this tells the current seat of the ped
+    //If the ped is in a vehicle, this tells the current seat of the ped
     seat = null;
 
     //Currently inactive
@@ -154,9 +153,7 @@ class PedClass {
         this.flags = {};
         peds[ped.id] = this;
 
-        for (let key of Object.keys(this)) {
-            if (typeof this[key] !== "undefined") this[key] = ped[key];
-        }
+        for (let key of Object.keys(ped)) if (typeof this[key] !== "undefined") this[key] = ped[key];
     }
 
     /**
@@ -165,20 +162,11 @@ class PedClass {
      * users. This client decide the style of this ped and gives it back to the
      * server for sync.
      */
-    async firstSpawn() {
+    firstSpawn() {
         //Check if created - if so: stop!
         if (this.created) return;
-        this.created = true;
 
-        //Load the model of this ped
-        await loadModel(this.model);
-        
-        //Create a random ped with a random style fitting to the current location
-        this.scriptID = native.createPed(4, native.getHashKey(this.model), this.pos.x, this.pos.y, this.pos.z);
         native.setPedRandomComponentVariation(this.scriptID, 0);
-
-        //Store this ped by his scriptID as a key
-        pedsToScriptID[this.scriptID] = this;
 
         /**
          * Get all important information to give it back to the server for sync
@@ -213,9 +201,6 @@ class PedClass {
         this.texture11 = native.getPedTextureVariation(this.scriptID, 11);
         this.created = true;
 
-        native.setEntityInvincible(this.scriptID, this.invincible);
-        native.freezeEntityPosition(this.scriptID, this.freeze);
-
         //Send back to the server for sync with other players
         alt.emitServer("pedSyncer:client:firstSpawn", Ped.emitParse(this));
     }
@@ -224,13 +209,7 @@ class PedClass {
      * This will be executed by the clients coming into range of the ped and the ped
      * was already created by an other client which already decided the peds style.
      */
-    async respawn() {
-        //Load the model of this ped
-        await loadModel(this.model);
-
-        //Create the ped with the giving properties of the ped
-        this.scriptID = native.createPed(this.gender=="male"?4:5, native.getHashKey(this.model), this.pos.x, this.pos.y, this.pos.z, this.heading, false, false);
-
+    respawn() {
         //Set the heading of the ped
         native.setEntityHeading(this.scriptID, this.heading);
 
@@ -240,27 +219,38 @@ class PedClass {
         //Set the peds style
         this.setPedComponentVariation();
 
-        //Store this ped by his scriptID as a key
-        pedsToScriptID[this.scriptID] = this;
-
         //Set Ped-Attributes
-        if (this.invincible) native.setEntityInvincible(this.scriptID, true);
         native.setPedArmour(this.scriptID, this.armour);
         native.setEntityHealth(this.scriptID, this.health, 0);
         if (this.dead) native.setPedToRagdoll(this.scriptID, -1, -1, 0, false, false, false);
-        native.setEntityInvincible(this.scriptID, this.invincible);
-        native.freezeEntityPosition(this.scriptID, this.freeze);
     }
 
     /**
      * Spawn the ped, decide if this is the first time this ped will ever be created
      */
     async spawn() {
+        //Load the model of this ped
+        await loadModel(this.model);
+
+        //Create a random ped with a random style fitting to the current location
+        if (this.vehicle == null) this.scriptID = native.createPed(4, native.getHashKey(this.model), this.pos.x, this.pos.y, this.pos.z);
+        else {
+            let veh = alt.Vehicle.all.filter(v => v.id == this.vehicle)[0];
+            this.scriptID = native.createPedInsideVehicle(veh.scriptID, 4, native.getHashKey(this.model), this.seat, false, false);
+            native.taskVehicleDriveWander(this.scriptID, veh.scriptID, 10, 786491);
+        }
+
+        //Store this ped by his scriptID as a key
+        pedsToScriptID[this.scriptID] = this;
+
+        native.setEntityInvincible(this.scriptID, this.invincible);
+        native.freezeEntityPosition(this.scriptID, this.freeze);
+
         let spawned = false;
         //If already created, respawn it
-        if (this.created) await this.respawn();
+        if (this.created) this.respawn();
         //If it wasn't created and this client is the netOwner: spawn it first time
-        else if (this.netOwner == alt.Player.local.id) await this.firstSpawn();
+        else if (this.netOwner == alt.Player.local.id) this.firstSpawn();
 
         //Start the peds wandering
         if (typeof this.scriptID !== "undefined" && this.scriptID != 0) {
@@ -300,6 +290,7 @@ class PedClass {
      */
     outOfRange() {
         //Delete ped
+        native.deleteEntity(this.scriptID);
         native.deletePed(this.scriptID);
 
         //Delete ped scriptID reference
@@ -481,7 +472,7 @@ class PedClass {
     updateProperties(ped) {
         let componentSet = false;
         for (let key of Object.keys(ped)) {
-            if (typeof this[key] !== "undefined") this[key] = ped[key];
+            this[key] = ped[key];
             if (
                 key.includes("drawable") ||
                 key.includes("texture") ||

@@ -1,6 +1,7 @@
 ﻿using AltV.Net;
 using AltV.Net.Async;
 using AltV.Net.Elements.Entities;
+using AltV.Net.Elements.Pools;
 using AltV.Net.EntitySync;
 using AltV.Net.EntitySync.ServerEvent;
 using PedSyncer.Control;
@@ -482,11 +483,23 @@ namespace PedSyncer.Model
             }
         }
 
-        //Currently inactive - The vehicle the ped sits in
-        public IVehicle Vehicle
-        { get; set; }
+        //The vehicle the ped sits in
+        private IVehicle? vehicle = null;
+        public IVehicle? Vehicle
+        {
+            get
+            {
+                return vehicle;
+            }
+            set
+            {
+                vehicle = value;
+                if (value == null) this.SetData("vehicle", null);
+                else this.SetData("vehicle", value.Id);
+            }
+        }
 
-        //Currently inactive - If the ped is in a vehicle, this tells the current seat of the ped
+        //If the ped is in a vehicle, this tells the current seat of the ped
         public int Seat
         { get; set; }
 
@@ -750,7 +763,8 @@ namespace PedSyncer.Model
 
                 NavigationMeshPolyFootpath nearestNavMesh = NavigationMesh.getInstance().getNearestMeshByPosition(this.Position);
 
-                this.Model = ParseModelHash(Ped.ModelsToNavMeshAreas[nearestNavMesh.AreaId][RandomKey.Next(0, Ped.ModelsToNavMeshAreas[nearestNavMesh.AreaId].Count - 1)]);
+                if (nearestNavMesh != null) this.Model = ParseModelHash(Ped.ModelsToNavMeshAreas[nearestNavMesh.AreaId][RandomKey.Next(0, Ped.ModelsToNavMeshAreas[nearestNavMesh.AreaId].Count - 1)]);
+                else this.Model = ParseModelHash(Ped.ModelsToNavMeshAreas[10000][RandomKey.Next(0, Ped.ModelsToNavMeshAreas[10000].Count - 1)]);
             }
         }
 
@@ -879,7 +893,8 @@ namespace PedSyncer.Model
             writer.Value(this.Invincible);
 
             writer.Name("vehicle");
-            writer.Value(this.Vehicle);
+            if (this.Vehicle != null) writer.Value(this.Vehicle.Id.ToString());
+            else writer.Value("");
 
             writer.Name("seat");
             writer.Value(this.Seat);

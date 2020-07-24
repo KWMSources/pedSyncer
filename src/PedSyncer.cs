@@ -65,6 +65,9 @@ namespace PedSyncer
             //Start serverside ped movement calculation
             PedMovement.GetInstance();
 
+            //Create citizen vehicles
+            PedVehicles.GetInstance().SpawnRandomCitizenVehicles(2000);
+
             //Create citizen peds who wanders - delete this line if you don't wanna have citizens
             Ped.CreateCitizenPeds();
 
