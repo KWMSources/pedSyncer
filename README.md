@@ -119,51 +119,39 @@ The idea of developing with this resource is that you can use the peds like you 
 **Object-Properties**
 
 `Id: ulong` 
-
 (get) Unique ID of the ped
 
 `Dimension: int`
-
 (get/set) Dimension of the ped, default 0
 
 `Position: Vector3`
-
 (get/set) Position of the ped
 
 `Range: uint`
-
 (get/set) Range of the ped
 
 `NetOwner: IPlayer`
-
 (get) netOwner of the ped
 
 `Valid: bool`
-
 (get) Inactive, will contain information about the validity of the ped
 
 `Created: bool`
-
 (get) true if the ped was already created at one client
 
 `Heading: double`
-
 (get, set) heading of the ped
 
 `Model: string`
-
 (get, set) ped-model of the ped
 
 `Drawble[1-11]: int`
-
 (get, set) index of the drawable[1-11]
 
 `Texture[1-11]: int`
-
 (get, set) index of the texture[1-11]
 
 `Prop[0,1,2,6,7]: int`
-
 (get, set) index of the properties[0,1,2,6,7]
 
 `Gender: string`
@@ -229,49 +217,38 @@ Inactive
 **Object-Methods**
 
 `constructor(x: float, y: float, z: float, model: number): void`
-
 Constuctor of the ped. `x`, `y` and `z` are the Vector3 coordinates. Usage like `new Ped(0,0,72);`
 
 `Destroy(): void`
-
 Not active currently
 
 `StartWandering(IPathElement? StartNavMesh = null): void`
-
 Let the ped wander starting at the given start.
 
 `ContinueWandering(): void`
-
 Method to let the ped further wander at the moment the ped reaches the final destination
 
 `SetRandomModel(): void`
-
 Set a random model to the ped according to its current position.
 
 `SetData(string key, object value): void`
-
 Entity Sync function to store data to the ped
 
 `TryGetData<T>(string key, out T value)`
-
 Entity Sync function to get data of the ped
 
 **Static methods and properties**
 
 `GetByID(id: ulong): Ped`
-
 Returns the ped object given by his ID. `undefined` if it found nothing
 
 `GetNear(pos: Vector3, distance: float): Array<Ped>`
-
 Returns peds which are in the distance of a given position.
 
 `All`
-
 Returns all peds.
 
 `createCitizenPeds(): void`
-
 Method to create citizen peds which spawns randomly and wander.
 
 ## Clientside
@@ -279,47 +256,36 @@ Method to create citizen peds which spawns randomly and wander.
 ### Ped
 
 `id: ulong` 
-
 (get) Unique ID of the ped
 
 `dimension: int`
-
 (get) Dimension of the ped
 
 `position: Vector3`
-
 (get) Position of the ped
 
 `netOwner: int`
-
 (get) netOwners ID, only not null if this client is the netOwner
 
 `valid: bool`
-
 (get) Inactive, will contain information about the validity of the ped
 
 `created: bool`
-
 (get) true if the ped was already created at one client
 
 heading: double`
-
 (get) heading of the ped
 
 `model: string`
-
 (get) ped-model of the ped
 
 `drawble[1-11]: int`
-
 (get, set) index of the drawable[1-11]
 
 `texture[1-11]: int`
-
 (get, set) index of the texture[1-11]
 
 `prop[0,1,2,6,7]: int`
-
 (get, set) index of the properties[0,1,2,6,7]
 
 `gender: string`
@@ -376,19 +342,15 @@ Inactive
 **Static methods and properties**
 
 `getByID(id: number): Ped`
-
 Method to get the ped by the ID
 
 `getByScriptID(scriptID: number): Ped`
-
 Method to get the ped by the script ID
 
 `getNear(position: position, distance: number): Ped[]`
-
 Method to get the ped to a position in the given distance
 
 `getAllStreamedPeds(): Ped[]`
-
 Method to get all the peds which are streamed in into the client
 
 # ToDos
