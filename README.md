@@ -74,12 +74,11 @@ The pedSyncer use the c# entity sync.
 
 # Installation & integration
 
-## Prepation
-
 1. Download the pedSyncer directory and put it into your resource folder
 2. Load the c#-module https://altv.mp/#/downloads and store it in the modules folder
 3. Add `csharp-module` to `server.cfg` in the `modules` section
 4. Add `'pedSyncer'` to the resource section
+5. Please mention https://github.com/DurtyFree/gta-v-data-dumps/blob/master/navigationmesh.md#systemnotsupportedexception-a-non-collectible-assembly-may-not-reference-a-collectible-assembly if you get the `A non-collectible assembly may not reference a collectible assembly.` exception
 
 You can also compile the script by yourself with your own configurations (like spawning of citizens or npc traffic).
 
