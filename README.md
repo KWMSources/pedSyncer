@@ -15,14 +15,14 @@ This experiment can be used to:
 
 - ped creation and development like AltV players or vehicles
 - streaming and sync of peds
--- using of the c# entity sync
--- sync of ped components
--- sync of models
--- sync of tasks
--- sync of scenarios
--- sync of invincible
--- sync of freeze
--- sync of ped death
+  - using of the c# entity sync
+  - sync of ped components
+  - sync of models
+  - sync of tasks
+  - sync of scenarios
+  - sync of invincible
+  - sync of freeze
+  - sync of ped death
 - ped path walking
 - ped ambient scenarios
 - ped wandering
