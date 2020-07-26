@@ -22,31 +22,21 @@ export function inDistanceBetweenPos(pos1, pos2, distance) {
     } else return false;
 }
 
-export function loadModel(classname) {
-    return new Promise((resolve, reject) => {
-        let orig = classname;
-        if ((typeof classname === 'string' && classname.substr(0, 2) === '0x') || parseInt(orig) < 0) {
-            classname = parseInt(classname);
-        } else if (typeof classname === 'string' && isNaN(classname)) {
-            classname = native.getHashKey(classname);
-        }
+export async function loadModel(classname) {
+    let orig = classname;
+    if ((typeof classname === 'string' && classname.substr(0, 2) === '0x') || parseInt(orig) < 0) {
+        classname = parseInt(classname);
+    } else if (typeof classname === 'string' && isNaN(classname)) {
+        classname = native.getHashKey(classname);
+    }
 
-        if (!native.isModelValid(classname)) {
-            return resolve(false);
-        }
+    if (!native.isModelValid(classname)) {
+        throw "Model " + classname + " not valid";
+    }
 
-        if (native.hasModelLoaded(classname)) return resolve(classname);
+    if (native.hasModelLoaded(classname)) return;
 
-        native.requestModel(classname);
-
-        let interval = alt.setInterval(() => {
-            if (native.hasModelLoaded(classname)) {
-                alt.clearInterval(interval);
-
-                return resolve(classname);
-            }
-        }, 10);
-    });
+    await alt.loadModelAsync(classname);
 }
 
 export function unloadModel(classname) {
