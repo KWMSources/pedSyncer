@@ -48,26 +48,6 @@ namespace PedSyncer.Model
         }
 
         /**
-		 * Tells if the ped was already created on one client
-		 *
-		 * If created is true this object will contain information about the style
-		 * of this ped
-		 */
-
-        public bool Created
-        {
-            get
-            {
-                if (this.TryGetData<bool>("created", out bool value)) return value;
-                return false;
-            }
-            set
-            {
-                this.SetData("created", value);
-            }
-        }
-
-        /**
 		 * Current heading of the ped
 		 */
 
@@ -452,6 +432,71 @@ namespace PedSyncer.Model
             }
         }
 
+        public int PropTexture0
+        {
+            get
+            {
+                if (this.TryGetData<int>("proptexture0", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("proptexture0", value);
+            }
+        }
+
+        public int PropTexture1
+        {
+            get
+            {
+                if (this.TryGetData<int>("proptexture1", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("proptexture1", value);
+            }
+        }
+
+        public int PropTexture2
+        {
+            get
+            {
+                if (this.TryGetData<int>("proptexture2", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("proptexture2", value);
+            }
+        }
+
+        public int PropTexture6
+        {
+            get
+            {
+                if (this.TryGetData<int>("proptexture6", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("proptexture6", value);
+            }
+        }
+
+        public int PropTexture7
+        {
+            get
+            {
+                if (this.TryGetData<int>("proptexture7", out int value)) return value;
+                return 0;
+            }
+            set
+            {
+                this.SetData("proptexture7", value);
+            }
+        }
+
         public string Gender
         { get; set; }
 
@@ -724,7 +769,6 @@ namespace PedSyncer.Model
             {
                 this.PathPositions = new List<IPathElement>();
                 this.PathPositions.Add(NavigationMeshControl.getNearestMeshByPosition(this.Position));
-                Console.WriteLine("Wandering at null: " + this.Id);
                 return;
             }
 
@@ -768,6 +812,66 @@ namespace PedSyncer.Model
             }
         }
 
+        //Property and Method to generate a random ped style
+        private static Dictionary<string, ModelData> ModelData = new Dictionary<string, ModelData>();
+
+        public void SetRandomStyle()
+        {
+            if (!ModelData.ContainsKey(this.Model.ToLower())) return;
+
+            Random RandomKey = new Random();
+
+            ModelData modelData = ModelData[this.Model];
+
+            this.Drawable1 = RandomKey.Next(0, modelData.Drawable1);
+            this.Texture1 = modelData.Texture1.ContainsKey(this.Drawable1) ? RandomKey.Next(0, modelData.Texture1[this.Drawable1]) : 0;
+
+            this.Drawable2 = RandomKey.Next(0, modelData.Drawable2);
+            this.Texture2 = modelData.Texture2.ContainsKey(this.Drawable2) ? RandomKey.Next(0, modelData.Texture2[this.Drawable2]) : 0;
+
+            this.Drawable3 = RandomKey.Next(0, modelData.Drawable3);
+            this.Texture3 = modelData.Texture3.ContainsKey(this.Drawable3) ? RandomKey.Next(0, modelData.Texture3[this.Drawable3]) : 0;
+
+            this.Drawable4 = RandomKey.Next(0, modelData.Drawable4);
+            this.Texture4 = modelData.Texture4.ContainsKey(this.Drawable4) ? RandomKey.Next(0, modelData.Texture4[this.Drawable4]) : 0;
+
+            this.Drawable5 = RandomKey.Next(0, modelData.Drawable5);
+            this.Texture5 = modelData.Texture5.ContainsKey(this.Drawable5) ? RandomKey.Next(0, modelData.Texture5[this.Drawable5]) : 0;
+
+            this.Drawable6 = RandomKey.Next(0, modelData.Drawable6);
+            this.Texture6 = modelData.Texture6.ContainsKey(this.Drawable6) ? RandomKey.Next(0, modelData.Texture6[this.Drawable6]) : 0;
+
+            this.Drawable7 = RandomKey.Next(0, modelData.Drawable7);
+            this.Texture7 = modelData.Texture7.ContainsKey(this.Drawable7) ? RandomKey.Next(0, modelData.Texture7[this.Drawable7]) : 0;
+
+            this.Drawable8 = RandomKey.Next(0, modelData.Drawable8);
+            this.Texture8 = modelData.Texture8.ContainsKey(this.Drawable8) ? RandomKey.Next(0, modelData.Texture8[this.Drawable8]) : 0;
+
+            this.Drawable9 = RandomKey.Next(0, modelData.Drawable9);
+            this.Texture9 = modelData.Texture9.ContainsKey(this.Drawable9) ? RandomKey.Next(0, modelData.Texture9[this.Drawable9]) : 0;
+
+            this.Drawable10 = RandomKey.Next(0, modelData.Drawable10);
+            this.Texture10 = modelData.Texture10.ContainsKey(this.Drawable10) ? RandomKey.Next(0, modelData.Texture10[this.Drawable10]) : 0;
+
+            this.Drawable11 = RandomKey.Next(0, modelData.Drawable11);
+            this.Texture11 = modelData.Texture11.ContainsKey(this.Drawable11) ? RandomKey.Next(0, modelData.Texture11[this.Drawable11]) : 0;
+
+            this.Prop0 = RandomKey.Next(0, modelData.Prop0);
+            this.PropTexture0 = modelData.PropTexture0.ContainsKey(this.Prop0) ? RandomKey.Next(0, modelData.PropTexture0[this.Prop0]) : 0;
+
+            this.Prop1 = RandomKey.Next(0, modelData.Prop1);
+            this.PropTexture1 = modelData.PropTexture1.ContainsKey(this.Prop1) ? RandomKey.Next(0, modelData.PropTexture1[this.Prop1]) : 0;
+
+            this.Prop2 = RandomKey.Next(0, modelData.Prop2);
+            this.PropTexture2 = modelData.PropTexture2.ContainsKey(this.Prop2) ? RandomKey.Next(0, modelData.PropTexture2[this.Prop2]) : 0;
+
+            this.Prop6 = RandomKey.Next(0, modelData.Prop6);
+            this.PropTexture6 = modelData.PropTexture6.ContainsKey(this.Prop6) ? RandomKey.Next(0, modelData.PropTexture6[this.Prop6]) : 0;
+
+            this.Prop7 = RandomKey.Next(0, modelData.Prop7);
+            this.PropTexture7 = modelData.PropTexture7.ContainsKey(this.Prop7) ? RandomKey.Next(0, modelData.PropTexture7[this.Prop7]) : 0;
+        }
+
         //Method to serialize this object
         public void OnWrite(IMValueWriter writer)
         {
@@ -795,9 +899,6 @@ namespace PedSyncer.Model
 
             writer.Name("valid");
             writer.Value(this.Valid);
-
-            writer.Name("created");
-            writer.Value(this.Created);
 
             writer.Name("heading");
             writer.Value(this.Heading);
@@ -885,6 +986,21 @@ namespace PedSyncer.Model
 
             writer.Name("prop7");
             writer.Value(this.Prop7);
+
+            writer.Name("proptexture0");
+            writer.Value(this.PropTexture0);
+
+            writer.Name("proptexture1");
+            writer.Value(this.PropTexture1);
+
+            writer.Name("proptexture2");
+            writer.Value(this.PropTexture2);
+
+            writer.Name("proptexture6");
+            writer.Value(this.PropTexture6);
+
+            writer.Name("proptexture7");
+            writer.Value(this.PropTexture7);
 
             writer.Name("gender");
             writer.Value(this.Gender);
@@ -993,6 +1109,17 @@ namespace PedSyncer.Model
         {
             NavigationMesh NavigationMeshControl = NavigationMesh.getInstance();
 
+            //Load Drawable Data
+            if (ModelData.Count == 0)
+            {
+                Dictionary<string, ModelData> ModelDataTemp = FileControl.LoadDataFromJsonFile<Dictionary<string, ModelData>>("resources/pedSyncer/server/data/PedDrawables.json");
+
+                foreach (string Model in ModelDataTemp.Keys)
+                {
+                    if (!ModelData.ContainsKey(Model.ToLower())) ModelData.Add(Model.ToLower(), ModelDataTemp[Model]);
+                }
+            }
+
             //Load random navMeshes to spawn peds on it
             List<NavigationMeshPolyFootpath> RandomSpawnsList = NavigationMeshControl.getRandomSpawnMeshes();
 
@@ -1001,6 +1128,7 @@ namespace PedSyncer.Model
             {
                 Ped ped = new Ped(RandomSpawn.Position.X, RandomSpawn.Position.Y, RandomSpawn.Position.Z);
                 ped.SetRandomModel();
+                ped.SetRandomStyle();
                 ped.Wandering = true;
             });
 

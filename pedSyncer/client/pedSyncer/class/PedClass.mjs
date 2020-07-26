@@ -86,6 +86,12 @@ class PedClass {
     prop6 = null;
     prop7 = null;
 
+    proptexture0 = null;
+    proptexture1 = null;
+    proptexture2 = null;
+    proptexture6 = null;
+    proptexture7 = null;
+
     gender = null;
 
     //Will contain information if the ped is invincible
@@ -157,75 +163,6 @@ class PedClass {
     }
 
     /**
-     * This will be executed by the first client to which the ped is streamed in.
-     * This client will decide the model, the drawables and the textures for all
-     * users. This client decide the style of this ped and gives it back to the
-     * server for sync.
-     */
-    firstSpawn() {
-        //Check if created - if so: stop!
-        if (this.created) return;
-
-        native.setPedRandomComponentVariation(this.scriptID, 0);
-
-        /**
-         * Get all important information to give it back to the server for sync
-         */
-        this.pos = JSON.parse(JSON.stringify(native.getEntityCoords(this.scriptID, true)));
-        this.rot = native.getEntityRotation(this.scriptID, 0);
-
-        this.gender = native.isPedMale(this.scriptID)?"male":"female";
-        this.drawable0 = native.getPedDrawableVariation(this.scriptID, 0);
-        this.drawable1 = native.getPedDrawableVariation(this.scriptID, 1);
-        this.drawable2 = native.getPedDrawableVariation(this.scriptID, 2);
-        this.drawable3 = native.getPedDrawableVariation(this.scriptID, 3);
-        this.drawable4 = native.getPedDrawableVariation(this.scriptID, 4);
-        this.drawable5 = native.getPedDrawableVariation(this.scriptID, 5);
-        this.drawable6 = native.getPedDrawableVariation(this.scriptID, 6);
-        this.drawable7 = native.getPedDrawableVariation(this.scriptID, 7);
-        this.drawable8 = native.getPedDrawableVariation(this.scriptID, 8);
-        this.drawable9 = native.getPedDrawableVariation(this.scriptID, 9);
-        this.drawable10 = native.getPedDrawableVariation(this.scriptID, 10);
-        this.drawable11 = native.getPedDrawableVariation(this.scriptID, 11);
-        this.texture0 = native.getPedTextureVariation(this.scriptID, 0);
-        this.texture1 = native.getPedTextureVariation(this.scriptID, 1);
-        this.texture2 = native.getPedTextureVariation(this.scriptID, 2);
-        this.texture3 = native.getPedTextureVariation(this.scriptID, 3);
-        this.texture4 = native.getPedTextureVariation(this.scriptID, 4);
-        this.texture5 = native.getPedTextureVariation(this.scriptID, 5);
-        this.texture6 = native.getPedTextureVariation(this.scriptID, 6);
-        this.texture7 = native.getPedTextureVariation(this.scriptID, 7);
-        this.texture8 = native.getPedTextureVariation(this.scriptID, 8);
-        this.texture9 = native.getPedTextureVariation(this.scriptID, 9);
-        this.texture10 = native.getPedTextureVariation(this.scriptID, 10);
-        this.texture11 = native.getPedTextureVariation(this.scriptID, 11);
-        this.created = true;
-
-        //Send back to the server for sync with other players
-        alt.emitServer("pedSyncer:client:firstSpawn", Ped.emitParse(this));
-    }
-
-    /**
-     * This will be executed by the clients coming into range of the ped and the ped
-     * was already created by an other client which already decided the peds style.
-     */
-    respawn() {
-        //Set the heading of the ped
-        native.setEntityHeading(this.scriptID, this.heading);
-
-        //Don't know why this is important, but it is...
-        native.setEntityAsMissionEntity(this.scriptID, true, false);
-    
-        //Set the peds style
-        this.setPedComponentVariation();
-
-        //Set Ped-Attributes
-        native.setPedArmour(this.scriptID, this.armour);
-        native.setEntityHealth(this.scriptID, this.health, 0);
-        if (this.dead) native.setPedToRagdoll(this.scriptID, -1, -1, 0, false, false, false);
-    }
-
-    /**
      * Spawn the ped, decide if this is the first time this ped will ever be created
      */
     async spawn() {
@@ -250,10 +187,23 @@ class PedClass {
         native.freezeEntityPosition(this.scriptID, this.freeze);
 
         let spawned = false;
-        //If already created, respawn it
-        if (this.created) this.respawn();
-        //If it wasn't created and this client is the netOwner: spawn it first time
-        else if (this.netOwner == alt.Player.local.id) this.firstSpawn();
+
+        this.pos = JSON.parse(JSON.stringify(native.getEntityCoords(this.scriptID, true)));
+        this.rot = native.getEntityRotation(this.scriptID, 0);
+
+        //Set the heading of the ped
+        native.setEntityHeading(this.scriptID, this.heading);
+
+        //Don't know why this is important, but it is...
+        native.setEntityAsMissionEntity(this.scriptID, true, false);
+    
+        //Set the peds style
+        this.setPedComponentVariation();
+
+        //Set Ped-Attributes
+        native.setPedArmour(this.scriptID, this.armour);
+        native.setEntityHealth(this.scriptID, this.health, 0);
+        if (this.dead) native.setPedToRagdoll(this.scriptID, -1, -1, 0, false, false, false);
 
         //Start the peds wandering
         if (typeof this.scriptID !== "undefined" && this.scriptID != 0) {
@@ -467,6 +417,11 @@ class PedClass {
         native.setPedComponentVariation(this.scriptID, 9, this.drawable9, this.texture9, 0);
         native.setPedComponentVariation(this.scriptID, 10, this.drawable10, this.texture10, 0);
         native.setPedComponentVariation(this.scriptID, 11, this.drawable11, this.texture11, 0);
+        native.setPedPropIndex(this.scriptID, 0, this.prop0, this.proptexture0, 0);
+        native.setPedPropIndex(this.scriptID, 1, this.prop1, this.proptexture1, 0);
+        native.setPedPropIndex(this.scriptID, 2, this.prop2, this.proptexture2, 0);
+        native.setPedPropIndex(this.scriptID, 6, this.prop6, this.proptexture6, 0);
+        native.setPedPropIndex(this.scriptID, 7, this.prop7, this.proptexture7, 0);
     }
 
     /**
@@ -481,7 +436,8 @@ class PedClass {
             if (
                 key.includes("drawable") ||
                 key.includes("texture") ||
-                key.includes("prop")
+                key.includes("prop") ||
+                key.includes("proptexture")
             ) componentSet = true;
         }
         if (componentSet) this.setPedComponentVariation();
