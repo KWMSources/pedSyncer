@@ -186,8 +186,6 @@ class PedClass {
         native.setEntityInvincible(this.scriptID, this.invincible);
         native.freezeEntityPosition(this.scriptID, this.freeze);
 
-        let spawned = false;
-
         this.pos = JSON.parse(JSON.stringify(native.getEntityCoords(this.scriptID, true)));
         this.rot = native.getEntityRotation(this.scriptID, 0);
 
@@ -209,15 +207,6 @@ class PedClass {
         if (typeof this.scriptID !== "undefined" && this.scriptID != 0) {
             if (this.wandering) this.startPath();
             if (this.scenario != null) this.startScenario();
-            spawned = true;
-        }
-
-        if (spawned == false && this.pedSpawnTrys < 10) {
-            alt.setTimeout(async () => {
-                await Ped.getByID(this.id).spawn();
-            }, this.pedSpawnTryTime);
-            this.pedSpawnTryTime *= 2;
-            this.pedSpawnTrys += 1;
         }
     }
 

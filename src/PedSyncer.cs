@@ -49,8 +49,7 @@ namespace PedSyncer
             Alt.OnClient<IPlayer, Dictionary<string, string>>("pedSyncer:client:firstSpawn", Events.OnFirstSpawn);
             Alt.OnClient<IPlayer, object[]>("pedSyncer:client:positions", Events.OnPositionUpdate);
             Alt.OnClient<IPlayer, ulong, string, string[]>("pedSyncer:client:task", Events.OnTaskUpdate);
-
-            Alt.OnPlayerConnect += Events.OnPlayerConnect;
+            Alt.OnClient<IPlayer>("pedSyncer:client:ready", Events.OnPlayerConnect);
 
             AltEntitySync.OnEntityRemove += Events.OnEntityRemove;
 

@@ -65,10 +65,7 @@ export function startPedControler() {
     alt.onServer("entitySync:create", (entityId, entityType, position, newEntityData) => {
         if (entityType != pedType) return;
         let ped = Ped.getByID(entityId);
-        if (
-            typeof ped === "undefined" ||
-            (ped.vehicle != null && ped.vehicle != "")
-        ) return;
+        if (typeof ped !== "undefined" && ped.vehicle != null && ped.vehicle != "") return;
         trySpawn(entityId, position, 0, 100, newEntityData);
     });
 
@@ -76,14 +73,16 @@ export function startPedControler() {
     function trySpawn(entityId, position, spawnTrys, spawnTrysTime, newEntityData) {
         if (spawnTrys >= 10) return;
         let ped = Ped.getByID(entityId);
+        
+        if (typeof ped !== "undefined" && ped.vehicle != null && ped.vehicle != "") return;
 
-        if (typeof ped === "undefined" || typeof ped.id === "undefined" || ped.id != entityId) {
+        if (typeof ped === "undefined") {
             alt.setTimeout(() => {
                 trySpawn(entityId, position, spawnTrys+1, spawnTrysTime*2, newEntityData);
             }, spawnTrysTime);
         } else {
             ped.pedSpawnTrys = 0;
-            ped.pedSpawnTryTime = 100;
+            ped.pedSpawnTryTime = 200;
             ped.pos = position;
             ped.spawn();
 
@@ -189,7 +188,7 @@ export function startPedControler() {
                     if (streamedInVehicle.indexOf(vehicle.id) == -1) {
                         let ped = Ped.getByID(parseInt(vehicle.getSyncedMeta("ped")));
                         ped.pedSpawnTrys = 0;
-                        ped.pedSpawnTryTime = 100;
+                        ped.pedSpawnTryTime = 200;
                         ped.spawn();
                     }
                 }
@@ -232,4 +231,6 @@ export function startPedControler() {
             }
         }
     });
+
+    alt.setTimeout(() => {alt.emitServer("pedSyncer:client:ready")}, 2000);
 }

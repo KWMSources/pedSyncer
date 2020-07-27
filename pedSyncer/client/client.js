@@ -22,7 +22,7 @@ if (DebugMode) {
 
             let screenPos = native.getScreenCoordFromWorldCoord(playerPos2.x, playerPos2.y, playerPos2.z + 0.94);
             
-            drawNameTags(`ID: ${ped.id}, ${ped.model} [${ped.wandering==true?"W":"S"} - ${ped.navmashPositions.length}]`, screenPos[1], screenPos[2] - 0.030, 0.3, 255, 255, 255, 220, true);
+            drawNameTags(`ID: ${ped.id}`, screenPos[1], screenPos[2] - 0.030, 0.3, 255, 255, 255, 220, true);
         }
     });
 

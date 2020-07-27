@@ -54,9 +54,15 @@ namespace PedSyncer.Control
                 if (ped == null) return;
 
                 //Update position
-                if (PedClient.TryGetValue("pos", out object? posObj))
+                if (PedClient.TryGetValue("pos", out object? posObj) && (string)posObj != "{null}")
                 {
-                    ped.Position = JsonConvert.DeserializeObject<Vector3>((string)posObj);
+                    try
+                    {
+                        ped.Position = JsonConvert.DeserializeObject<Vector3>((string)posObj);
+                    } catch (Exception ex)
+                    {
+                        Console.WriteLine("Wrong JSON: " + (string)posObj);
+                    }
                 }
 
                 //Update heading
@@ -100,7 +106,7 @@ namespace PedSyncer.Control
          * 1. send all peds to the player
          * 2. send the debug stats to the player
          */
-        public static void OnPlayerConnect(IPlayer player, string reason)
+        public static void OnPlayerConnect(IPlayer player)
         {
             Parallel.ForEach(Ped.All, ped =>
             {
