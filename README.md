@@ -367,7 +367,6 @@ Method to get all the peds which are streamed in into the client
 - [ ] Flag sync
 
 # Known Issues
-- [ ] Some desyncs between the styles of the peds
 - [ ] Scenario z-offset is broke of some peds
 - [ ] Set peds into other vehicles doesn't work currently (first attemp works), + seat without functionalities
 
