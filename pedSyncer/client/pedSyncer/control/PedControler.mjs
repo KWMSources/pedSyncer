@@ -9,6 +9,7 @@ export function startPedControler() {
     //Event which fires if syncedMeta of a ped has been deleted
     alt.onServer('pedSyncer:server:metaDelete', (pedId, key) => {
         Ped.getByID(pedId).syncedMetaData[key] = undefined;
+
         delete Ped.getByID(pedId).syncedMetaData[key];
     });
 
@@ -20,6 +21,7 @@ export function startPedControler() {
     //Event which fires if a ped was created on server-side or on connect of this player
     alt.onServer('pedSyncer:server:create', (newPed) => {
         if (typeof Ped.getByID(newPed.id) !== "undefined") return;
+
         let ped = new Ped(newPed);
     });
 
@@ -31,20 +33,20 @@ export function startPedControler() {
 
     alt.onServer("entitySync:netOwner", (entityId, entityType, isNetOwner) => {
         if (entityType != pedType) return;
-        if (isNetOwner) {
-            setNetOwner(entityId, 0, 100);
-        } else {
+
+        if (isNetOwner) setNetOwner(entityId, 0, 100);
+        else {
             let ped = Ped.getByID(entityId);
     
-            if (typeof ped !== "undefined") {
-                ped.releaseNetOwner();
-            }
+            if (typeof ped !== "undefined") ped.releaseNetOwner();
         }
     });
 
     //Event which fires if the properties of a ped has been changed
     alt.onServer('pedSyncer:server:update', (ped) => {
-        Ped.getByID(ped.id).updateProperties(ped);
+        let ped = Ped.getByID(ped.id);
+
+        if (typeof ped !== "undefined") ped.updateProperties(ped);
     });
 
     //Event which fires if the position was changed
@@ -55,23 +57,25 @@ export function startPedControler() {
 
         if (typeof ped !== "undefined") {
             ped.pos = position;
-            if (ped.scriptID != 0 && !inDistanceBetweenPos(ped.pos, position, 2)) {
-                native.setEntityCoords2(ped.scriptID, position.x, position.y, position.z, 1, 0, 0, 1);
-            }
+            if (ped.scriptID != 0 && !inDistanceBetweenPos(ped.pos, position, 2)) native.setEntityCoords2(ped.scriptID, position.x, position.y, position.z, 1, 0, 0, 1);
         }
     });
 
     //Event which fires on ped get streamed in
     alt.onServer("entitySync:create", (entityId, entityType, position, newEntityData) => {
         if (entityType != pedType) return;
+
         let ped = Ped.getByID(entityId);
+
         if (typeof ped !== "undefined" && ped.vehicle != null && ped.vehicle != "") return;
+
         trySpawn(entityId, position, 0, 100, newEntityData);
     });
 
     //TrySpawn Mechanik to make sure that the peds data is complete and then spawn it surely
-    function trySpawn(entityId, position, spawnTrys, spawnTrysTime, newEntityData) {
+    function trySpawn(entityId, position, spawnTrys, spawnTrysTime, newEntityData = null) {
         if (spawnTrys >= 10) return;
+
         let ped = Ped.getByID(entityId);
         
         if (typeof ped !== "undefined" && ped.vehicle != null && ped.vehicle != "") return;
@@ -81,12 +85,10 @@ export function startPedControler() {
                 trySpawn(entityId, position, spawnTrys+1, spawnTrysTime*2, newEntityData);
             }, spawnTrysTime);
         } else {
-            ped.pedSpawnTrys = 0;
-            ped.pedSpawnTryTime = 200;
             ped.pos = position;
             ped.spawn();
 
-            setPedProperties(entityId, newEntityData);
+            if (newEntityData) setPedProperties(entityId, newEntityData);
         }
     }
 
@@ -95,6 +97,7 @@ export function startPedControler() {
         if (entityType != pedType) return;
 
         let ped = Ped.getByID(entityId);
+
         if (typeof ped === "undefined" || ped.vehicle != null) return;
 
         ped.outOfRange();
@@ -145,7 +148,7 @@ export function startPedControler() {
                         native.setEntityHealth(ped.scriptID, ped[key], 0);
                         break;
                     case 'dead':
-                        if (!native.isPedDeadOrDying(ped.scriptID, 1)) native.setPedToRagdoll(ped.scriptID, -1, -1, 0, false, false, false);
+                        if (ped[key]) native.setPedToRagdoll(ped.scriptID, -1, -1, 0, false, false, false);
                         break;
                     case 'freeze':
                         native.freezeEntityPosition(ped.scriptID, ped[key]);
@@ -163,21 +166,21 @@ export function startPedControler() {
     //Function to set us as the new netOwner
     function setNetOwner(entityId, setTrys, setTrysTime) {
         if (setTrys >= 10) return;
+
         let ped = Ped.getByID(entityId);
 
         if (typeof ped === "undefined") {
             alt.setTimeout(() => {
                 setNetOwner(entityId, setTrys+1, setTrysTime*2);
             }, setTrysTime);
-        } else {
-            ped.becomeNetOwner();
-        }
+        } else ped.becomeNetOwner();
     }
 
     let streamedInVehicle = [];
     function checkStreamedInVehicle() {
         try {
             let newStreamedInVehicle = [];
+
             for (let vehicle of alt.Vehicle.all) {
                 if (
                     vehicle.scriptID != 0 && 
@@ -185,20 +188,21 @@ export function startPedControler() {
                 ) {
                     newStreamedInVehicle.push(vehicle.id);
                     
-                    if (streamedInVehicle.indexOf(vehicle.id) == -1) {
-                        let ped = Ped.getByID(parseInt(vehicle.getSyncedMeta("ped")));
-                        ped.pedSpawnTrys = 0;
-                        ped.pedSpawnTryTime = 200;
-                        ped.spawn();
-                    }
+                    if (streamedInVehicle.indexOf(vehicle.id) == -1) trySpawn(parseInt(vehicle.getSyncedMeta("ped")), vehicle.pos, 0, 100);
                 }
             }
 
             for (let vehicleId of streamedInVehicle.filter(vehicleIdCheck => newStreamedInVehicle.indexOf(vehicleIdCheck) == -1)) {
+                let vehicle = getVehicleById(vehicleId);
+
                 if (
-                    alt.Vehicle.all.filter(v => v.id == vehicleId).length > 0 && 
-                    alt.Vehicle.all.filter(v => v.id == vehicleId)[0].hasSyncedMeta("ped")
-                ) Ped.getByID(alt.Vehicle.all.filter(v => v.id == vehicleId)[0].getSyncedMeta("ped")).outOfRange();
+                    typeof vehicle !== "undefined" &&
+                    vehicle.hasSyncedMeta("ped")
+                ) {
+                    let ped = Ped.getByID(parseInt(vehicle.getSyncedMeta("ped")));
+
+                    if (typeof ped !== "undefined") ped.outOfRange();
+                }
             }
 
             streamedInVehicle = newStreamedInVehicle;
@@ -212,7 +216,9 @@ export function startPedControler() {
     
     //Event which fires if a ped has a new path
     alt.onServer('pedSyncer:server:path', (pedId, path) => {
-        Ped.getByID(pedId).setPath(path);
+        let ped = Ped.getByID(pedId);
+
+        if (typeof ped !== "undefined") ped.setPath(path);
     });
 
     //Delete all current peds if the ressource stop (important for development)
@@ -226,7 +232,9 @@ export function startPedControler() {
             
             if (typeof ped !== "undefined") {
                 let isNetowner = ped.netOwner == alt.Player.local.id;
+
                 alt.log("Ped Debug: " + ped.id + " " + !ped.debug + " " + isNetowner);
+                
                 ped.debug = !ped.debug;
             }
         }

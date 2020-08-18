@@ -3,10 +3,13 @@ import alt from 'alt';
 import native from 'natives';
 import { loadModel } from "../utils/functions.mjs";
 import { unloadModel } from "../utils/functions.mjs";
+import { deletePedEntirely } from "../utils/functions.mjs";
+import { setPedWanderingStats } from "../utils/functions.mjs";
 
 var peds = {};
 var pedsToScriptID = {};
 var pedsProxies = {};
+var props = [0,1,2,6,7];
 class PedClass {
     //Flag to debug this one ped
     debug = false;
@@ -44,11 +47,8 @@ class PedClass {
     
     /**
      * Current position, rotation and heading of the ped
-     * 
-     * ToDo: Rotation still needed???
      */
     pos = {x: 0, y: 0, z: 0};
-    rot = {x: 0, y: 0, z: 0};
     heading = 0;
 
     /**
@@ -155,11 +155,28 @@ class PedClass {
     constructor(ped) {
         //Has to be forbidden on client side
         //Should only be allowed for onServer-Creation
+
         this.id = ped.id;
         this.flags = {};
         peds[ped.id] = this;
 
         for (let key of Object.keys(ped)) if (typeof this[key] !== "undefined") this[key] = ped[key];
+    }
+
+    createPed() {
+        //Create a ped with a random style fitting to the current location
+        if (this.vehicle == null) this.scriptID = native.createPed(4, native.getHashKey(this.model), this.pos.x, this.pos.y, this.pos.z);
+        else {
+            let vehicle = getVehicleById(this.vehicle);
+
+            if (typeof vehicle === "undefined") return;
+
+            this.scriptID = native.createPedInsideVehicle(vehicle.scriptID, 4, native.getHashKey(this.model), this.seat, false, false);
+
+            this.taskParams = ["scriptID", vehicle.scriptID, 10, 786603];
+            this.task = "taskVehicleDriveWander";
+            this.sendTask();
+        }
     }
 
     /**
@@ -169,16 +186,7 @@ class PedClass {
         //Load the model of this ped
         await loadModel(this.model);
 
-        //Create a random ped with a random style fitting to the current location
-        if (this.vehicle == null) this.scriptID = native.createPed(4, native.getHashKey(this.model), this.pos.x, this.pos.y, this.pos.z);
-        else {
-            let veh = alt.Vehicle.all.filter(v => v.id == this.vehicle)[0];
-            this.scriptID = native.createPedInsideVehicle(veh.scriptID, 4, native.getHashKey(this.model), this.seat, false, false);
-
-            this.taskParams = ["scriptID", veh.scriptID, 10, 786491];
-            this.task = "taskVehicleDriveWander";
-            this.sendTask();
-        }
+        this.createPed();
 
         //Store this ped by his scriptID as a key
         pedsToScriptID[this.scriptID] = this;
@@ -186,8 +194,7 @@ class PedClass {
         native.setEntityInvincible(this.scriptID, this.invincible);
         native.freezeEntityPosition(this.scriptID, this.freeze);
 
-        this.pos = JSON.parse(JSON.stringify(native.getEntityCoords(this.scriptID, true)));
-        this.rot = native.getEntityRotation(this.scriptID, 0);
+        this.pos = getPedPos(this.scriptID);
 
         //Set the heading of the ped
         native.setEntityHeading(this.scriptID, this.heading);
@@ -219,7 +226,7 @@ class PedClass {
     becomeNetOwner() {
         this.netOwner = alt.Player.local.id;
 
-        if (this.vehicle != null || this.task == "taskVehicleDriveWander") native.taskVehicleDriveWander(this.scriptID, alt.Vehicle.all.filter(v => v.id == this.vehicle)[0].scriptID, 10, 786491);
+        if (this.vehicle != null || this.task == "taskVehicleDriveWander") native.taskVehicleDriveWander(this.scriptID, getVehicleById(this.vehicle).scriptID, 10, 786603);
     }
 
     releaseNetOwner() {
@@ -234,8 +241,7 @@ class PedClass {
      */
     outOfRange() {
         //Delete ped
-        native.deleteEntity(this.scriptID);
-        native.deletePed(this.scriptID);
+        deletePedEntirely(this.scriptID);
 
         //Delete ped scriptID reference
         delete pedsToScriptID[this.scriptID];
@@ -372,6 +378,7 @@ class PedClass {
      */
     getPathFinalDestination() {
         if (this.navmashPositions.length > 0) return this.navmashPositions[this.navmashPositions.length-1];
+
         return null;
     }
 
@@ -380,7 +387,9 @@ class PedClass {
      */
     startScenario() {
         native.setEntityHeading(this.scriptID, this.heading);
+
         let that = this;
+
         alt.setTimeout(() => {
             native.taskStartScenarioInPlace(that.scriptID, that.scenario, 0, false);
             
@@ -389,28 +398,19 @@ class PedClass {
             this.sendTask();
         }, 1000);
     }
+    
+    setWandering() {
+        if (this.wandering == true) this.startPath();
+        else if(this.scriptID != 0) native.clearPedTasks(this.scriptID);
+    }
 
     /**
      * Method to set the peds style, using the setPedComponentVariation-native
      */
     setPedComponentVariation() {
-        native.setPedComponentVariation(this.scriptID, 0, this.drawable0, this.texture0, 0);
-        native.setPedComponentVariation(this.scriptID, 1, this.drawable1, this.texture1, 0);
-        native.setPedComponentVariation(this.scriptID, 2, this.drawable2, this.texture2, 0);
-        native.setPedComponentVariation(this.scriptID, 3, this.drawable3, this.texture3, 0);
-        native.setPedComponentVariation(this.scriptID, 4, this.drawable4, this.texture4, 0);
-        native.setPedComponentVariation(this.scriptID, 5, this.drawable5, this.texture5, 0);
-        native.setPedComponentVariation(this.scriptID, 6, this.drawable6, this.texture6, 0);
-        native.setPedComponentVariation(this.scriptID, 7, this.drawable7, this.texture7, 0);
-        native.setPedComponentVariation(this.scriptID, 8, this.drawable8, this.texture8, 0);
-        native.setPedComponentVariation(this.scriptID, 9, this.drawable9, this.texture9, 0);
-        native.setPedComponentVariation(this.scriptID, 10, this.drawable10, this.texture10, 0);
-        native.setPedComponentVariation(this.scriptID, 11, this.drawable11, this.texture11, 0);
-        native.setPedPropIndex(this.scriptID, 0, this.prop0, this.proptexture0, 0);
-        native.setPedPropIndex(this.scriptID, 1, this.prop1, this.proptexture1, 0);
-        native.setPedPropIndex(this.scriptID, 2, this.prop2, this.proptexture2, 0);
-        native.setPedPropIndex(this.scriptID, 6, this.prop6, this.proptexture6, 0);
-        native.setPedPropIndex(this.scriptID, 7, this.prop7, this.proptexture7, 0);
+        for (let i = 0; i < 12; i++) native.setPedComponentVariation(this.scriptID, i, this["drawable"+i], this["texture"+i], 0);
+
+        for (let prop in props) native.setPedPropIndex(this.scriptID, prop, this["prop"+prop], this["proptexture"+prop], 0);
     }
 
     /**
@@ -420,8 +420,10 @@ class PedClass {
      */
     updateProperties(ped) {
         let componentSet = false;
+
         for (let key of Object.keys(ped)) {
             this[key] = ped[key];
+
             if (
                 key.includes("drawable") ||
                 key.includes("texture") ||
@@ -429,6 +431,7 @@ class PedClass {
                 key.includes("proptexture")
             ) componentSet = true;
         }
+
         if (componentSet) this.setPedComponentVariation();
     }
 
@@ -439,20 +442,15 @@ class PedClass {
      */
     updatePos(ped) {
         this.pos = ped.pos;
-        this.rot = ped.rot;
         this.heading = ped.heading;
     }
 
     sendTask() {
-        if (this.netOwner == alt.Player.local.id) {
-            let params = [];
-            for (let key in this.taskParams) {
-                if (this.taskParams[key] == this.scriptID) params.push("scriptID");
-                else params.push(this.taskParams[key]);
-            }
+        if (this.netOwner != alt.Player.local.id) return;
 
-            alt.emitServer("pedSyncer:client:task", this.id, this.task, params);
-        }
+        let params = replaceScriptID(this.taskParams, this.scriptID);
+
+        alt.emitServer("pedSyncer:client:task", this.id, this.task, params);
     }
 
     /**
@@ -488,6 +486,10 @@ class PedClass {
         return typeof this.syncedMetaData[key] !== "undefined";
     }
 
+    pack() {
+        return {id: ped.id, pos: JSON.stringify(ped.pos), heading: ped.heading, nearFinalPosition: ped.nearFinalPosition};
+    }
+
     /**
      * Class Methods
      */
@@ -504,11 +506,7 @@ class PedClass {
 
     //Method to get all peds near to the given position and an given radius to this position
     static getNear(pos, distance = 5) {
-        let pedsReturn = [];
-        for (let ped of Object.values(peds).filter(p => inDistanceBetweenPos(pos, p.pos, distance))) {
-            pedsReturn.push(ped);
-        }
-        return pedsReturn;
+        return Object.values(peds).filter(p => inDistanceBetweenPos(pos, p.pos, distance));
     }
 
     //Method to get all peds which are streamed to the player
@@ -518,9 +516,9 @@ class PedClass {
 
     static emitParse(ped) {
         let newPed = {};
-        for (let key in ped) {
-            newPed[key] = ped[key]+"";
-        }
+
+        for (let key in ped) newPed[key] = ped[key]+"";
+
         return newPed;
     }
 
@@ -529,61 +527,37 @@ class PedClass {
      */
 
     /**
+     * Get the peds which are streamed in and which this client is the netOwner of
+     */
+    static getAllMyStreamedPeds() {
+        return Ped.getAllStreamedPeds().filter(p => p.netOwner == alt.Player.local.id);
+    }
+
+    /**
      * Method to set all positions of the peds to which this client is the netOwner and
      * send these new positions to the server.
      */
     static setMyPedPoses() {
         //Iterate over all peds which are streamed in filtered by the netOwner == this client
-        for (let ped of Ped.getAllStreamedPeds().filter(p => p.netOwner == alt.Player.local.id)) {
-            //Get the current positions and set them to the ped
-            let pos = native.getEntityCoords(ped.scriptID, true);
-            let rot = native.getEntityRotation(ped.scriptID, true);
-
-            if (ped.debug) {
-                alt.log("ped " + ped.id + " " + JSON.stringify(ped.pos) + " " + JSON.stringify(pos));
-            }   
-
-            ped.pos = {x: pos.x, y: pos.y, z: pos.z};
-            ped.rot = {x: rot.x, y: rot.y, z: rot.z};
-            ped.heading = native.getEntityHeading(ped.scriptID);
-            ped.armour = native.getPedArmour(ped.scriptID);
-            ped.health = native.getEntityHealth(ped.scriptID);
-            ped.dead = native.isPedDeadOrDying(ped.scriptID, 1);
-
-            if (ped.wandering) {
+        for (let ped of Ped.getAllMyStreamedPeds()) {
+            try {
+                /*if (ped.debug) {
+                    
+                }*/  
+    
+                ped = setPedCurrentData(ped);
+                
+                ped = setPedWanderingStats(ped);
+    
                 /**
-                 * If this peds path has a finalDestination, the position is valid and the final position
-                 * is closer than 5 feet: This ped is near to its finalDestination - it path sould be
-                 * new calculated
-                 */
-                if (
-                    ped.getPathFinalDestination() != null && 
-                    ped.pos != null && 
-                    native.getDistanceBetweenCoords(ped.getPathFinalDestination().x, ped.getPathFinalDestination().y, ped.getPathFinalDestination().z, ped.pos.x, ped.pos.y, ped.pos.z, false) < 0.5
-                ) {
-                    ped.nearFinalPosition = true;
-                }
-
-                /**
-                 * If this peds path has a nextNavMeshStation and the station is closer than 5 feet: This
-                 * peds station is reached, a next station will be calculated
-                 */
-                if (
-                    ped.getPathFinalDestination() != null && 
-                    ped.pos != null && 
-                    ped.nextNavMeshStation < ped.navmashPositions.length && 
-                    native.getDistanceBetweenCoords(ped.navmashPositions[ped.nextNavMeshStation].x, ped.navmashPositions[ped.nextNavMeshStation].y, ped.navmashPositions[ped.nextNavMeshStation].z, ped.pos.x, ped.pos.y, ped.pos.z, false) < 2
-                ) {
-                    ped.pathPositionReached();
-                }
+                 * Set Ped flags
+                 
+                for (let j = 0; j <= 426; j++) {
+                    ped.flags[j] = native.getPedConfigFlag(ped.scriptID, j, 1);
+                }*/
+            } catch (error) {
+                alt.log("[PEDSYNCER ERROR] " + error);
             }
-
-            /**
-             * Set Ped flags
-             
-            for (let j = 0; j <= 426; j++) {
-                ped.flags[j] = native.getPedConfigFlag(ped.scriptID, j, 1);
-            }*/
         }
         alt.setTimeout(Ped.setMyPedPoses, 500);
     }
@@ -595,7 +569,7 @@ class PedClass {
         let pedsToSend = [];
 
         //Iterate over all peds which are streamed in filtered by the netOwner == this client, add this ped to pedsToSend
-        for (let ped of Ped.getAllStreamedPeds().filter(p => p.netOwner == alt.Player.local.id && p.scriptID != 0)) pedsToSend.push({id: ped.id, pos: JSON.stringify(ped.pos), heading: ped.heading, nearFinalPosition: ped.nearFinalPosition});
+        for (let ped of Ped.getAllMyStreamedPeds()) pedsToSend.push(ped.pack());
 
         //If pedsToSend is not empty: send it to the server
         if(pedsToSend.length > 0) alt.emitServer("pedSyncer:client:positions", pedsToSend);
@@ -606,22 +580,18 @@ class PedClass {
     static all;
 }
 
+var functions = ['firstSpawn','respawn','spawn','becomeNetOwner','outOfRange','setPath','startPath','getPathFinalDestination','setPedComponentVariation','updateProperties','updatePos','deleteMeta','getMeta','hasMeta','setMeta','getSyncedMeta','hasSyncedMeta'];
+
 //PedClass Proxy
 export const Ped = new Proxy(PedClass, {
     construct(target, args) {
         let ped = new Proxy(new target(...args), {
             set(pedTarget, property, value) {
                 peds[pedTarget.id][property] = value;
-                if (property == "wandering") { 
-                    if (value == true) pedTarget.startPath();
-                    else if(pedTarget.scriptID != 0) native.clearPedTasks(pedTarget.scriptID);
-                } else if (property == "task" && value != "" && peds[pedTarget.id]["wandering"] == false) {
-                    for (let key in peds[pedTarget.id]["taskParams"]) {
-                        if (peds[pedTarget.id]["taskParams"][key] == "scriptID") {
-                            peds[pedTarget.id]["taskParams"][key] = pedTarget.scriptID;
-                            break;
-                        }
-                    }
+
+                if (property == "wandering") pedTarget.setWandering();
+                else if (property == "task" && value != "" && peds[pedTarget.id]["wandering"] == false) {
+                    peds[pedTarget.id]["taskParams"] = insertScriptID(peds[pedTarget.id]["taskParams"], pedTarget.scriptID);
 
                     if(
                         pedTarget.scriptID != 0 &&
@@ -632,34 +602,19 @@ export const Ped = new Proxy(PedClass, {
                     ) native[peds[pedTarget.id][property]](...peds[pedTarget.id]["taskParams"]);
                     pedTarget.sendTask();
                 }
+                
                 return true;
             },
             get: (pedTarget, property, receiver) => {
                 if (property == "all") return Object.values(pedsProxies);
-                switch (property) {
-                    case 'firstSpawn':
-                    case 'respawn':
-                    case 'spawn':
-                    case 'becomeNetOwner':
-                    case 'outOfRange':
-                    case 'setPath':
-                    case 'startPath':
-                    case 'getPathFinalDestination':
-                    case 'setPedComponentVariation':
-                    case 'updateProperties':
-                    case 'updatePos':
-                    case 'deleteMeta':
-                    case 'getMeta':
-                    case 'hasMeta':
-                    case 'setMeta':
-                    case 'getSyncedMeta':
-                    case 'hasSyncedMeta':
-                        return function() {
-                            return peds[pedTarget.id][property].apply(this, arguments);
-                        }
-                    default:
-                        return peds[pedTarget.id][property];
+                
+                if (functions.indexOf(property) != -1) {
+                    return function() {
+                        return peds[pedTarget.id][property].apply(this, arguments);
+                    }
                 }
+
+                return peds[pedTarget.id][property];
             }
         });
 
