@@ -1,7 +1,6 @@
 import native from 'natives';
 import alt from 'alt';
 import { Ped } from '../class/PedClass.mjs';
-import { func } from 'prop-types';
 
 export function getDistanceBetweenPos(pos1, pos2) {
     if (typeof pos1 !== 'undefined' && typeof pos2 !== 'undefined' && typeof pos1.x !== 'undefined' && typeof pos2.x !== 'undefined') {
@@ -25,11 +24,15 @@ export function inDistanceBetweenPos(pos1, pos2, distance) {
 
 export async function loadModel(classname) {
     let orig = classname;
+    if ((typeof classname === 'string' && classname.substr(0, 2) === '0x') || parseInt(orig) < 0) {
+        classname = parseInt(classname);
+    } else if (typeof classname === 'string' && isNaN(classname)) {
+        classname = native.getHashKey(classname);
+    }
 
-    if ((typeof classname === 'string' && classname.substr(0, 2) === '0x') || parseInt(orig) < 0) classname = parseInt(classname);
-    else if (typeof classname === 'string' && isNaN(classname)) classname = native.getHashKey(classname);
-
-    if (!native.isModelValid(classname)) throw "Model " + classname + " not valid";
+    if (!native.isModelValid(classname)) {
+        throw "Model " + classname + " not valid";
+    }
 
     if (native.hasModelLoaded(classname)) return;
 
@@ -37,10 +40,15 @@ export async function loadModel(classname) {
 }
 
 export function unloadModel(classname) {
-    if (typeof classname === 'string' && classname.substr(0, 2) === '0x') classname = parseInt(classname);
-    else if (typeof classname === 'string' && isNaN(classname)) classname = native.getHashKey(classname);
+    if (typeof classname === 'string' && classname.substr(0, 2) === '0x') {
+        classname = parseInt(classname);
+    } else if (typeof classname === 'string' && isNaN(classname)) {
+        classname = native.getHashKey(classname);
+    }
 
-    if (!native.isModelValid(classname)) return;
+    if (!native.isModelValid(classname)) {
+        return;
+    }
 
     if (Ped.all.filter(ped => native.getEntityModel(ped.scriptID) == classname).length == 0) native.setModelAsNoLongerNeeded(classname);
 }
@@ -793,75 +801,4 @@ for (let key in pedToHash) hashToPed[pedToHash[key]] = key;
 
 export function getPedModelString(value) {
     return hashToPed[value.toString(16)];
-}
-
-export function deletePedEntirely(scriptID) {
-    native.deleteEntity(this.scriptID);
-    native.deletePed(this.scriptID);
-}
-
-export function getPedPos(scriptID) {
-    return JSON.parse(JSON.stringify(native.getEntityCoords(scriptID, true)));
-}
-
-export function getPedPos(scriptID) {
-    return JSON.parse(JSON.stringify(native.getEntityCoords(scriptID, true)));
-}
-
-export function setPedCurrentData(ped) {
-    ped.pos = getPedPos(ped.scriptID);
-    ped.heading = native.getEntityHeading(ped.scriptID);
-    ped.armour = native.getPedArmour(ped.scriptID);
-    ped.health = native.getEntityHealth(ped.scriptID);
-    ped.dead = native.isPedDeadOrDying(ped.scriptID, 1);
-
-    return ped;
-}
-
-export function getDistance(pos1, pos2) {
-    return Math.sqrt(Math.pow((pos1.x - pos2.x), 2) + Math.pow((pos1.y - pos2.y), 2) + Math.pow((pos1.z - pos2.z), 2));
-}
-
-export function setPedWanderingStats(ped) {
-    if (ped.wandering) {
-        /**
-         * If this peds path has a finalDestination, the position is valid and the final position
-         * is closer than 5 feet: This ped is near to its finalDestination - it path sould be
-         * new calculated
-         */
-        if (
-            ped.getPathFinalDestination() != null && 
-            ped.pos != null && 
-            getDistance(ped.getPathFinalDestination(), ped.pos) < 0.5
-        ) ped.nearFinalPosition = true;
-
-        /**
-         * If this peds path has a nextNavMeshStation and the station is closer than 5 feet: This
-         * peds station is reached, a next station will be calculated
-         */
-        if (
-            ped.getPathFinalDestination() != null && 
-            ped.pos != null && 
-            ped.nextNavMeshStation < ped.navmashPositions.length && 
-            getDistance(ped.navmashPositions[ped.nextNavMeshStation], ped.pos) < 2
-        ) ped.pathPositionReached();
-    }
-
-    return ped;
-}
-
-export function getVehicleById(id) {
-    return alt.Vehicle.all.filter(v => v.id == id)[0];
-}
-
-export function replaceScriptID(params, scriptID) {
-    if (params.indexOf(scriptID) != -1) params[params.indexOf(scriptID)] = "scriptID";
-
-    return params;
-}
-
-export function insertScriptID(params, scriptID) {
-    if (params.indexOf("scriptID") != -1) params[params.indexOf("scriptID")] = scriptID;
-    
-    return params;
 }
