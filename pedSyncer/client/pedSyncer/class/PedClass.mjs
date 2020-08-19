@@ -219,7 +219,11 @@ class PedClass {
     becomeNetOwner() {
         this.netOwner = alt.Player.local.id;
 
-        if (this.vehicle != null || this.task == "taskVehicleDriveWander") native.taskVehicleDriveWander(this.scriptID, alt.Vehicle.all.filter(v => v.id == this.vehicle)[0].scriptID, 10, 786491);
+        if (this.vehicle != null || this.task == "taskVehicleDriveWander") {
+            let vehicleObject = alt.Vehicle.all.filter(v => v.id == this.vehicle)[0];
+
+            if (typeof vehicleObject !== "undefined") native.taskVehicleDriveWander(this.scriptID, vehicleObject.scriptID, 10, 786491);
+        }
     }
 
     releaseNetOwner() {
