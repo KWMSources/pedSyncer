@@ -8,7 +8,7 @@
     ".NETCoreApp,Version=v3.1": {
       "pedSyncer/1.0.0": {
         "dependencies": {
-          "AltV.Net": "1.36.7-rc",
+          "AltV.Net": "1.38.4",
           "AltV.Net.EntitySync": "1.7.0-dev-preview",
           "AltV.Net.EntitySync.ServerEvent": "1.7.0-dev-preview",
           "MessagePack": "2.1.115",
@@ -18,7 +18,7 @@
           "pedSyncer.dll": {}
         }
       },
-      "AltV.Net/1.36.7-rc": {
+      "AltV.Net/1.38.4": {
         "runtime": {
           "lib/netcoreapp3.1/AltV.Net.dll": {
             "assemblyVersion": "1.0.0.0",
@@ -28,7 +28,7 @@
       },
       "AltV.Net.Async/1.36.6-rc": {
         "dependencies": {
-          "AltV.Net": "1.36.7-rc",
+          "AltV.Net": "1.38.4",
           "System.Threading.Channels": "4.7.0"
         },
         "runtime": {
@@ -51,7 +51,7 @@
       },
       "AltV.Net.EntitySync.ServerEvent/1.7.0-dev-preview": {
         "dependencies": {
-          "AltV.Net": "1.36.7-rc",
+          "AltV.Net": "1.38.4",
           "AltV.Net.Async": "1.36.6-rc",
           "AltV.Net.EntitySync": "1.7.0-dev-preview",
           "System.Threading.Channels": "4.7.0"
@@ -118,12 +118,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "AltV.Net/1.36.7-rc": {
+    "AltV.Net/1.38.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-UcYrPeJpP1Q85mTYhke5JvZsTTwx23u1ZJETj+M2tnAyJP0gJIXsM9BOR8TBlAxY5V1LJgO6clahClnAHIFMKA==",
-      "path": "altv.net/1.36.7-rc",
-      "hashPath": "altv.net.1.36.7-rc.nupkg.sha512"
+      "sha512": "sha512-jXc4948BqAB0LdztOwTUzBCsaNPfOEU+cbDbqQqHpr8t9ETLBlsMNlGrKUOw170Mviw7WdbOhov4sFUpwGsnSA==",
+      "path": "altv.net/1.38.4",
+      "hashPath": "altv.net.1.38.4.nupkg.sha512"
     },
     "AltV.Net.Async/1.36.6-rc": {
       "type": "package",

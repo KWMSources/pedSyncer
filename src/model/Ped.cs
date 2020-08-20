@@ -1142,6 +1142,8 @@ namespace PedSyncer.Model
                 ped.Heading = ScenarioPoint.Position.W/Math.PI*180;
                 ped.Scenario = ScenarioPoint.IType;
             }
+
+            Console.WriteLine("[PedSyncer] CreateCitizenPeds " + Ped.All.Count + " peds created");
         }
     }
 }

@@ -29,7 +29,7 @@ namespace PedSyncer
                 4,
                 100,
                 true,
-                (threadCount, repository) => new ServerEventNetworkLayer(threadCount, repository),
+                (threadCount, repository) => new PedSyncerNetworkLayer(threadCount, repository),
                 (entity, threadCount) => (entity.Id % threadCount),
                 (entityId, entityType, threadCount) => (entityId % threadCount),
                 (threadId) => new LimitedGrid3(50_000, 50_000, 100, 10_000, 10_000, 256),
@@ -47,7 +47,7 @@ namespace PedSyncer
              * Prepare the Events and route them to the controllers
              */
             Alt.OnClient<IPlayer, Dictionary<string, string>>("pedSyncer:client:firstSpawn", Events.OnFirstSpawn);
-            Alt.OnClient<IPlayer, object[]>("pedSyncer:client:positions", Events.OnPositionUpdate);
+            Alt.OnClient<IPlayer, string>("pedSyncer:client:positions", Events.OnPositionUpdate);
             Alt.OnClient<IPlayer, ulong, string, string[]>("pedSyncer:client:task", Events.OnTaskUpdate);
             Alt.OnClient<IPlayer>("pedSyncer:client:ready", Events.OnPlayerConnect);
 

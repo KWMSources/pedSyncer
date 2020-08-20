@@ -547,9 +547,9 @@ class PedClass {
                 alt.log("ped " + ped.id + " " + JSON.stringify(ped.pos) + " " + JSON.stringify(pos));
             }   
 
-            ped.pos = {x: pos.x, y: pos.y, z: pos.z};
-            ped.rot = {x: rot.x, y: rot.y, z: rot.z};
-            ped.heading = native.getEntityHeading(ped.scriptID);
+            ped.pos = {x: pos.x.toFixed(3), y: pos.y.toFixed(3), z: pos.z.toFixed(3)};
+            ped.rot = {x: rot.x.toFixed(3), y: rot.y.toFixed(3), z: rot.z.toFixed(3)};
+            ped.heading = native.getEntityHeading(ped.scriptID).toFixed(3);
             ped.armour = native.getPedArmour(ped.scriptID);
             ped.health = native.getEntityHealth(ped.scriptID);
             ped.dead = native.isPedDeadOrDying(ped.scriptID, 1);
@@ -602,9 +602,9 @@ class PedClass {
         for (let ped of Ped.getAllStreamedPeds().filter(p => p.netOwner == alt.Player.local.id && p.scriptID != 0)) pedsToSend.push({id: ped.id, pos: JSON.stringify(ped.pos), heading: ped.heading, nearFinalPosition: ped.nearFinalPosition});
 
         //If pedsToSend is not empty: send it to the server
-        if(pedsToSend.length > 0) alt.emitServer("pedSyncer:client:positions", pedsToSend);
+        if(pedsToSend.length > 0) alt.emitServer("pedSyncer:client:positions", JSON.stringify(pedsToSend));
 
-        alt.setTimeout(Ped.sendMyPedPoses, 500);
+        alt.setTimeout(Ped.sendMyPedPoses, posSyncTime);
     }
 
     static all;
@@ -680,5 +680,6 @@ export const Ped = new Proxy(PedClass, {
     }
 });
 
+let posSyncTime = 2000;
 alt.setTimeout(Ped.setMyPedPoses, 500);
-alt.setTimeout(Ped.sendMyPedPoses, 500);
+alt.setTimeout(Ped.sendMyPedPoses, posSyncTime);

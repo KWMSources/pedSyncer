@@ -37,9 +37,10 @@ namespace PedSyncer.Control
          * Event which is fired on the sending of the current positions and other states of 
          * the peds by their netOwner. This event will be fired very, very often.
          */
-        public static void OnPositionUpdate(IPlayer Player, object[] PedClientArray)
+        public static void OnPositionUpdate(IPlayer Player, string PedClientArrayJSON)
         {
-            if (PedClientArray.Length == 0) return;
+            List<Dictionary<string, object>> PedClientArray = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(PedClientArrayJSON);
+            if (PedClientArray.Count == 0) return;
 
             //Process all sended peds
             foreach (Dictionary<string, object> PedClient in PedClientArray)
