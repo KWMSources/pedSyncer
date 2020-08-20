@@ -78,7 +78,6 @@ namespace AltV.Net.EntitySync.ServerEvent
                                 switch (entityEvent.EventType)
                                 {
                                     case 1:
-                                        Console.WriteLine("entitySync:create " + entityEvent.Entity.Id);
                                         if (entityEvent.ChangedData != null)
                                         {
                                             currPlayerClient.Emit("entitySync:create", entityEvent.Entity.Id,
@@ -93,14 +92,12 @@ namespace AltV.Net.EntitySync.ServerEvent
 
                                         break;
                                     case 2:
-                                        Console.WriteLine("entitySync:remove " + entityEvent.Entity.Id);
                                         currPlayerClient.Emit("entitySync:remove", entityEvent.Entity.Id,
                                             entityEvent.Entity.Type);
                                         break;
                                     case 3:
                                         if (entityEvent.Entity.NetOwner != currPlayerClient)
                                         {
-                                            Console.WriteLine("entitySync:updatePosition " + entityEvent.Entity.Id);
                                             currPlayerClient.Emit("entitySync:updatePosition", entityEvent.Entity.Id,
                                             entityEvent.Entity.Type, entityEvent.Position);
                                         }
@@ -108,18 +105,15 @@ namespace AltV.Net.EntitySync.ServerEvent
                                     case 4:
                                         if (entityEvent.Entity.NetOwner != currPlayerClient)
                                         {
-                                            Console.WriteLine("entitySync:updateData " + entityEvent.Entity.Id);
                                             currPlayerClient.Emit("entitySync:updateData", entityEvent.Entity.Id,
                                             entityEvent.Entity.Type, entityEvent.ChangedData);
                                         }
                                         break;
                                     case 5:
-                                        Console.WriteLine("entitySync:clearCache " + entityEvent.Entity.Id);
                                         currPlayerClient.Emit("entitySync:clearCache", entityEvent.Entity.Id,
                                             entityEvent.Entity.Type);
                                         break;
                                     case 6:
-                                        Console.WriteLine("entitySync:netOwner " + entityEvent.Entity.Id);
                                         currPlayerClient.Emit("entitySync:netOwner", entityEvent.Entity.Id,
                                             entityEvent.Entity.Type, entityEvent.NetOwner);
                                         break;

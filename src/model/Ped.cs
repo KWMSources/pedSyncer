@@ -27,6 +27,9 @@ namespace PedSyncer.Model
         //Directory to handle all peds
         public static ConcurrentDictionary<ulong, Ped> peds = new ConcurrentDictionary<ulong, Ped>();
 
+        //Updated Data
+        public List<string> UpdatedData = new List<string>();
+
         /**
 		 * Always true currently
 		 *
@@ -43,6 +46,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("valid");
                 this.SetData("valid", value);
             }
         }
@@ -60,6 +64,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("heading");
                 this.SetData("heading", value);
             }
         }
@@ -77,6 +82,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("model");
                 this.SetData("model", value);
             }
         }
@@ -90,6 +96,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("drawable1");
                 this.SetData("drawable1", value);
             }
         }
@@ -103,6 +110,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("drawable2");
                 this.SetData("drawable2", value);
             }
         }
@@ -116,6 +124,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("drawable3");
                 this.SetData("drawable3", value);
             }
         }
@@ -129,6 +138,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("drawable4");
                 this.SetData("drawable4", value);
             }
         }
@@ -142,6 +152,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("drawable5");
                 this.SetData("drawable5", value);
             }
         }
@@ -155,6 +166,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("drawable6");
                 this.SetData("drawable6", value);
             }
         }
@@ -168,6 +180,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("drawable7");
                 this.SetData("drawable7", value);
             }
         }
@@ -181,6 +194,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("drawable8");
                 this.SetData("drawable8", value);
             }
         }
@@ -194,6 +208,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("drawable9");
                 this.SetData("drawable9", value);
             }
         }
@@ -207,6 +222,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("drawable10");
                 this.SetData("drawable10", value);
             }
         }
@@ -220,6 +236,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("drawable11");
                 this.SetData("drawable11", value);
             }
         }
@@ -233,6 +250,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("texture1");
                 this.SetData("texture1", value);
             }
         }
@@ -246,6 +264,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("texture2");
                 this.SetData("texture2", value);
             }
         }
@@ -259,6 +278,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("texture3");
                 this.SetData("texture3", value);
             }
         }
@@ -272,6 +292,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("texture4");
                 this.SetData("texture4", value);
             }
         }
@@ -285,6 +306,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("texture5");
                 this.SetData("texture5", value);
             }
         }
@@ -298,6 +320,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("texture6");
                 this.SetData("texture6", value);
             }
         }
@@ -311,6 +334,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("texture7");
                 this.SetData("texture7", value);
             }
         }
@@ -324,6 +348,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("texture8");
                 this.SetData("texture8", value);
             }
         }
@@ -337,6 +362,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("texture9");
                 this.SetData("texture9", value);
             }
         }
@@ -350,6 +376,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("texture10");
                 this.SetData("texture10", value);
             }
         }
@@ -363,6 +390,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("texture11");
                 this.SetData("texture11", value);
             }
         }
@@ -376,6 +404,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("prop0");
                 this.SetData("prop0", value);
             }
         }
@@ -389,6 +418,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("prop1");
                 this.SetData("prop1", value);
             }
         }
@@ -402,6 +432,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("prop2");
                 this.SetData("prop2", value);
             }
         }
@@ -415,6 +446,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("prop6");
                 this.SetData("prop6", value);
             }
         }
@@ -428,6 +460,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("prop7");
                 this.SetData("prop7", value);
             }
         }
@@ -441,6 +474,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("proptexture0");
                 this.SetData("proptexture0", value);
             }
         }
@@ -454,6 +488,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("proptexture1");
                 this.SetData("proptexture1", value);
             }
         }
@@ -467,6 +502,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("proptexture2");
                 this.SetData("proptexture2", value);
             }
         }
@@ -480,6 +516,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("proptexture6");
                 this.SetData("proptexture6", value);
             }
         }
@@ -493,6 +530,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("proptexture7");
                 this.SetData("proptexture7", value);
             }
         }
@@ -510,6 +548,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("flags");
                 this.SetData("flags", value);
             }
         }
@@ -524,6 +563,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("invincible");
                 this.SetData("invincible", value);
             }
         }
@@ -539,6 +579,7 @@ namespace PedSyncer.Model
             set
             {
                 vehicle = value;
+                UpdatedData.Add("vehicle");
                 if (value == null) this.SetData("vehicle", null);
                 else this.SetData("vehicle", value.Id);
             }
@@ -561,6 +602,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("hasBlood");
                 this.SetData("hasBlood", value);
             }
         }
@@ -575,6 +617,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("armour");
                 this.SetData("armour", value);
             }
         }
@@ -589,6 +632,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("health");
                 this.SetData("health", value);
             }
         }
@@ -603,6 +647,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("dead");
                 this.SetData("dead", value);
             }
         }
@@ -628,6 +673,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("task");
                 this.SetData("task", value);
             }
         }
@@ -641,6 +687,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("taskParams");
                 this.SetData("taskParams", value);
             }
         }
@@ -655,6 +702,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("Scenario");
                 this.SetData("Scenario", value);
             }
         }
@@ -669,6 +717,7 @@ namespace PedSyncer.Model
             }
             set
             {
+                UpdatedData.Add("freeze");
                 this.SetData("freeze", value);
             }
         }
@@ -693,6 +742,7 @@ namespace PedSyncer.Model
                     this.NearFinalPosition = false;
                     this.CurrentNavmashPositionsIndex = 0;
                 }
+                UpdatedData.Add("wandering");
                 this.SetData("wandering", value);
             }
         }
