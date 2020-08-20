@@ -3,6 +3,7 @@ import alt from 'alt';
 import native from 'natives';
 import { loadModel } from "../utils/functions.mjs";
 import { unloadModel } from "../utils/functions.mjs";
+import { getVehicleById } from "../utils/functions.mjs";
 
 var peds = {};
 var pedsToScriptID = {};
@@ -171,17 +172,17 @@ class PedClass {
         //Create a random ped with a random style fitting to the current location
         if (this.vehicle == null) this.scriptID = native.createPed(4, native.getHashKey(this.model), this.pos.x, this.pos.y, this.pos.z);
         else {
-            let veh = alt.Vehicle.all.filter(v => v.id == this.vehicle)[0];
-            this.scriptID = native.createPedInsideVehicle(veh.scriptID, 4, native.getHashKey(this.model), this.seat, false, false);
+            let vehicle = getVehicleById(this.vehicle);
+            this.scriptID = native.createPedInsideVehicle(vehicle.scriptID, 4, native.getHashKey(this.model), this.seat, false, false);
 
-            this.taskParams = ["scriptID", veh.scriptID, 10, 786491];
+            this.taskParams = ["scriptID", vehicle.scriptID, 10, 786491];
             this.task = "taskVehicleDriveWander";
             this.sendTask();
         }
         
-        if (this.scriptID == 0 && spawnTrys < 10) {
+        if (this.scriptID == 0 && this.spawnTrys < 10) {
             let that = this;
-            spawnTrys++;
+            this.spawnTrys++;
             alt.setTimeout(() => {
                 that.spawn();
             }, 500);
@@ -228,9 +229,8 @@ class PedClass {
         this.netOwner = alt.Player.local.id;
 
         if (this.vehicle != null || this.task == "taskVehicleDriveWander") {
-            let vehicleObject = alt.Vehicle.all.filter(v => v.id == this.vehicle)[0];
-
-            if (typeof vehicleObject !== "undefined") native.taskVehicleDriveWander(this.scriptID, vehicleObject.scriptID, 10, 786491);
+            let vehicle = getVehicleById(this.vehicle);
+            if (vehicle != null) native.taskVehicleDriveWander(this.scriptID, vehicle.scriptID, 10, 786491);
         }
     }
 

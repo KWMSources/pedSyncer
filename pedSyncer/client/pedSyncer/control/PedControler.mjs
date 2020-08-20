@@ -2,6 +2,7 @@ import native from 'natives';
 import * as alt from 'alt';
 import { Ped } from '../class/PedClass.mjs';
 import { inDistanceBetweenPos } from '../utils/functions.mjs';
+import { getVehicleById } from '../utils/functions.mjs';
 
 var pedType = 1654;
 
@@ -188,10 +189,8 @@ export function startPedControler() {
             }
 
             for (let vehicleId of streamedInVehicle.filter(vehicleIdCheck => newStreamedInVehicle.indexOf(vehicleIdCheck) == -1)) {
-                if (alt.Vehicle.all.filter(v => v.id == vehicleId).length > 0) {
-                    let vehicle = alt.Vehicle.all.filter(v => v.id == vehicleId)[0];
-                    alt.emit("vehiclesDespawned", vehicle);
-                }
+                let vehicle = getVehicleById(vehicleId);
+                if (vehicle != null) alt.emit("vehiclesDespawned", vehicle);
             }
 
             streamedInVehicle = newStreamedInVehicle;

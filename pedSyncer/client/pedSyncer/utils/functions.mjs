@@ -802,3 +802,9 @@ for (let key in pedToHash) hashToPed[pedToHash[key]] = key;
 export function getPedModelString(value) {
     return hashToPed[value.toString(16)];
 }
+
+export function getVehicleById(id) {
+    let filtered = alt.Vehicle.all.filter(v => id == v.id);
+    if (filtered.length == 0) return null;
+    return filtered[0];
+}
