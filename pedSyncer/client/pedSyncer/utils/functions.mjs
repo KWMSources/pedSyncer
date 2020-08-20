@@ -31,7 +31,7 @@ export async function loadModel(classname) {
     }
 
     if (!native.isModelValid(classname)) {
-        throw "Model " + classname + " not valid";
+        throw "Model " + classname + " / " + orig + " not valid";
     }
 
     if (native.hasModelLoaded(classname)) return;

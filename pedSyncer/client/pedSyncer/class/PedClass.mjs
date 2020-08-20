@@ -142,9 +142,8 @@ class PedClass {
     navmashPositions = [];
     nearFinalPosition = false;
     nextNavMeshStation = 200;
-    
-    pedSpawnTryTime = null;
-    pedSpawnTrys = null;
+
+    spawnTrys = 0;
 
     //The peds flags
     flags = {};
@@ -178,6 +177,15 @@ class PedClass {
             this.taskParams = ["scriptID", veh.scriptID, 10, 786491];
             this.task = "taskVehicleDriveWander";
             this.sendTask();
+        }
+        
+        if (this.scriptID == 0 && spawnTrys < 10) {
+            let that = this;
+            spawnTrys++;
+            alt.setTimeout(() => {
+                that.spawn();
+            }, 500);
+            return;
         }
 
         //Store this ped by his scriptID as a key

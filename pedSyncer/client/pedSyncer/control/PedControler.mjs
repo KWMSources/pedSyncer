@@ -81,8 +81,6 @@ export function startPedControler() {
                 trySpawn(entityId, position, spawnTrys+1, spawnTrysTime*2, newEntityData);
             }, spawnTrysTime);
         } else {
-            ped.pedSpawnTrys = 0;
-            ped.pedSpawnTryTime = 200;
             ped.pos = position;
             ped.spawn();
 
@@ -185,20 +183,15 @@ export function startPedControler() {
                 ) {
                     newStreamedInVehicle.push(vehicle.id);
                     
-                    if (streamedInVehicle.indexOf(vehicle.id) == -1) {
-                        let ped = Ped.getByID(parseInt(vehicle.getSyncedMeta("ped")));
-                        ped.pedSpawnTrys = 0;
-                        ped.pedSpawnTryTime = 200;
-                        ped.spawn();
-                    }
+                    if (streamedInVehicle.indexOf(vehicle.id) == -1) alt.emit("vehiclesSpawned", vehicle);
                 }
             }
 
             for (let vehicleId of streamedInVehicle.filter(vehicleIdCheck => newStreamedInVehicle.indexOf(vehicleIdCheck) == -1)) {
-                if (
-                    alt.Vehicle.all.filter(v => v.id == vehicleId).length > 0 && 
-                    alt.Vehicle.all.filter(v => v.id == vehicleId)[0].hasSyncedMeta("ped")
-                ) Ped.getByID(alt.Vehicle.all.filter(v => v.id == vehicleId)[0].getSyncedMeta("ped")).outOfRange();
+                if (alt.Vehicle.all.filter(v => v.id == vehicleId).length > 0) {
+                    let vehicle = alt.Vehicle.all.filter(v => v.id == vehicleId)[0];
+                    alt.emit("vehiclesDespawned", vehicle);
+                }
             }
 
             streamedInVehicle = newStreamedInVehicle;
@@ -208,7 +201,7 @@ export function startPedControler() {
 
         alt.setTimeout(checkStreamedInVehicle, 100);
     }
-    alt.setTimeout(checkStreamedInVehicle, 5000);
+    alt.setTimeout(checkStreamedInVehicle, 7000);
     
     //Event which fires if a ped has a new path
     alt.onServer('pedSyncer:server:path', (pedId, path) => {
@@ -233,4 +226,17 @@ export function startPedControler() {
     });
 
     alt.setTimeout(() => {alt.emitServer("pedSyncer:client:ready")}, 2000);
+
+    alt.on("vehiclesSpawned", (vehicle) => {
+        if (!vehicle.hasSyncedMeta("ped")) return;
+
+        let ped = Ped.getByID(parseInt(vehicle.getSyncedMeta("ped")));
+        ped.spawn();
+    });
+
+    alt.on("vehiclesDespawned", (vehicle) => {
+        if (!vehicle.hasSyncedMeta("ped")) return;
+        
+        Ped.getByID(vehicle.getSyncedMeta("ped")).outOfRange();
+    });
 }
