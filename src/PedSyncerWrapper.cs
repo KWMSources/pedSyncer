@@ -139,7 +139,7 @@ namespace pedSyncer
         public static void CreateCitizenPeds()
         {
             Console.WriteLine("[INFO] PedSyncer Wrapper Create Citizens.");
-            Ped.CreateCitizenPeds();
+            Ped.CreateCitizenPeds(2000);
         }
     }
 }

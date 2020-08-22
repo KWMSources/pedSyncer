@@ -1162,9 +1162,13 @@ namespace PedSyncer.Model
         }
 
         //Method to generate wandering peds as citizens
-        public static void CreateCitizenPeds()
+        public static void CreateCitizenPeds(int PedCount)
         {
             NavigationMesh NavigationMeshControl = NavigationMesh.getInstance();
+
+            int ScenarioCount, WanderingCount;
+            WanderingCount = (int)Math.Round(PedCount * 0.8);
+            ScenarioCount = PedCount - WanderingCount;
 
             //Load Drawable Data
             if (ModelData.Count == 0)
@@ -1178,7 +1182,7 @@ namespace PedSyncer.Model
             }
 
             //Load random navMeshes to spawn peds on it
-            List<NavigationMeshPolyFootpath> RandomSpawnsList = NavigationMeshControl.getRandomSpawnMeshes();
+            List<NavigationMeshPolyFootpath> RandomSpawnsList = NavigationMeshControl.getRandomSpawnMeshes(WanderingCount);
 
             //Spawn the peds on these navMeshes and let the ped wander
             Parallel.ForEach(RandomSpawnsList, RandomSpawn =>
@@ -1192,7 +1196,7 @@ namespace PedSyncer.Model
             Scenarios Scenarios = Scenarios.getInstance();
 
             //Load random ScenarioPoints to spawn peds on it
-            List<ScenarioPoint> ScenarioPoints = Scenarios.GetRandomScenarioSpots();
+            List<ScenarioPoint> ScenarioPoints = Scenarios.GetRandomScenarioSpots(ScenarioCount);
             foreach(ScenarioPoint ScenarioPoint in ScenarioPoints)
             {
                 Ped ped = new Ped(ScenarioPoint.Position.X, ScenarioPoint.Position.Y, ScenarioPoint.Position.Z, Scenarios.GetRandomModelByScenarioPoint(ScenarioPoint));

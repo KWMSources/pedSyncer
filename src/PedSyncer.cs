@@ -65,10 +65,10 @@ namespace PedSyncer
             PedMovement.GetInstance();
 
             //Create citizen vehicles
-            PedVehicles.GetInstance().SpawnRandomCitizenVehicles(3000);
+            PedVehicles.GetInstance().SpawnRandomCitizenVehicles(1000);
 
             //Create citizen peds who wanders - delete this line if you don't wanna have citizens
-            Ped.CreateCitizenPeds();
+            Ped.CreateCitizenPeds(2000);
 
             //NodeJS Wrapper
             PedSyncerWrapper.RegisterWrapperFunctions();

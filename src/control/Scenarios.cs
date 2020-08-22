@@ -114,11 +114,8 @@ namespace PedSyncer.Control
         /**
          * Method to get a list of randomly selected ScenarioPoints
          */
-        public List<ScenarioPoint> GetRandomScenarioSpots()
+        public List<ScenarioPoint> GetRandomScenarioSpots(int ToSelect)
         {
-            //Currently spawns 3000 scenario peds
-            int ToSelect = 3000;
-
             Random Randomizer = new Random();
             List<ScenarioPoint> ScenarioSpawns = new List<ScenarioPoint>();
 

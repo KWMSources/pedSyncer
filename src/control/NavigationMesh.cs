@@ -136,7 +136,7 @@ namespace PedSyncer.Control
          * randomValueMax. Select in this section a random spawn. Guarantees a distribution of the peds over the whole
          * map.
          */
-        public List<NavigationMeshPolyFootpath> getRandomSpawnMeshes()
+        public List<NavigationMeshPolyFootpath> getRandomSpawnMeshes(int WanderingCount)
         {
             //Prepare the spawn list
             List<NavigationMeshPolyFootpath> spawns = new List<NavigationMeshPolyFootpath>();
@@ -145,7 +145,7 @@ namespace PedSyncer.Control
 
             //60: Determines the count of random spawns - there are 98,000 footpath navMeshes, divide by 60: 1633 spawns for peds
             //Todo: make this value as a parameter beginning from the endpoint
-            int randomValueMax = 60, randomValue;
+            int randomValueMax = (int) Math.Round((double) (navMeshes.Count / WanderingCount)), randomValue;
             int counter = 0;
 
             while (randomValueMax * counter < navMeshes.Count)
