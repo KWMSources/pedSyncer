@@ -199,7 +199,7 @@ class PedClass {
         this.rot = native.getEntityRotation(this.scriptID, 0);
 
         //Set the heading of the ped
-        native.setEntityHeading(this.scriptID, this.heading);
+        if (this.vehicle == null) native.setEntityHeading(this.scriptID, this.heading);
 
         //Don't know why this is important, but it is...
         native.setEntityAsMissionEntity(this.scriptID, true, false);
