@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using AltV.Net.EntitySync.Events;
+using PedSyncer.Model;
 
 namespace AltV.Net.EntitySync.ServerEvent
 {
@@ -103,9 +104,19 @@ namespace AltV.Net.EntitySync.ServerEvent
                                         }
                                         break;
                                     case 4:
+                                        /*Dictionary<string, object> UpdatedData = new Dictionary<string, object>();
+                                        Ped ped = Ped.GetByID(entityEvent.Entity.Id);
+                                        if (ped == null) continue;
+
+                                        foreach (string key in ped.UpdatedData)
+                                        {
+                                            if (!UpdatedData.ContainsKey(key)) UpdatedData.Add(key, ped.GetValue(key));
+                                        }*/
+
                                         if (entityEvent.Entity.NetOwner != currPlayerClient)
                                         {
                                             currPlayerClient.Emit("entitySync:updateData", entityEvent.Entity.Id,
+                                            //entityEvent.Entity.Type, UpdatedData);
                                             entityEvent.Entity.Type, entityEvent.ChangedData);
                                         }
                                         break;

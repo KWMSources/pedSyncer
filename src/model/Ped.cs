@@ -776,6 +776,13 @@ namespace PedSyncer.Model
         public int CurrentNavmashPositionsIndex
         { get; set; }
 
+        //Return Value
+        public object GetValue(string key)
+        {
+            if (this.TryGetData<object>(key, out object value)) return value;
+            return false;
+        }
+
         /**
 		 * Object Methods
 		 */
