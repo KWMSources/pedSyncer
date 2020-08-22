@@ -90,7 +90,7 @@ namespace PedSyncer.Control
                                         new Vector3(scenarioPoint3.Position.X, scenarioPoint3.Position.Y, scenarioPoint3.Position.Z)
                                     );
 
-                                if (distance < 3 && distance > 1)
+                                if (distance < 3 && distance > 1 && scenarioPoint2.TimeStart == scenarioPoint3.TimeStart)
                                 {
                                     scenarioPoint2.NearScenarioPoint.Add(scenarioPoint3);
                                 }
