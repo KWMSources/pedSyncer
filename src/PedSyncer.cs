@@ -32,7 +32,7 @@ namespace PedSyncer
                 (threadCount, repository) => new PedSyncerNetworkLayer(threadCount, repository),
                 (entity, threadCount) => (entity.Id % threadCount),
                 (entityId, entityType, threadCount) => (entityId % threadCount),
-                (threadId) => new LimitedGrid3(50_000, 50_000, 100, 10_000, 10_000, 256),
+                (threadId) => new LimitedGrid3(50_000, 50_000, 100, 10_000, 10_000, 128),
                 new IdProvider()
             );
 
