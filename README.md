@@ -1,3 +1,5 @@
+# Please mention: This project is no longer maintained. It will also not be maintained for money. No matter how much money you offer: I will not help you maintain this project. So please: Don't contact me. Thanks.
+
 # pedSyncer
 
 This AltV-resource is an experiment for synchronize peds. I publish this resource to give an idea how this can work. Furthermore, I also published it to allow contribution by other developers to improve this experiment.
